@@ -1,24 +1,32 @@
 package io.github.skibrianski.partial_interface;
 
 import java.lang.annotation.Repeatable;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
+// TODO: name is wrong. as this is repeatable it should be something method-related
 @Repeatable(PartialInterfaces.class)
 public @interface PartialInterface {
     Class<?> returnType();
+    // TODO: support varargs
     Class<?>[] argumentTypes();
     String methodName();
     boolean isStatic() default false;
 
-//
-//    interface Stack1<E> {
-//        boolean isEmpty();
-//        int size();
-//
-//        void add()
-//
-////         *   public final B add(E... elementsToAdd);
-//// *   public ImmutableArrayList<E> build();
-//    }
-
+    class Util {
+        public static String stringify(PartialInterface partialInterface) {
+            String argumentString = Arrays.stream(partialInterface.argumentTypes())
+                    .map(Class::getSimpleName)
+                    .collect(Collectors.joining(", "));
+            String staticPrefix = partialInterface.isStatic() ? "static " : "";
+            return String.format(
+                    "%s%s %s(%s)",
+                    staticPrefix,
+                    partialInterface.returnType().getSimpleName(),
+                    partialInterface.methodName(),
+                    argumentString
+            );
+        }
+    }
 }
 
