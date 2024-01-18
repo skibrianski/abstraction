@@ -2,9 +2,6 @@ package io.github.skibrianski.partial_interface;
 
 import java.lang.annotation.Repeatable;
 
-// TODO: should this be a repeatable class-level annotation or should we do method-level?
-// method-level would be cleaner, but it creates a method to override (and what if we want to vary on return type?)
-// for now, we'll go with class-level.
 // TODO: support primitive-friendly "parameterized" types
 // TODO: can we also support static methods?
 @Repeatable(PartialInterfaces.class)
