@@ -2,8 +2,6 @@ package io.github.skibrianski.partial_interface;
 
 import java.lang.annotation.Repeatable;
 
-// TODO: support primitive-friendly "parameterized" types
-// TODO: can we also support static methods?
 @Repeatable(PartialInterfaces.class)
 public @interface PartialInterface {
     Class<?> returnType();
