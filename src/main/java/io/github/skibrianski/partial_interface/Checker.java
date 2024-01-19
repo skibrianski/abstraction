@@ -65,9 +65,10 @@ public final class Checker {
                     }
                     if (matchingMethods.size() > 1) {
                         throw new PartialInterfaceException(
-                                "internal error: implementation " + implementation
+                                "bug: internal error: implementation " + implementation
                                         + "implements more than one matching interface method matching: "
                                         + PartialInterface.Util.stringify(partialInterface)
+                                        + ". please report this error."
                         );
                     }
                 }
