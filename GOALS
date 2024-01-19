@@ -7,6 +7,9 @@
   - non-public methods in interface (?bad idea?)
   - constructor constraints?
 
+questions:
+  - how can check() be triggered automatically at clinit time of the child class?
+
 design notes:
-- use class annotations, not use method annotations, b/c of potential return type confusion
+- use class annotations, not method annotations, b/c of potential return type confusion
 - use classgraph instead of ctor checks b/c an interface cannot run code at init or clinit time.

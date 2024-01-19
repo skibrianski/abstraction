@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 // TODO: name is wrong. as this is repeatable it should be something method-related
 @Repeatable(PartialInterfaces.class)
 public @interface PartialInterface {
+    // TODO: support parameterized types
     Class<?> returnType();
     // TODO: support varargs
+    // TODO: support parameterized types
     Class<?>[] argumentTypes();
     String methodName();
     boolean isStatic() default false;

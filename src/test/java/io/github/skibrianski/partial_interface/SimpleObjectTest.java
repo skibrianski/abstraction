@@ -4,14 +4,14 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PartialInterfaceTest {
+public class SimpleObjectTest {
 
     @PartialInterface(returnType = String.class, argumentTypes = {String.class, String.class}, methodName = "concat")
     interface WithConcatenation { }
 
     public interface InvalidInterface extends WithConcatenation { }
 
-    public interface ValidInterface<E> extends WithConcatenation {
+    public interface ValidInterface extends WithConcatenation {
         String concat(String input1, String input2);
     }
 
