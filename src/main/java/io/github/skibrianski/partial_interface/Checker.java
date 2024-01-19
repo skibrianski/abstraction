@@ -54,11 +54,7 @@ public final class Checker {
                     List<Method> matchingMethods = Arrays.stream(methods)
                             .filter(m -> m.getName().equals(partialInterface.methodName()))
                             .filter(m -> m.getReturnType().equals(partialInterface.returnType()))
-                            .filter(m -> {
-                                var a = m.getParameterTypes();
-                                var b = partialInterface.argumentTypes();
-                                return Arrays.equals(m.getParameterTypes(), partialInterface.argumentTypes());
-                            })
+                            .filter(m -> Arrays.equals(m.getParameterTypes(), partialInterface.argumentTypes()))
                             .collect(Collectors.toList());
                     if (matchingMethods.isEmpty()) {
                         throw new PartialInterfaceNotCompletedException(
