@@ -11,7 +11,7 @@ public class UtilTest {
     void test_toString_withNoArguments() {
         RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
                 false,
-                int.class,
+                TestUtil.buildRegularType(int.class),
                 "foo",
                 new Class<?>[0]
         );
@@ -25,7 +25,7 @@ public class UtilTest {
     void test_toString_withSingleArgument() {
         RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
                 false,
-                int.class,
+                TestUtil.buildRegularType(int.class),
                 "foo",
                 new Class<?>[]{String.class}
         );
@@ -39,7 +39,7 @@ public class UtilTest {
     void test_toString_withMultipleArguments() {
         RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
                 false,
-                int.class,
+                TestUtil.buildRegularType(int.class),
                 "foo",
                 new Class<?>[]{String.class, Object.class}
         );
@@ -53,7 +53,7 @@ public class UtilTest {
     void test_toString_static() {
         RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
                 true,
-                int.class,
+                TestUtil.buildRegularType(int.class),
                 "foo",
                 new Class<?>[0]
         );

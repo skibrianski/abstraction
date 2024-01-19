@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Test;
 
 public class VarArgsTest {
 
-    @RequiresChildMethod(returnType = String.class, argumentTypes = {String[].class}, methodName = "concat")
+    @RequiresChildMethod(
+            returnType = @RequiresChildMethod.Type(String.class),
+            argumentTypes = {String[].class},
+            methodName = "concat"
+    )
     interface WithConcatenation { }
 
     public interface InvalidInterface extends WithConcatenation { }

@@ -53,7 +53,12 @@ public final class PartialInterface {
                 for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
                     List<Method> matchingMethods = Arrays.stream(methods)
                             .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                            .filter(m -> m.getReturnType().equals(requiresChildMethod.returnType()))
+                            .filter(m -> {
+                                if (requiresChildMethod.returnType().type() == RequiresChildMethod.TypeType.REGULAR) {
+                                    return m.getReturnType().equals(requiresChildMethod.returnType().value());
+                                }
+                                throw new RuntimeException("unimplemented");
+                            })
                             .filter(m -> Arrays.equals(m.getParameterTypes(), requiresChildMethod.argumentTypes()))
                             .collect(Collectors.toList());
                     if (matchingMethods.isEmpty()) {

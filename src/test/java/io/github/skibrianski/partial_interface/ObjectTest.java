@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Test;
 
 public class ObjectTest {
 
-    @RequiresChildMethod(returnType = String.class, argumentTypes = {String.class}, methodName = "scramble")
+    @RequiresChildMethod(
+            returnType = @RequiresChildMethod.Type(String.class),
+            argumentTypes = {String.class},
+            methodName = "scramble"
+    )
     interface WithScrambler { }
 
     public interface InvalidInterface extends WithScrambler { }

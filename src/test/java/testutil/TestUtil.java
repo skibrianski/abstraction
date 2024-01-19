@@ -6,9 +6,29 @@ import java.lang.annotation.Annotation;
 
 public final class TestUtil {
 
+    public static RequiresChildMethod.Type buildRegularType(Class<?> classType) {
+        return new RequiresChildMethod.Type() {
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return RequiresChildMethod.Type.class;
+            }
+
+
+            @Override
+            public Class<?> value() {
+                return classType;
+            }
+
+            @Override
+            public RequiresChildMethod.TypeType type() {
+                return RequiresChildMethod.TypeType.REGULAR;
+            }
+        };
+    }
+
     public static RequiresChildMethod buildAnnotation(
             boolean isStatic,
-            Class<?> returnType,
+            RequiresChildMethod.Type returnType,
             String methodName,
             Class<?>[] argumentTypes
     ) {
@@ -19,7 +39,7 @@ public final class TestUtil {
             }
 
             @Override
-            public Class<?> returnType() {
+            public Type returnType() {
                 return returnType;
             }
 

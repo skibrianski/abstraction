@@ -6,8 +6,16 @@ import org.junit.jupiter.api.Test;
 
 public class RepeatedAnnotationTest {
 
-    @RequiresChildMethod(returnType = int.class, argumentTypes = {}, methodName = "intSupplier")
-    @RequiresChildMethod(returnType = String.class, argumentTypes = {}, methodName = "stringSupplier")
+    @RequiresChildMethod(
+            returnType = @RequiresChildMethod.Type(int.class),
+            argumentTypes = {},
+            methodName = "intSupplier"
+    )
+    @RequiresChildMethod(
+            returnType = @RequiresChildMethod.Type(String.class),
+            argumentTypes = {},
+            methodName = "stringSupplier"
+    )
     interface WithMultipleAnnotations { }
 
     public static class ValidClass implements WithMultipleAnnotations {

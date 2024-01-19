@@ -6,7 +6,11 @@ import org.junit.jupiter.api.Test;
 
 public class PrimitiveTest {
 
-    @RequiresChildMethod(returnType = int.class, argumentTypes = {int.class}, methodName = "triple")
+    @RequiresChildMethod(
+            returnType = @RequiresChildMethod.Type(int.class),
+            argumentTypes = {int.class},
+            methodName = "triple"
+    )
     interface WithTriple { }
 
     public interface InvalidInterface extends WithTriple { }
