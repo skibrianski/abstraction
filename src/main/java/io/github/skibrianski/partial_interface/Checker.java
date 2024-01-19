@@ -51,6 +51,7 @@ public final class Checker {
                 Class<?> implementation = implementationClassInfo.loadClass();
                 Method[] methods = implementation.getMethods();
                 for (PartialInterface partialInterface : partialInterfaces) {
+                    PartialInterface.Util.validate(partialInterface);
                     List<Method> matchingMethods = Arrays.stream(methods)
                             .filter(m -> m.getName().equals(partialInterface.methodName()))
                             .filter(m -> m.getReturnType().equals(partialInterface.returnType()))

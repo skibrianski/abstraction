@@ -4,22 +4,22 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ObjectTest {
+public class VarArgsTest {
 
-    @PartialInterface(returnType = String.class, argumentTypes = {String.class}, methodName = "scramble")
-    interface WithScrambler { }
+//    @PartialInterface(returnType = String.class, varArgType = int.class, methodName = "concat")
+    interface WithConcatenation { }
 
-    public interface InvalidInterface extends WithScrambler { }
+    public interface InvalidInterface extends WithConcatenation { }
 
-    public interface ValidInterface extends WithScrambler {
-        String scramble(String input1);
+    public interface ValidInterface extends WithConcatenation {
+        String concat(String... inputs);
     }
 
-    public static class InvalidClass implements WithScrambler { }
+    public static class InvalidClass implements WithConcatenation { }
 
-    public static class ValidClass implements WithScrambler {
-        public String scramble(String input1) {
-            return input1;
+    public static class ValidClass implements WithConcatenation {
+        public String concat(String input1, String input2) {
+            return input1.concat(input2);
         }
     }
 

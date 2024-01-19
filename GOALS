@@ -8,7 +8,10 @@
   - constructor constraints?
 
 questions:
-  - how can check() be triggered automatically at clinit time of the child class?
+- how can check() be triggered automatically at clinit time of the child class?
+
+limitations:
+- refactoring cannot be done automatically in an IDE
 
 design notes:
 - use class annotations, not method annotations, b/c of potential return type confusion
