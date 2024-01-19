@@ -48,51 +48,61 @@ public final class PartialInterface {
                     .map(RequiresChildMethod.class::cast)
                     .collect(Collectors.toList());
             for (ClassInfo implementationClassInfo : implementations) {
-                Class<?> implementation = implementationClassInfo.loadClass();
-                Method[] methods = implementation.getMethods();
-                HasTypeParameters hasTypeParameters = implementation.getAnnotation(HasTypeParameters.class);
-                Class<?>[] typeParameters = hasTypeParameters == null
-                        ? new Class<?>[0]
-                        : hasTypeParameters.value();
-                for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
-                    List<Method> matchingMethods = Arrays.stream(methods)
-                            .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                            .filter(m -> {
-                                switch (requiresChildMethod.returnType().type()) {
-                                    case REGULAR:
-                                        return m.getReturnType().equals(requiresChildMethod.returnType().value());
-                                    case PARAMETERIZED:
-                                        if (requiresChildMethod.returnType().value().equals(RequiresChildMethod.FirstParameter.class)) {
-                                            if (typeParameters.length == 0) {
-                                                throw new PartialInterfaceUsageException(
-                                                        "no type parameter. missing @HasTypeParameters?" // TODO: more detail
-                                                );
-                                            }
-                                            return m.getReturnType().equals(typeParameters[0]);
-                                        }
-                                }
-                                throw new RuntimeException("unimplemented");
-                            })
-                            .filter(m -> Arrays.equals(m.getParameterTypes(), requiresChildMethod.argumentTypes()))
-                            .collect(Collectors.toList());
-                    if (matchingMethods.isEmpty()) {
-                        throw new PartialInterfaceNotCompletedException(
-                                "implementation " + implementation.getName()
-                                        + " does not implement partial interface method: "
-                                        + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                        );
-                    }
-                    if (matchingMethods.size() > 1) {
-                        throw new PartialInterfaceException(
-                                "bug: internal error: implementation " + implementation.getName()
-                                        + " implements more than one matching interface method matching: "
-                                        + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                                        + ". please report this error."
-                        );
-                    }
-                }
+                validateImplementation(implementationClassInfo.loadClass(), requiresChildMethodAnnotations);
             }
         }
+    }
+
+    private static void validateImplementation(
+            Class<?> implementation,
+            List<RequiresChildMethod> requiresChildMethodAnnotations
+    ) {
+        Method[] methods = implementation.getMethods();
+        HasTypeParameters hasTypeParameters = implementation.getAnnotation(HasTypeParameters.class);
+        Class<?>[] typeParameters = hasTypeParameters == null ? new Class<?>[0] : hasTypeParameters.value();
+        for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
+            List<Method> matchingMethods = Arrays.stream(methods)
+                    .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
+                    .filter(m -> validateReturnType(m, requiresChildMethod.returnType(), typeParameters))
+                    .filter(m -> Arrays.equals(m.getParameterTypes(), requiresChildMethod.argumentTypes()))
+                    .collect(Collectors.toList());
+            if (matchingMethods.isEmpty()) {
+                throw new PartialInterfaceNotCompletedException(
+                        "implementation " + implementation.getName()
+                                + " does not implement partial interface method: "
+                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                );
+            }
+            if (matchingMethods.size() > 1) {
+                throw new PartialInterfaceException(
+                        "bug: internal error: implementation " + implementation.getName()
+                                + " implements more than one matching interface method matching: "
+                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                                + ". please report this error."
+                );
+            }
+        }
+    }
+
+    private static boolean validateReturnType(
+            Method method,
+            RequiresChildMethod.Type returnType,
+            Class<?>[] typeParameters
+    ) {
+        switch (returnType.type()) {
+            case REGULAR:
+                return method.getReturnType().equals(returnType.value());
+            case PARAMETERIZED:
+                if (returnType.value().equals(RequiresChildMethod.FirstParameter.class)) {
+                    if (typeParameters.length == 0) {
+                        throw new PartialInterfaceUsageException(
+                                "no type parameter. missing @HasTypeParameters?" // TODO: more detail
+                        );
+                    }
+                    return method.getReturnType().equals(typeParameters[0]);
+                }
+        }
+        throw new RuntimeException("unimplemented");
     }
 }
 
