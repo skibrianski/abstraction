@@ -4,7 +4,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SimpleObjectTest {
+public class ObjectTest {
 
     @PartialInterface(returnType = String.class, argumentTypes = {String.class, String.class}, methodName = "concat")
     interface WithConcatenation { }
