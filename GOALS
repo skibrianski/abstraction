@@ -1,20 +1,18 @@
-- allow for a "partial" interface. a partial interface is one which sneakily requires more than
-  what is defined in the contract. those sneaky requirements can be defined via annotation
-  - classgraph will scan for children of @PartialInterfaces, and ensure that they implement the sneaky requirements
+- allow for a "partial" interface. a partial interface is one which requires more than
+  what is defined in the contract. this can be useful for a number of reasons:
 - uses:
   - primitive-friendly parameterization
   - interfaces that require static methods
-  - non-public methods in interface (?bad idea?)
+  - non-public methods in interface (bad idea?)
   - constructor constraints?
+
+caveats:
+- for now, you have to call PartialInterface.check() at clinit time.
+- refactoring cannot be done automatically in an IDE
+- varargs should be specified as eg int[].class, as under the covers that is how java treats it.
 
 questions:
 - how can check() be triggered automatically at clinit time of the child class?
-
-limitations:
-- refactoring cannot be done automatically in an IDE
-
-notes:
-- varargs should be specified as eg int[].class, as under the covers that is how java treats it.
 
 design notes:
 - use class annotations, not method annotations, b/c of potential return type confusion

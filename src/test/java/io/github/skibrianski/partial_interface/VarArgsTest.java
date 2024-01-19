@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class VarArgsTest {
 
-    @PartialInterface(returnType = String.class, argumentTypes = {String[].class}, methodName = "concat")
+    @RequiresChildMethod(returnType = String.class, argumentTypes = {String[].class}, methodName = "concat")
     interface WithConcatenation { }
 
     public interface InvalidInterface extends WithConcatenation { }
@@ -25,27 +25,27 @@ public class VarArgsTest {
 
     @Test
     void test_class_valid() {
-        Assertions.assertDoesNotThrow(() -> Checker.check(ValidClass.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
     @Test
     void test_class_invalid() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(InvalidClass.class)
+                () -> PartialInterface.check(InvalidClass.class)
         );
     }
 
     @Test
     void test_interface_valid() {
-        Assertions.assertDoesNotThrow(() -> Checker.check(ValidInterface.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
     }
 
     @Test
     void test_interface_invalid() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(InvalidInterface.class)
+                () -> PartialInterface.check(InvalidInterface.class)
         );
     }
 }

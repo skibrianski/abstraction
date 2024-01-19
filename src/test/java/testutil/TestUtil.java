@@ -1,21 +1,21 @@
 package testutil;
 
-import io.github.skibrianski.partial_interface.PartialInterface;
+import io.github.skibrianski.partial_interface.RequiresChildMethod;
 
 import java.lang.annotation.Annotation;
 
 public final class TestUtil {
 
-    public static PartialInterface buildPartialInterface(
+    public static RequiresChildMethod buildAnnotation(
             boolean isStatic,
             Class<?> returnType,
             String methodName,
             Class<?>[] argumentTypes
     ) {
-        return new PartialInterface() {
+        return new RequiresChildMethod() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return PartialInterface.class;
+                return RequiresChildMethod.class;
             }
 
             @Override

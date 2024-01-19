@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 public class RepeatedAnnotationTest {
 
-    @PartialInterface(returnType = int.class, argumentTypes = {}, methodName = "intSupplier")
-    @PartialInterface(returnType = String.class, argumentTypes = {}, methodName = "stringSupplier")
+    @RequiresChildMethod(returnType = int.class, argumentTypes = {}, methodName = "intSupplier")
+    @RequiresChildMethod(returnType = String.class, argumentTypes = {}, methodName = "stringSupplier")
     interface WithMultipleAnnotations { }
 
     public static class ValidClass implements WithMultipleAnnotations {
@@ -21,7 +21,7 @@ public class RepeatedAnnotationTest {
     }
     @Test
     void test_class_valid() {
-        Assertions.assertDoesNotThrow(() -> Checker.check(ValidClass.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
     public static class ClassWithoutIntSupplier implements WithMultipleAnnotations {
@@ -33,7 +33,7 @@ public class RepeatedAnnotationTest {
     void test_class_invalid_noIntSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(ClassWithoutIntSupplier.class)
+                () -> PartialInterface.check(ClassWithoutIntSupplier.class)
         );
     }
 
@@ -46,7 +46,7 @@ public class RepeatedAnnotationTest {
     void test_class_invalid_noStringSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(ClassWithoutStringSupplier.class)
+                () -> PartialInterface.check(ClassWithoutStringSupplier.class)
         );
     }
 
@@ -58,7 +58,7 @@ public class RepeatedAnnotationTest {
     }
     @Test
     void test_interface_valid() {
-        Assertions.assertDoesNotThrow(() -> Checker.check(ValidInterface.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
     }
 
 
@@ -69,7 +69,7 @@ public class RepeatedAnnotationTest {
     void test_interface_invalid_noIntSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(InterfaceWithoutIntSupplier.class)
+                () -> PartialInterface.check(InterfaceWithoutIntSupplier.class)
         );
     }
 
@@ -80,7 +80,7 @@ public class RepeatedAnnotationTest {
     void test_interface_invalid_noStringSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> Checker.check(InterfaceWithoutStringSupplier.class)
+                () -> PartialInterface.check(InterfaceWithoutStringSupplier.class)
         );
     }
 
