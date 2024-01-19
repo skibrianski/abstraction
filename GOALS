@@ -13,6 +13,9 @@ questions:
 limitations:
 - refactoring cannot be done automatically in an IDE
 
+notes:
+- varargs should be specified as eg int[].class, as under the covers that is how java treats it.
+
 design notes:
 - use class annotations, not method annotations, b/c of potential return type confusion
 - use classgraph instead of ctor checks b/c an interface cannot run code at init or clinit time.

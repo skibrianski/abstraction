@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class VarArgsTest {
 
-//    @PartialInterface(returnType = String.class, varArgType = int.class, methodName = "concat")
+    @PartialInterface(returnType = String.class, argumentTypes = {String[].class}, methodName = "concat")
     interface WithConcatenation { }
 
     public interface InvalidInterface extends WithConcatenation { }
@@ -18,8 +18,8 @@ public class VarArgsTest {
     public static class InvalidClass implements WithConcatenation { }
 
     public static class ValidClass implements WithConcatenation {
-        public String concat(String input1, String input2) {
-            return input1.concat(input2);
+        public String concat(String... inputs) {
+            return String.join("", inputs);
         }
     }
 

@@ -10,8 +10,7 @@ public final class TestUtil {
             boolean isStatic,
             Class<?> returnType,
             String methodName,
-            Class<?>[] argumentTypes,
-            boolean lastArgumentIsVarArgs
+            Class<?>[] argumentTypes
     ) {
         return new PartialInterface() {
             @Override
@@ -27,11 +26,6 @@ public final class TestUtil {
             @Override
             public Class<?>[] argumentTypes() {
                 return argumentTypes;
-            }
-
-            @Override
-            public boolean lastArgumentIsVarArgs() {
-                return lastArgumentIsVarArgs;
             }
 
             @Override

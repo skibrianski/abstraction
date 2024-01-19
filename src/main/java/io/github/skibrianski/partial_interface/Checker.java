@@ -51,11 +51,14 @@ public final class Checker {
                 Class<?> implementation = implementationClassInfo.loadClass();
                 Method[] methods = implementation.getMethods();
                 for (PartialInterface partialInterface : partialInterfaces) {
-                    PartialInterface.Util.validate(partialInterface);
                     List<Method> matchingMethods = Arrays.stream(methods)
                             .filter(m -> m.getName().equals(partialInterface.methodName()))
                             .filter(m -> m.getReturnType().equals(partialInterface.returnType()))
-                            .filter(m -> Arrays.equals(m.getParameterTypes(), partialInterface.argumentTypes()))
+                            .filter(m -> {
+                                var a = m.getParameterTypes();
+                                var b = partialInterface.argumentTypes();
+                                return Arrays.equals(m.getParameterTypes(), partialInterface.argumentTypes());
+                            })
                             .collect(Collectors.toList());
                     if (matchingMethods.isEmpty()) {
                         throw new PartialInterfaceNotCompletedException(
