@@ -58,15 +58,15 @@ public final class Checker {
                             .collect(Collectors.toList());
                     if (matchingMethods.isEmpty()) {
                         throw new PartialInterfaceNotCompletedException(
-                                "implementation " + implementation
+                                "implementation " + implementation.getName()
                                         + " does not implement partial interface method: "
                                         + PartialInterface.Util.stringify(partialInterface)
                         );
                     }
                     if (matchingMethods.size() > 1) {
                         throw new PartialInterfaceException(
-                                "bug: internal error: implementation " + implementation
-                                        + "implements more than one matching interface method matching: "
+                                "bug: internal error: implementation " + implementation.getName()
+                                        + " implements more than one matching interface method matching: "
                                         + PartialInterface.Util.stringify(partialInterface)
                                         + ". please report this error."
                         );
