@@ -19,6 +19,8 @@ public @interface RequiresChildMethod {
         TypeType type() default TypeType.REGULAR;
     }
 
+    interface FirstParameter { }
+
     enum TypeType {
         REGULAR,
         PARAMETERIZED;

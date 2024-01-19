@@ -52,4 +52,6 @@ public class ObjectTest {
                 () -> PartialInterface.check(InvalidInterface.class)
         );
     }
+
+    // TODO: negative test cases for 1. wrong name 2. wrong return type 3. wrong parameter types
 }

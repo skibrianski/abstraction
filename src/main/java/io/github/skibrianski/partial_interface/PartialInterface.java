@@ -50,12 +50,26 @@ public final class PartialInterface {
             for (ClassInfo implementationClassInfo : implementations) {
                 Class<?> implementation = implementationClassInfo.loadClass();
                 Method[] methods = implementation.getMethods();
+                HasTypeParameters hasTypeParameters = implementation.getAnnotation(HasTypeParameters.class);
+                Class<?>[] typeParameters = hasTypeParameters == null
+                        ? new Class<?>[0]
+                        : hasTypeParameters.value();
                 for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
                     List<Method> matchingMethods = Arrays.stream(methods)
                             .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
                             .filter(m -> {
-                                if (requiresChildMethod.returnType().type() == RequiresChildMethod.TypeType.REGULAR) {
-                                    return m.getReturnType().equals(requiresChildMethod.returnType().value());
+                                switch (requiresChildMethod.returnType().type()) {
+                                    case REGULAR:
+                                        return m.getReturnType().equals(requiresChildMethod.returnType().value());
+                                    case PARAMETERIZED:
+                                        if (requiresChildMethod.returnType().value().equals(RequiresChildMethod.FirstParameter.class)) {
+                                            if (typeParameters.length == 0) {
+                                                throw new PartialInterfaceUsageException(
+                                                        "no type parameter. missing @HasTypeParameters?" // TODO: more detail
+                                                );
+                                            }
+                                            return m.getReturnType().equals(typeParameters[0]);
+                                        }
                                 }
                                 throw new RuntimeException("unimplemented");
                             })
