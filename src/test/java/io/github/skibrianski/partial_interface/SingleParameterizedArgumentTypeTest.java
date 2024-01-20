@@ -12,12 +12,7 @@ public class SingleParameterizedArgumentTypeTest {
     @RequiresTypeParameters(count = 1)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(void.class),
-            argumentTypes = {
-                    @RequiresChildMethod.Type(
-                            value = RequiresChildMethod.FirstParameter.class,
-                            type = RequiresChildMethod.TypeType.PARAMETERIZED
-                    )
-            },
+            argumentTypes = {@RequiresChildMethod.Type(RequiresChildMethod.FirstParameter.class)},
             methodName = "method"
     )
     interface HasMethodWithLoneTypeParameter { }

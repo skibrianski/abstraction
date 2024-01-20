@@ -16,16 +16,12 @@ public @interface RequiresChildMethod {
 
     @interface Type {
         Class<?> value();
-        TypeType type() default TypeType.REGULAR;
     }
 
-    interface FirstParameter { }
-    interface SecondParameter { }
+    interface Parameter { }
+    interface FirstParameter extends Parameter { }
+    interface SecondParameter extends Parameter { }
 
-    enum TypeType {
-        REGULAR,
-        PARAMETERIZED;
-    }
 
     class Util {
         public static String stringify(RequiresChildMethod requiresChildMethod) {
@@ -44,18 +40,17 @@ public @interface RequiresChildMethod {
         }
 
         public static String stringify(Type type) {
-            switch(type.type()) {
-                case REGULAR:
-                    return type.value().getSimpleName();
-                case PARAMETERIZED:
-                    if (type.value().equals(FirstParameter.class)) {
-                        return "P1";
-                    }
-                    if (type.value().equals(SecondParameter.class)) {
-                        return "P2";
-                    }
+            if (RequiresChildMethod.Parameter.class.isAssignableFrom(type.value())) {
+                if (type.value().equals(FirstParameter.class)) {
+                    return "P1";
+                }
+                if (type.value().equals(SecondParameter.class)) {
+                    return "P2";
+                }
+                throw new RuntimeException("unimplemented");
+            } else {
+                return type.value().getSimpleName();
             }
-            throw new RuntimeException("unimplemented");
         }
     }
 }

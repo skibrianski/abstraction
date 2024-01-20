@@ -18,11 +18,6 @@ public final class TestUtil {
             public Class<?> value() {
                 return classType;
             }
-
-            @Override
-            public RequiresChildMethod.TypeType type() {
-                return RequiresChildMethod.TypeType.REGULAR;
-            }
         };
     }
 
