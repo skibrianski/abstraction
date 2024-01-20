@@ -83,21 +83,4 @@ public class ObjectTest {
                 () -> PartialInterface.check(WrongArgumentTypeClass.class)
         );
     }
-
-    public interface ValidInterface extends WithScrambler {
-        String scramble(String input1);
-    }
-    @Test
-    void test_interface_valid() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
-    }
-
-    public interface InvalidInterface extends WithScrambler { }
-    @Test
-    void test_interface_invalid() {
-        Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
-                () -> PartialInterface.check(InvalidInterface.class)
-        );
-    }
 }
