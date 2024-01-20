@@ -23,12 +23,64 @@ public class ObjectTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
-    public static class InvalidClass implements WithScrambler { }
+    public static class NoMethodClass implements WithScrambler { }
     @Test
-    void test_class_invalid() {
+    void test_class_invalid_noMethod() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> PartialInterface.check(InvalidClass.class)
+                () -> PartialInterface.check(NoMethodClass.class)
+        );
+    }
+
+    public static class WrongReturnTypeClass implements WithScrambler {
+        public int scramble(String input1) {
+            return 3;
+        }
+    }
+    @Test
+    void test_class_invalid_wrongReturnType() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(WrongReturnTypeClass.class)
+        );
+    }
+
+    public static class MissingArgumentClass implements WithScrambler {
+        public String scramble() {
+            return "gah";
+        }
+    }
+    @Test
+    void test_class_invalid_missingArgument() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(MissingArgumentClass.class)
+        );
+    }
+
+    public static class ExtraArgumentClass implements WithScrambler {
+        public String scramble(String input, int extraArg) {
+            return input;
+        }
+    }
+    @Test
+    void test_class_invalid_extraArgument() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(ExtraArgumentClass.class)
+        );
+    }
+
+    public static class WrongArgumentTypeClass implements WithScrambler {
+        public String scramble(int input) {
+            return "gah";
+        }
+    }
+    @Test
+    void test_class_invalid_wrongArgumentType() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(WrongArgumentTypeClass.class)
         );
     }
 
@@ -48,6 +100,4 @@ public class ObjectTest {
                 () -> PartialInterface.check(InvalidInterface.class)
         );
     }
-
-    // TODO: negative test cases for 1. wrong name 2. wrong return type 3. wrong parameter types
 }
