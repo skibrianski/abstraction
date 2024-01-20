@@ -19,13 +19,13 @@ public class ObjectTest {
         }
     }
     @Test
-    void test_class_valid() {
+    void test_valid() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
     public static class NoMethodClass implements WithScrambler { }
     @Test
-    void test_class_invalid_noMethod() {
+    void test_invalid_noMethod() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(NoMethodClass.class)
@@ -38,7 +38,7 @@ public class ObjectTest {
         }
     }
     @Test
-    void test_class_invalid_wrongReturnType() {
+    void test_invalid_wrongReturnType() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(WrongReturnTypeClass.class)
@@ -51,7 +51,7 @@ public class ObjectTest {
         }
     }
     @Test
-    void test_class_invalid_missingArgument() {
+    void test_invalid_missingArgument() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(MissingArgumentClass.class)
@@ -64,7 +64,7 @@ public class ObjectTest {
         }
     }
     @Test
-    void test_class_invalid_extraArgument() {
+    void test_invalid_extraArgument() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(ExtraArgumentClass.class)
@@ -77,7 +77,7 @@ public class ObjectTest {
         }
     }
     @Test
-    void test_class_invalid_wrongArgumentType() {
+    void test_invalid_wrongArgumentType() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(WrongArgumentTypeClass.class)

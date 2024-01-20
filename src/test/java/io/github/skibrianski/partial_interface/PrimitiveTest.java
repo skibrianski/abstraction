@@ -20,13 +20,13 @@ public class PrimitiveTest {
         }
     }
     @Test
-    void test_class_valid() {
+    void test_valid() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
     public static class InvalidClass implements WithTriple { }
     @Test
-    void test_class_invalid() {
+    void test_invalid() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(InvalidClass.class)

@@ -17,13 +17,13 @@ public class InterfaceTest {
         String scramble(String input1);
     }
     @Test
-    void test_interface_valid() {
+    void test_valid() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
     }
 
     public interface InvalidInterface extends WithScrambler { }
     @Test
-    void test_interface_invalid() {
+    void test_invalid() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(InvalidInterface.class)

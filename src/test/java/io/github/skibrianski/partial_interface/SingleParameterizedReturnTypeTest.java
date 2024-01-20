@@ -18,13 +18,13 @@ public class SingleParameterizedReturnTypeTest {
     interface ReturnsLoneTypeParameter { }
 
     @HasTypeParameters({int.class})
-    public class Valid implements ReturnsLoneTypeParameter {
+    public static class Valid implements ReturnsLoneTypeParameter {
         public int method() {
             return 3;
         }
     }
     @Test
-    void test_interface_valid() {
+    void test_valid() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 }

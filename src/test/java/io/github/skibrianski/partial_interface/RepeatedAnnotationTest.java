@@ -28,7 +28,7 @@ public class RepeatedAnnotationTest {
         }
     }
     @Test
-    void test_class_valid() {
+    void test_valid() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
@@ -38,7 +38,7 @@ public class RepeatedAnnotationTest {
         }
     }
     @Test
-    void test_class_invalid_noIntSupplier() {
+    void test_invalid_noIntSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(ClassWithoutIntSupplier.class)
@@ -51,7 +51,7 @@ public class RepeatedAnnotationTest {
         }
     }
     @Test
-    void test_class_invalid_noStringSupplier() {
+    void test_invalid_noStringSupplier() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
                 () -> PartialInterface.check(ClassWithoutStringSupplier.class)
