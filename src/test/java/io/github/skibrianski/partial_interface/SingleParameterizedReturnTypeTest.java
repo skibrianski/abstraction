@@ -25,7 +25,7 @@ public class SingleParameterizedReturnTypeTest {
         }
     }
     @Test
-    void test_valid() {
+    void test_valid_exactTypeMatch() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithExactTypeParameterMatch.class));
     }
 
@@ -38,9 +38,8 @@ public class SingleParameterizedReturnTypeTest {
             return null;
         }
     }
-    // TODO: this is true whether its a type param or not. fix up ObjectTest, maybe others.
     @Test
-    void test_valid2() {
+    void test_valid_childTypeMatch() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildOfTypeParameter.class));
     }
 

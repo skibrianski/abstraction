@@ -93,7 +93,9 @@ public final class PartialInterface {
     ) {
         switch (returnType.type()) {
             case REGULAR:
-                return method.getReturnType().equals(returnType.value());
+                // TODO: is assignable From
+                return returnType.value().isAssignableFrom(method.getReturnType());
+//                return method.getReturnType().equals(returnType.value());
             case PARAMETERIZED:
                 if (returnType.value().equals(RequiresChildMethod.FirstParameter.class)) {
                     if (typeParameters.length == 0) {
@@ -101,7 +103,7 @@ public final class PartialInterface {
                                 "no type parameter. missing @HasTypeParameters?" // TODO: more detail
                         );
                     }
-                    return method.getReturnType().equals(typeParameters[0]);
+                    return typeParameters[0].isAssignableFrom(method.getReturnType());
                 }
         }
         throw new RuntimeException("unimplemented");

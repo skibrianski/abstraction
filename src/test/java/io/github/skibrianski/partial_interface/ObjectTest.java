@@ -6,22 +6,45 @@ import org.junit.jupiter.api.Test;
 
 public class ObjectTest {
 
+    public static class A { }
+    public static class AChild extends A { }
+
     @RequiresChildMethod(
-            returnType = @RequiresChildMethod.Type(String.class),
-            argumentTypes = {String.class},
+            returnType = @RequiresChildMethod.Type(A.class),
+            argumentTypes = {A.class},
             methodName = "scramble"
     )
     interface WithScrambler { }
 
-    public static class ValidClass implements WithScrambler {
-        public String scramble(String input1) {
+    public static class ValidClassExactMatch implements WithScrambler {
+        public A scramble(A input1) {
             return input1;
         }
     }
     @Test
-    void test_valid() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
+    void test_valid_exactMatch() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassExactMatch.class));
     }
+
+    public static class ValidWithChildReturnType implements WithScrambler {
+        public AChild scramble(A input1) {
+            return null;
+        }
+    }
+    @Test
+    void test_valid_childReturnType() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildReturnType.class));
+    }
+
+//    public static class ValidWithChildParameterType implements WithScrambler {
+//        public A scramble(AChild input1) {
+//            return null;
+//        }
+//    }
+//    @Test
+//    void test_valid_childParameterType() {
+//        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildParameterType.class));
+//    }
 
     public static class NoMethodClass implements WithScrambler { }
     @Test
@@ -33,7 +56,7 @@ public class ObjectTest {
     }
 
     public static class WrongReturnTypeClass implements WithScrambler {
-        public int scramble(String input1) {
+        public int scramble(A input1) {
             return 3;
         }
     }
@@ -46,8 +69,8 @@ public class ObjectTest {
     }
 
     public static class MissingArgumentClass implements WithScrambler {
-        public String scramble() {
-            return "gah";
+        public A scramble() {
+            return new A();
         }
     }
     @Test
@@ -59,7 +82,7 @@ public class ObjectTest {
     }
 
     public static class ExtraArgumentClass implements WithScrambler {
-        public String scramble(String input, int extraArg) {
+        public A scramble(A input, int extraArg) {
             return input;
         }
     }
@@ -72,8 +95,8 @@ public class ObjectTest {
     }
 
     public static class WrongArgumentTypeClass implements WithScrambler {
-        public String scramble(int input) {
-            return "gah";
+        public A scramble(int input) {
+            return new A();
         }
     }
     @Test
