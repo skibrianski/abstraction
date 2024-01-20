@@ -10,8 +10,14 @@ public class MultipleParameterizedArgumentTypesTest {
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(void.class),
             argumentTypes = {
-                    @RequiresChildMethod.Type(RequiresChildMethod.FirstParameter.class),
-                    @RequiresChildMethod.Type(RequiresChildMethod.SecondParameter.class)
+                    @RequiresChildMethod.Type(
+                            value = RequiresChildMethod.TypeParameter.class,
+                            parameterNumber = 1
+                    ),
+                    @RequiresChildMethod.Type(
+                            value = RequiresChildMethod.TypeParameter.class,
+                            parameterNumber = 2
+                    )
             },
             methodName = "method"
     )

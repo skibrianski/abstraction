@@ -114,28 +114,19 @@ public final class PartialInterface {
             RequiresChildMethod.Type type,
             Class<?>[] typeParameters
     ) {
-        if (RequiresChildMethod.Parameter.class.isAssignableFrom(type.value())) {
-            if (type.value().equals(RequiresChildMethod.FirstParameter.class)) {
-                if (typeParameters.length == 0) {
-                    // TODO: needs test
-                    throw new PartialInterfaceUsageException(
-                            "no type parameter. missing @HasTypeParameters?" // TODO: more detail
-                    );
-                }
-                return typeParameters[0].isAssignableFrom(implementedType);
-            } else if (type.value().equals(RequiresChildMethod.SecondParameter.class)) {
-                if (typeParameters.length < 2) {
-                    // TODO: needs test
-                    throw new PartialInterfaceUsageException(
-                            "not enough type parameters" // TODO: more detail
-                    );
-                }
-                return typeParameters[1].isAssignableFrom(implementedType);
+        if (RequiresChildMethod.TypeParameter.class.isAssignableFrom(type.value())) {
+            int parameterIndex = type.parameterNumber() - 1;
+            if (parameterIndex >= typeParameters.length) {
+                // TODO: needs test?
+                // TODO: special case for no params "no type parameter. missing @HasTypeParameters?"
+                throw new PartialInterfaceUsageException(
+                        "not enough type parameters" // TODO: more detail
+                );
             }
+            return typeParameters[parameterIndex].isAssignableFrom(implementedType);
         } else {
             return type.value().isAssignableFrom(implementedType);
         }
-        throw new RuntimeException("unimplemented");
     }
 }
 

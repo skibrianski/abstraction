@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +15,10 @@ public @interface RequiresChildMethod {
 
     @interface Type {
         Class<?> value();
+        int parameterNumber() default -1; // TODO: a little weird that these start at 0. names would be better anyhow
     }
 
-    interface Parameter { }
-    interface FirstParameter extends Parameter { }
-    interface SecondParameter extends Parameter { }
-
+    interface TypeParameter { }
 
     class Util {
         public static String stringify(RequiresChildMethod requiresChildMethod) {
@@ -40,14 +37,9 @@ public @interface RequiresChildMethod {
         }
 
         public static String stringify(Type type) {
-            if (RequiresChildMethod.Parameter.class.isAssignableFrom(type.value())) {
-                if (type.value().equals(FirstParameter.class)) {
-                    return "P1";
-                }
-                if (type.value().equals(SecondParameter.class)) {
-                    return "P2";
-                }
-                throw new RuntimeException("unimplemented");
+            if (TypeParameter.class.isAssignableFrom(type.value())) {
+                int parameterNumber = type.parameterNumber();
+                return "P" + parameterNumber;
             } else {
                 return type.value().getSimpleName();
             }

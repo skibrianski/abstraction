@@ -9,7 +9,10 @@ public class ParameterizedReturnTypeTest {
     // TODO: return type can be child of typeParam, eg `LocalDate foo()` satisfies `Temporal foo()`
     @RequiresTypeParameters(count = 1)
     @RequiresChildMethod(
-            returnType = @RequiresChildMethod.Type(RequiresChildMethod.FirstParameter.class),
+            returnType = @RequiresChildMethod.Type(
+                    value = RequiresChildMethod.TypeParameter.class,
+                    parameterNumber = 1
+            ),
             argumentTypes = {},
             methodName = "method"
     )
