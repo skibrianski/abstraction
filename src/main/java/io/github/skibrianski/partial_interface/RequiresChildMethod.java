@@ -20,6 +20,7 @@ public @interface RequiresChildMethod {
     }
 
     interface FirstParameter { }
+    interface SecondParameter { }
 
     enum TypeType {
         REGULAR,
@@ -49,6 +50,9 @@ public @interface RequiresChildMethod {
                 case PARAMETERIZED:
                     if (type.value().equals(FirstParameter.class)) {
                         return "P1";
+                    }
+                    if (type.value().equals(SecondParameter.class)) {
+                        return "P2";
                     }
             }
             throw new RuntimeException("unimplemented");

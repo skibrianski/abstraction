@@ -118,6 +118,7 @@ public final class PartialInterface {
             case REGULAR:
                 return type.value().isAssignableFrom(implementedType);
             case PARAMETERIZED:
+                // TODO: this is yuck-o
                 if (type.value().equals(RequiresChildMethod.FirstParameter.class)) {
                     if (typeParameters.length == 0) {
                         // TODO: needs test
@@ -126,6 +127,14 @@ public final class PartialInterface {
                         );
                     }
                     return typeParameters[0].isAssignableFrom(implementedType);
+                } else if (type.value().equals(RequiresChildMethod.SecondParameter.class)) {
+                    if (typeParameters.length < 2) {
+                        // TODO: needs test
+                        throw new PartialInterfaceUsageException(
+                                "not enough type parameters" // TODO: more detail
+                        );
+                    }
+                    return typeParameters[1].isAssignableFrom(implementedType);
                 }
         }
         throw new RuntimeException("unimplemented");
