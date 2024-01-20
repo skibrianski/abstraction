@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface;
 
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.util.Arrays;
 import java.util.List;
@@ -7,9 +8,8 @@ import java.util.stream.Collectors;
 
 @Repeatable(RequiresChildMethods.class)
 public @interface RequiresChildMethod {
-    // TODO: support parameterized types
+    // TODO: should return type default to Void and argumentTypes default to {} ?
     Type returnType();
-    // TODO: support parameterized types
     Type[] argumentTypes();
     String methodName();
     boolean isStatic() default false;

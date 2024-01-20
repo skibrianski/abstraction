@@ -6,9 +6,22 @@ import org.junit.jupiter.api.Test;
 
 public class ParameterizedArgumentTypeTest {
 
-    @Test
-    void test_TODO() {
-        throw new RuntimeException("not implemented");
-    }
+//    @RequiresTypeParameters(count = 1)
+//    @RequiresChildMethod(
+//            returnType = @RequiresChildMethod.Type(Void.class),
+//            argumentTypes = {
+//                    @RequiresChildMethod.Type(
+//                            value = RequiresChildMethod.FirstParameter.class,
+//                            type = RequiresChildMethod.TypeType.PARAMETERIZED
+//                    )
+//            },
+//            methodName = "method"
+//    )
+//    interface AcceptsLoneTypeParameter { }
+//
+//    @Test
+//    void test_TODO() {
+//        throw new RuntimeException("not implemented");
+//    }
 
 }

@@ -8,6 +8,20 @@ import testutil.TestUtil;
 public class UtilTest {
 
     @Test
+    void test_toString_withVoidReturnAndNoArguments() {
+        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+                false,
+                TestUtil.buildRegularType(void.class),
+                "foo",
+                new RequiresChildMethod.Type[]{}
+        );
+        Assertions.assertEquals(
+                "void foo()",
+                RequiresChildMethod.Util.stringify(requiresChildMethod)
+        );
+    }
+
+    @Test
     void test_toString_withNoArguments() {
         RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
                 false,
