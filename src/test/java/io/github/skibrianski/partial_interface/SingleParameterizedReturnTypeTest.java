@@ -18,43 +18,13 @@ public class SingleParameterizedReturnTypeTest {
     interface ReturnsLoneTypeParameter { }
 
     @HasTypeParameters({int.class})
-    public interface ValidInterface extends ReturnsLoneTypeParameter {
-        int method();
+    public class Valid implements ReturnsLoneTypeParameter {
+        public int method() {
+            return 3;
+        }
     }
     @Test
     void test_interface_valid() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
-
-//    // TODO: lots more invalid cases
-//    public interface InvalidInterface extends ReturnsLoneTypeParameter { }
-//    @Test
-//    void test_interface_invalid() {
-//        Assertions.assertThrows(
-//                PartialInterfaceNotCompletedException.class,
-//                () -> PartialInterface.check(InvalidInterface.class)
-//        );
-//    }
-
-//    public static class InvalidClass implements ReturnsLoneTypeParameter { }
-//
-//    public static class ValidClass implements ReturnsLoneTypeParameter {
-//        public String scramble(String input1) {
-//            return input1;
-//        }
-//    }
-//
-//    @Test
-//    void test_class_valid() {
-//        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
-//    }
-//
-//    @Test
-//    void test_class_invalid() {
-//        Assertions.assertThrows(
-//                PartialInterfaceNotCompletedException.class,
-//                () -> PartialInterface.check(InvalidClass.class)
-//        );
-//    }
-
 }

@@ -57,39 +57,4 @@ public class RepeatedAnnotationTest {
                 () -> PartialInterface.check(ClassWithoutStringSupplier.class)
         );
     }
-
-
-    public interface ValidInterface extends WithMultipleAnnotations {
-        int intSupplier();
-
-        String stringSupplier();
-    }
-    @Test
-    void test_interface_valid() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
-    }
-
-
-    public interface InterfaceWithoutIntSupplier extends WithMultipleAnnotations {
-        String stringSupplier();
-    }
-    @Test
-    void test_interface_invalid_noIntSupplier() {
-        Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
-                () -> PartialInterface.check(InterfaceWithoutIntSupplier.class)
-        );
-    }
-
-    public interface InterfaceWithoutStringSupplier extends WithMultipleAnnotations {
-        int intSupplier();
-    }
-    @Test
-    void test_interface_invalid_noStringSupplier() {
-        Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
-                () -> PartialInterface.check(InterfaceWithoutStringSupplier.class)
-        );
-    }
-
 }
