@@ -94,7 +94,7 @@ public final class PartialInterface {
             Class<?>[] requiredParameterTypes,
             Class<?>[] typeParameters
     ) {
-        var parameterTypes = implementedMethod.getParameterTypes();
+        Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
         if (requiredParameterTypes.length != parameterTypes.length) {
             return false;
         }
