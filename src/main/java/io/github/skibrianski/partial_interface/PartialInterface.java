@@ -63,8 +63,10 @@ public final class PartialInterface {
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> validateReturnType(m, requiresChildMethod.returnType(), typeParameters))
-                    .filter(m -> Arrays.equals(m.getParameterTypes(), requiresChildMethod.argumentTypes()))
+                    .filter(m -> validateType(m.getReturnType(), requiresChildMethod.returnType(), typeParameters))
+                    .filter(m ->
+                        validateArgumentTypes(m, requiresChildMethod.argumentTypes(), typeParameters)
+                    )
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
                 String message = "implementation " + implementation.getName()
@@ -86,24 +88,39 @@ public final class PartialInterface {
         }
     }
 
-    private static boolean validateReturnType(
-            Method method,
-            RequiresChildMethod.Type returnType,
+    // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
+    private static boolean validateArgumentTypes(
+            Method implementedMethod,
+            Class<?>[] requiredParameterTypes,
             Class<?>[] typeParameters
     ) {
-        switch (returnType.type()) {
+        var parameterTypes = implementedMethod.getParameterTypes();
+        if (requiredParameterTypes.length != parameterTypes.length) {
+            return false;
+        }
+//        for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
+//            boolean argumentOk = validateType(implementedMethod.getParameterTypes()[pos], requiredParameterTypes[pos], typeParameters);
+//        }
+        return Arrays.equals(implementedMethod.getParameterTypes(), requiredParameterTypes);
+    }
+
+    // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
+    private static boolean validateType(
+            Class<?> implementedType,
+            RequiresChildMethod.Type type,
+            Class<?>[] typeParameters
+    ) {
+        switch (type.type()) {
             case REGULAR:
-                // TODO: is assignable From
-                return returnType.value().isAssignableFrom(method.getReturnType());
-//                return method.getReturnType().equals(returnType.value());
+                return type.value().isAssignableFrom(implementedType);
             case PARAMETERIZED:
-                if (returnType.value().equals(RequiresChildMethod.FirstParameter.class)) {
+                if (type.value().equals(RequiresChildMethod.FirstParameter.class)) {
                     if (typeParameters.length == 0) {
                         throw new PartialInterfaceUsageException(
                                 "no type parameter. missing @HasTypeParameters?" // TODO: more detail
                         );
                     }
-                    return typeParameters[0].isAssignableFrom(method.getReturnType());
+                    return typeParameters[0].isAssignableFrom(implementedType);
                 }
         }
         throw new RuntimeException("unimplemented");

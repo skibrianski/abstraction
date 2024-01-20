@@ -36,15 +36,15 @@ public class ObjectTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildReturnType.class));
     }
 
-//    public static class ValidWithChildParameterType implements WithScrambler {
-//        public A scramble(AChild input1) {
-//            return null;
-//        }
-//    }
-//    @Test
-//    void test_valid_childParameterType() {
-//        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildParameterType.class));
-//    }
+    public static class ValidWithChildParameterType implements WithScrambler {
+        public A scramble(AChild input1) {
+            return null;
+        }
+    }
+    @Test
+    void test_valid_childParameterType() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildParameterType.class));
+    }
 
     public static class NoMethodClass implements WithScrambler { }
     @Test
