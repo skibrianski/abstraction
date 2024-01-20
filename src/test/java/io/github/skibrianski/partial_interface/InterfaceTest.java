@@ -8,7 +8,7 @@ public class InterfaceTest {
 
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(String.class),
-            argumentTypes = {String.class},
+            argumentTypes = {@RequiresChildMethod.Type(String.class)},
             methodName = "scramble"
     )
     interface WithScrambler { }

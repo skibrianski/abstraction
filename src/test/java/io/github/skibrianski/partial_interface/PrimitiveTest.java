@@ -8,7 +8,7 @@ public class PrimitiveTest {
 
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(int.class),
-            argumentTypes = {int.class},
+            argumentTypes = {@RequiresChildMethod.Type(int.class)},
             methodName = "triple"
     )
     interface WithTriple { }

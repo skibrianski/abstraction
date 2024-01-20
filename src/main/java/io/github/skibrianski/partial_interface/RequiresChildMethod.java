@@ -10,7 +10,7 @@ public @interface RequiresChildMethod {
     // TODO: support parameterized types
     Type returnType();
     // TODO: support parameterized types
-    Class<?>[] argumentTypes();
+    Type[] argumentTypes();
     String methodName();
     boolean isStatic() default false;
 
@@ -29,7 +29,7 @@ public @interface RequiresChildMethod {
     class Util {
         public static String stringify(RequiresChildMethod requiresChildMethod) {
             List<String> argumentTypeList = Arrays.stream(requiresChildMethod.argumentTypes())
-                    .map(Class::getSimpleName)
+                    .map(Util::stringify)
                     .collect(Collectors.toList());
             String argumentString = String.join(", ", argumentTypeList);
             String staticPrefix = requiresChildMethod.isStatic() ? "static " : "";

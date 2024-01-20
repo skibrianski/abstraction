@@ -30,7 +30,7 @@ public final class TestUtil {
             boolean isStatic,
             RequiresChildMethod.Type returnType,
             String methodName,
-            Class<?>[] argumentTypes
+            RequiresChildMethod.Type[] argumentTypes
     ) {
         return new RequiresChildMethod() {
             @Override
@@ -44,7 +44,7 @@ public final class TestUtil {
             }
 
             @Override
-            public Class<?>[] argumentTypes() {
+            public Type[] argumentTypes() {
                 return argumentTypes;
             }
 

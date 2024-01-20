@@ -4,7 +4,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SingleParameterizedReturnTypeTest {
+public class ParameterizedReturnTypeTest {
 
     // TODO: return type can be child of typeParam, eg `LocalDate foo()` satisfies `Temporal foo()`
     @RequiresTypeParameters(count = 1)

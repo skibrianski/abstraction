@@ -78,6 +78,7 @@ public final class PartialInterface {
                 throw new PartialInterfaceNotCompletedException(message);
             }
             if (matchingMethods.size() > 1) {
+                // TODO: is this possible? if not, remove it.
                 throw new PartialInterfaceException(
                         "bug: internal error: implementation " + implementation.getName()
                                 + " implements more than one matching interface method matching: "
@@ -91,17 +92,20 @@ public final class PartialInterface {
     // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
     private static boolean validateArgumentTypes(
             Method implementedMethod,
-            Class<?>[] requiredParameterTypes,
+            RequiresChildMethod.Type[] requiredParameterTypes,
             Class<?>[] typeParameters
     ) {
         Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
         if (requiredParameterTypes.length != parameterTypes.length) {
             return false;
         }
-//        for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
-//            boolean argumentOk = validateType(implementedMethod.getParameterTypes()[pos], requiredParameterTypes[pos], typeParameters);
-//        }
-        return Arrays.equals(implementedMethod.getParameterTypes(), requiredParameterTypes);
+        for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
+            boolean argumentOk = validateType(implementedMethod.getParameterTypes()[pos], requiredParameterTypes[pos], typeParameters);
+            if (!argumentOk) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
@@ -116,6 +120,7 @@ public final class PartialInterface {
             case PARAMETERIZED:
                 if (type.value().equals(RequiresChildMethod.FirstParameter.class)) {
                     if (typeParameters.length == 0) {
+                        // TODO: needs test
                         throw new PartialInterfaceUsageException(
                                 "no type parameter. missing @HasTypeParameters?" // TODO: more detail
                         );

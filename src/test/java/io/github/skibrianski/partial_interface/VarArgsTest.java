@@ -8,7 +8,7 @@ public class VarArgsTest {
 
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(String.class),
-            argumentTypes = {String[].class},
+            argumentTypes = {@RequiresChildMethod.Type(String[].class)},
             methodName = "concat"
     )
     interface WithConcatenation { }

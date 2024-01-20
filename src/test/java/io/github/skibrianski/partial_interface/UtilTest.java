@@ -13,7 +13,7 @@ public class UtilTest {
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
-                new Class<?>[0]
+                new RequiresChildMethod.Type[]{}
         );
         Assertions.assertEquals(
                 "int foo()",
@@ -27,7 +27,9 @@ public class UtilTest {
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
-                new Class<?>[]{String.class}
+                new RequiresChildMethod.Type[]{
+                        TestUtil.buildRegularType(String.class)
+                }
         );
         Assertions.assertEquals(
                 "int foo(String)",
@@ -41,7 +43,10 @@ public class UtilTest {
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
-                new Class<?>[]{String.class, Object.class}
+                new RequiresChildMethod.Type[]{
+                        TestUtil.buildRegularType(String.class),
+                        TestUtil.buildRegularType(Object.class)
+                }
         );
         Assertions.assertEquals(
                 "int foo(String, Object)",
@@ -55,7 +60,7 @@ public class UtilTest {
                 true,
                 TestUtil.buildRegularType(int.class),
                 "foo",
-                new Class<?>[0]
+                new RequiresChildMethod.Type[]{}
         );
         Assertions.assertEquals(
                 "static int foo()",

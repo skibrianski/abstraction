@@ -11,7 +11,7 @@ public class ObjectTest {
 
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(A.class),
-            argumentTypes = {A.class},
+            argumentTypes = {@RequiresChildMethod.Type(A.class)},
             methodName = "scramble"
     )
     interface WithScrambler { }
