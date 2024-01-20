@@ -47,9 +47,11 @@ public @interface RequiresChildMethod {
                 case REGULAR:
                     return type.value().getSimpleName();
                 case PARAMETERIZED:
-                default:
-                    throw new RuntimeException("unimplemented");
+                    if (type.value().equals(FirstParameter.class)) {
+                        return "P1";
+                    }
             }
+            throw new RuntimeException("unimplemented");
         }
     }
 }

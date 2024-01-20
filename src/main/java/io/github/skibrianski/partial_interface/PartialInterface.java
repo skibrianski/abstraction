@@ -67,11 +67,13 @@ public final class PartialInterface {
                     .filter(m -> Arrays.equals(m.getParameterTypes(), requiresChildMethod.argumentTypes()))
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
-                throw new PartialInterfaceNotCompletedException(
-                        "implementation " + implementation.getName()
-                                + " does not implement partial interface method: "
-                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                );
+                String message = "implementation " + implementation.getName()
+                        + " does not implement partial interface method: "
+                        + RequiresChildMethod.Util.stringify(requiresChildMethod);
+                if (typeParameters.length > 0) {
+                    message += " with type parameters: " + Arrays.toString(typeParameters);
+                }
+                throw new PartialInterfaceNotCompletedException(message);
             }
             if (matchingMethods.size() > 1) {
                 throw new PartialInterfaceException(
