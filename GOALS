@@ -7,7 +7,6 @@
   - constructor constraints?
 
 todo:
-  - find a way to bypass manual call of PartialInterface.check() ?
   - support use of eg T<String> when T is Object
   - use in abstract class (not interface)
 
@@ -15,10 +14,8 @@ questions:
 - support use of eg Stream<T> -- will not work if T is primitive
   - could be supported with some alternative, eg Stream<T> for int would be an IntStream
 - support use of eg T<X> -- will not work if X is primitive.
-- how can check() be triggered automatically at clinit time of the child class?
 
 caveats:
-- for now, you have to call PartialInterface.check() at clinit time.
 - refactoring cannot be done automatically in an IDE
 - varargs must be specified as eg int[].class, as under the covers that is how java treats it.
 

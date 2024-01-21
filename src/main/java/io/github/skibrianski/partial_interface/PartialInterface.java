@@ -58,6 +58,7 @@ public final class PartialInterface {
                     .collect(Collectors.toList());
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
+                // TODO: this implementation is uggo.
                 if (!manual) {
                     if (implementationClassInfo.getAnnotationInfo(ValidatePartialInterfaceManually.class) != null) {
                         continue;
