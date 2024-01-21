@@ -9,10 +9,8 @@ import java.util.stream.Collectors;
 
 @Target({ElementType.TYPE})
 public @interface Type {
-
     Class<?> value();
     String parameterName() default "";
-    Type[] childParameters() default {};
 
     interface TypeParameter { }
 
