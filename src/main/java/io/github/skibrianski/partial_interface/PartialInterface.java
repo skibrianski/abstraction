@@ -126,7 +126,6 @@ public final class PartialInterface {
             Map<String, Class<?>> typeParameterMap
     ) {
         if (Type.TypeParameter.class.equals(type.value())) {
-
             StringTruncator parameterNameTruncator = new StringTruncator(type.parameterName())
                     .truncateOnce("...")
                     .truncateAll("[]");
@@ -136,11 +135,12 @@ public final class PartialInterface {
             Class<?> baseType = typeParameterMap.get(baseParameterName);
             if (baseType == null) {
                 if (baseParameterName.equals(type.parameterName())) {
-                    throw new PartialInterfaceUsageException(
+                    throw new PartialInterfaceNotCompletedException(
                             "cannot find type parameter: " + type.parameterName() // TODO: more detail
                     );
                 } else {
-                    throw new PartialInterfaceUsageException(
+                    // TODO: test coverage
+                    throw new PartialInterfaceNotCompletedException(
                             "cannot find base type parameter: " + baseParameterName // TODO: more detail
                                     + " for parameter: " + type.parameterName()
                     );
