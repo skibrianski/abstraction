@@ -9,6 +9,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceExcepti
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -123,17 +124,32 @@ public final class PartialInterface {
             Type type,
             Map<String, Class<?>> typeParameterMap
     ) {
-        if (Type.TypeParameter.class.isAssignableFrom(type.value())) {
-            Class<?> actualType = typeParameterMap.get(type.parameterName());
-            if (actualType == null) {
-//                // TODO: needs test?
-//                // TODO: special case for no params "no type parameter. missing @HasTypeParameters?"
+        if (Type.TypeParameter.class.equals(type.value())) {
+            String baseParameterName = type.parameterName();
+
+            int levels = 0;
+            if (baseParameterName.endsWith("...")) {
+                levels++;
+                baseParameterName = baseParameterName.replace("...", "");
+            }
+            while (baseParameterName.endsWith("[]")) {
+                levels++;
+                baseParameterName = baseParameterName.replace("[]", "");
+            }
+
+            Class<?> baseType = typeParameterMap.get(baseParameterName);
+            if (baseType == null) {
                 throw new PartialInterfaceUsageException(
                         "cannot find type parameter: " + type.parameterName() // TODO: more detail
                 );
             }
+
+            Class<?> actualType = baseType;
+            while (levels > 0) {
+                actualType = Array.newInstance(actualType, 0).getClass();
+                levels--;
+            }
             return actualType.isAssignableFrom(implementedType);
-//            return typeParameters[parameterIndex].isAssignableFrom(implementedType);
         } else {
             return type.value().isAssignableFrom(implementedType);
         }

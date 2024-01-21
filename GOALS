@@ -8,6 +8,7 @@
 
 todo:
   - support use of T[]
+  - use of multi-dimensional arrays eg T[][]
   - support use of eg T<String>
   - use in abstract class (not interface)
 
