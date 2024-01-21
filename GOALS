@@ -8,6 +8,7 @@
 
 todo:
   - support use of eg T<String> when T is Object
+  - could we assume boxing, eg if E = int.class, and a method must return List<E>, require return List<Integer> instead?
   - use in abstract class (not interface)
 
 questions:
