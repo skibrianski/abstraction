@@ -81,12 +81,11 @@ public final class PartialInterface {
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
+            TypeValidator typeValidator = new TypeValidator(typeParameterMap);
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> validateType(m.getReturnType(), requiresChildMethod.returnType(), typeParameterMap))
-                    .filter(m ->
-                        validateArgumentTypes(m, requiresChildMethod.argumentTypes(), typeParameterMap)
-                    )
+                    .filter(m -> typeValidator.validateType(m.getReturnType(), requiresChildMethod.returnType()))
+                    .filter(m -> typeValidator.validateArgumentTypes(m, requiresChildMethod.argumentTypes()))
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
                 String message = "implementation " + implementation.getName()
@@ -109,70 +108,5 @@ public final class PartialInterface {
         }
     }
 
-    private static boolean validateArgumentTypes(
-            Method implementedMethod,
-            Type[] requiredParameterTypes,
-            Map<String, Class<?>> typeParameterMap
-    ) {
-        Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
-        if (requiredParameterTypes.length != parameterTypes.length) {
-            return false;
-        }
-        for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
-            boolean argumentOk = validateType(
-                    implementedMethod.getParameterTypes()[pos],
-                    requiredParameterTypes[pos],
-                    typeParameterMap
-            );
-            if (!argumentOk) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean validateType(
-            Class<?> implementedType,
-            Type type,
-            Map<String, Class<?>> typeParameterMap
-    ) {
-        Class<?> actualType = Type.TypeParameter.class.equals(type.value())
-                ? getActualTypeForTypeParameter(type, typeParameterMap)
-                : type.value();
-        return actualType.isAssignableFrom(implementedType);
-    }
-
-    private static Class<?> getActualTypeForTypeParameter(
-            Type type,
-            Map<String, Class<?>> typeParameterMap
-    ) {
-        StringTruncator parameterNameTruncator = new StringTruncator(type.parameterName())
-                .truncateOnce("...")
-                .truncateAll("[]");
-        String baseParameterName = parameterNameTruncator.value();
-        int arrayLevels = parameterNameTruncator.truncationCount();
-
-        Class<?> baseType = typeParameterMap.get(baseParameterName);
-        if (baseType == null) {
-            if (baseParameterName.equals(type.parameterName())) {
-                throw new PartialInterfaceNotCompletedException(
-                        "cannot find type parameter: " + type.parameterName() // TODO: more detail
-                );
-            } else {
-                // TODO: test coverage
-                throw new PartialInterfaceNotCompletedException(
-                        "cannot find base type parameter: " + baseParameterName // TODO: more detail
-                                + " for parameter: " + type.parameterName()
-                );
-            }
-        }
-
-        Class<?> actualType = baseType;
-        while (arrayLevels > 0) {
-            actualType = Array.newInstance(actualType, 0).getClass();
-            arrayLevels--;
-        }
-        return actualType;
-    }
 }
 

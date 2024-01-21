@@ -7,6 +7,8 @@
   - constructor constraints?
 
 todo:
+  - special support for primitives requires support in annotation, eg.
+    instead of just @Type(int.class), @type(int.class, object=Integer.class) or so?
   - support use of eg T<String> when T is Object
   - use in abstract class (not interface)
 
