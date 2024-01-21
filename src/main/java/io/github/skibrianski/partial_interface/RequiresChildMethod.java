@@ -1,11 +1,14 @@
 package io.github.skibrianski.partial_interface;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
+import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Repeatable(RequiresChildMethods.class)
+@Target({ElementType.TYPE})
 public @interface RequiresChildMethod {
     // TODO: should return type default to void and argumentTypes default to {} ?
     Type returnType();
