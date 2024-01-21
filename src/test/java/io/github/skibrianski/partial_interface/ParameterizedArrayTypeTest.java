@@ -24,6 +24,17 @@ public class ParameterizedArrayTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
+    @HasTypeParameter(name = "R", value = int[].class)
+    public static class MultiDimensionalArray implements WithSummation {
+        public int[] sum(int[]... addends) {
+            return new int[]{3};
+        }
+    }
+    @Test
+    void test_valid_multiDimensionalArray() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(MultiDimensionalArray.class));
+    }
+
     public static class A { }
     public static class AChild extends A { }
     @HasTypeParameter(name = "R", value = A.class)
