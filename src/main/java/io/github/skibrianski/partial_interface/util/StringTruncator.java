@@ -15,7 +15,7 @@ public class StringTruncator {
         return this;
     }
     public StringTruncator truncateAll(String suffix) {
-        while (removeTrailing(suffix));
+        while (removeTrailing(suffix)); // note: despite intellij's highlight, the empty body is intentional
         return this;
     }
 
@@ -27,6 +27,7 @@ public class StringTruncator {
         return truncations;
     }
 
+    // if the string ends with suffix, removes it and increments truncations. returns true if something was removed.
     private boolean removeTrailing(String suffix) {
         if (string.endsWith(suffix)) {
             string = string.substring(0, string.length() - suffix.length());
