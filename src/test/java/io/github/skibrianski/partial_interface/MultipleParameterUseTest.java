@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class MultipleParameterUseTest {
-    // TODO: something like T foo(T theT, T theOtherT)
 
     @RequiresTypeParameters(count = 2)
     @RequiresChildMethod(

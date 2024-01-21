@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 public class ParameterizedReturnTypeTest {
 
-    // TODO: return type can be child of typeParam, eg `LocalDate foo()` satisfies `Temporal foo()`
     @RequiresTypeParameters(count = 1)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(
