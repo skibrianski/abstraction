@@ -7,7 +7,15 @@ import java.lang.annotation.Annotation;
 
 public final class TestUtil {
 
+    public static Type buildParameterizedType(String parameterName) {
+        return buildType(Type.TypeParameter.class, parameterName);
+    }
+
     public static Type buildRegularType(Class<?> classType) {
+        return buildType(classType, "");
+    }
+
+    private static Type buildType(Class<?> classType, String parameterName) {
         return new Type() {
             @Override
             public Class<? extends Annotation> annotationType() {
@@ -22,12 +30,12 @@ public final class TestUtil {
 
             @Override
             public String parameterName() {
-                return "";
+                return parameterName;
             }
         };
     }
 
-    public static RequiresChildMethod buildAnnotation(
+    public static RequiresChildMethod buildRequiresChildMethod(
             boolean isStatic,
             Type returnType,
             String methodName,

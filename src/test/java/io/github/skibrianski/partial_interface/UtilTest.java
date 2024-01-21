@@ -9,7 +9,7 @@ public class UtilTest {
 
     @Test
     void test_toString_withVoidReturnAndNoArguments() {
-        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
                 false,
                 TestUtil.buildRegularType(void.class),
                 "foo",
@@ -23,7 +23,7 @@ public class UtilTest {
 
     @Test
     void test_toString_withNoArguments() {
-        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
@@ -37,7 +37,7 @@ public class UtilTest {
 
     @Test
     void test_toString_withSingleArgument() {
-        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
@@ -51,7 +51,7 @@ public class UtilTest {
 
     @Test
     void test_toString_withMultipleArguments() {
-        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
                 false,
                 TestUtil.buildRegularType(int.class),
                 "foo",
@@ -68,7 +68,7 @@ public class UtilTest {
 
     @Test
     void test_toString_static() {
-        RequiresChildMethod requiresChildMethod = TestUtil.buildAnnotation(
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
                 true,
                 TestUtil.buildRegularType(int.class),
                 "foo",
@@ -76,6 +76,20 @@ public class UtilTest {
         );
         Assertions.assertEquals(
                 "static int foo()",
+                RequiresChildMethod.Util.stringify(requiresChildMethod)
+        );
+    }
+
+    @Test
+    void test_toString_parameterizedType() {
+        RequiresChildMethod requiresChildMethod = TestUtil.buildRequiresChildMethod(
+                false,
+                TestUtil.buildParameterizedType("R"),
+                "foo",
+                new Type[]{}
+        );
+        Assertions.assertEquals(
+                "R foo()",
                 RequiresChildMethod.Util.stringify(requiresChildMethod)
         );
     }
