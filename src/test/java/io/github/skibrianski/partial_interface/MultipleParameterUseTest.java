@@ -7,19 +7,10 @@ import org.junit.jupiter.api.Test;
 public class MultipleParameterUseTest {
 
     @RequiresChildMethod(
-            returnType = @RequiresChildMethod.Type(
-                    value = RequiresChildMethod.TypeParameter.class,
-                    parameterName = "T"
-            ),
+            returnType = @Type(value = Type.TypeParameter.class, parameterName = "T"),
             argumentTypes = {
-                    @RequiresChildMethod.Type(
-                            value = RequiresChildMethod.TypeParameter.class,
-                            parameterName = "T"
-                    ),
-                    @RequiresChildMethod.Type(
-                            value = RequiresChildMethod.TypeParameter.class,
-                            parameterName = "T"
-                    )
+                    @Type(value = Type.TypeParameter.class, parameterName = "T"),
+                    @Type(value = Type.TypeParameter.class, parameterName = "T")
             },
             methodName = "method"
     )

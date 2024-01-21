@@ -1,16 +1,17 @@
 package testutil;
 
 import io.github.skibrianski.partial_interface.RequiresChildMethod;
+import io.github.skibrianski.partial_interface.Type;
 
 import java.lang.annotation.Annotation;
 
 public final class TestUtil {
 
-    public static RequiresChildMethod.Type buildRegularType(Class<?> classType) {
-        return new RequiresChildMethod.Type() {
+    public static Type buildRegularType(Class<?> classType) {
+        return new Type() {
             @Override
             public Class<? extends Annotation> annotationType() {
-                return RequiresChildMethod.Type.class;
+                return Type.class;
             }
 
 
@@ -28,9 +29,9 @@ public final class TestUtil {
 
     public static RequiresChildMethod buildAnnotation(
             boolean isStatic,
-            RequiresChildMethod.Type returnType,
+            Type returnType,
             String methodName,
-            RequiresChildMethod.Type[] argumentTypes
+            Type[] argumentTypes
     ) {
         return new RequiresChildMethod() {
             @Override

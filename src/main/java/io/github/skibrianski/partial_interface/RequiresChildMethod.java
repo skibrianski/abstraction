@@ -16,35 +16,20 @@ public @interface RequiresChildMethod {
     String methodName();
     boolean isStatic() default false;
 
-    @interface Type {
-        Class<?> value();
-        String parameterName() default "";
-    }
-
-    interface TypeParameter { }
-
     class Util {
         public static String stringify(RequiresChildMethod requiresChildMethod) {
             List<String> argumentTypeList = Arrays.stream(requiresChildMethod.argumentTypes())
-                    .map(Util::stringify)
+                    .map(Type.Util::stringify)
                     .collect(Collectors.toList());
             String argumentString = String.join(", ", argumentTypeList);
             String staticPrefix = requiresChildMethod.isStatic() ? "static " : "";
             return String.format(
                     "%s%s %s(%s)",
                     staticPrefix,
-                    stringify(requiresChildMethod.returnType()),
+                    Type.Util.stringify(requiresChildMethod.returnType()),
                     requiresChildMethod.methodName(),
                     argumentString
             );
-        }
-
-        public static String stringify(Type type) {
-            if (TypeParameter.class.isAssignableFrom(type.value())) {
-                return type.parameterName();
-            } else {
-                return type.value().getSimpleName();
-            }
         }
     }
 }

@@ -98,7 +98,7 @@ public final class PartialInterface {
     // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
     private static boolean validateArgumentTypes(
             Method implementedMethod,
-            RequiresChildMethod.Type[] requiredParameterTypes,
+            Type[] requiredParameterTypes,
             Map<String, Class<?>> typeParameterMap
     ) {
         Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
@@ -121,10 +121,10 @@ public final class PartialInterface {
     // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
     private static boolean validateType(
             Class<?> implementedType,
-            RequiresChildMethod.Type type,
+            Type type,
             Map<String, Class<?>> typeParameterMap
     ) {
-        if (RequiresChildMethod.TypeParameter.class.isAssignableFrom(type.value())) {
+        if (Type.TypeParameter.class.isAssignableFrom(type.value())) {
             Class<?> actualType = typeParameterMap.get(type.parameterName());
             if (actualType == null) {
 //                // TODO: needs test?

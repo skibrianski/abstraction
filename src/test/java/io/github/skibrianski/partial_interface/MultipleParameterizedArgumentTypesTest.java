@@ -7,16 +7,10 @@ import org.junit.jupiter.api.Test;
 public class MultipleParameterizedArgumentTypesTest {
 
     @RequiresChildMethod(
-            returnType = @RequiresChildMethod.Type(void.class),
+            returnType = @Type(void.class),
             argumentTypes = {
-                    @RequiresChildMethod.Type(
-                            value = RequiresChildMethod.TypeParameter.class,
-                            parameterName = "T"
-                    ),
-                    @RequiresChildMethod.Type(
-                            value = RequiresChildMethod.TypeParameter.class,
-                            parameterName = "X"
-                    )
+                    @Type(value = Type.TypeParameter.class, parameterName = "T"),
+                    @Type(value = Type.TypeParameter.class, parameterName = "X"),
             },
             methodName = "method"
     )
