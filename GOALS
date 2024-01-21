@@ -7,8 +7,9 @@
   - constructor constraints?
 
 todo:
-  - support use of eg List<R>
-  - support use of eg R<X>
+  - support use of eg List<T>
+  - support use of eg T<String>
+  - support use of eg T<X>
   - use in abstract class (not interface)
 
 caveats:
