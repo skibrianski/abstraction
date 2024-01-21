@@ -8,12 +8,12 @@
 
 todo:
   - support use of eg T<String> when T is Object
-  - could we assume boxing, eg if E = int.class, and a method must return List<E>, require return List<Integer> instead?
   - use in abstract class (not interface)
 
 questions:
 - support use of eg Stream<T> -- will not work if T is primitive
   - could be supported with some alternative, eg Stream<T> for int would be an IntStream
+  - or instead of requiring List<primitive>, require List<BOX<primitive>>
 - support use of eg T<X> -- will not work if X is primitive.
 
 caveats:
