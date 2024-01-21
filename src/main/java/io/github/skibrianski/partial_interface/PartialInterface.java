@@ -21,21 +21,27 @@ public final class PartialInterface {
 
     // TODD: do we need enableAllInfo()?
 
+    static {
+        try (ScanResult scanResult = new ClassGraph().enableAllInfo().scan()) {
+            check(scanResult, false);
+        }
+    }
+
     public static void check(Class... classes) {
         String[] classNames = Arrays.stream(classes).map(Class::getName).toArray(String[]::new);
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptClasses(classNames).scan()) {
-            check(scanResult);
+            check(scanResult, true);
         }
     }
 
     public static void check(Package... packages) {
         String[] packageNames = Arrays.stream(packages).map(Package::getName).toArray(String[]::new);
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageNames).scan()) {
-            check(scanResult);
+            check(scanResult, true);
         }
     }
 
-    private static void check(ScanResult scanResult) {
+    private static void check(ScanResult scanResult, boolean manual) {
         for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
             if (!annotationClassInfo.isInterface()) {
                 throw new PartialInterfaceUsageException(
@@ -51,6 +57,12 @@ public final class PartialInterface {
                     .map(RequiresChildMethod.class::cast)
                     .collect(Collectors.toList());
             for (ClassInfo implementationClassInfo : implementations) {
+                // if we're doing an automatic pass, skip implementations tagged for manual validation
+                if (!manual) {
+                    if (implementationClassInfo.getAnnotationInfo(ValidatePartialInterfaceManually.class) != null) {
+                        continue;
+                    }
+                }
                 validateImplementation(
                         implementationClassInfo.loadClass(),
                         requiresChildMethodAnnotations
