@@ -7,7 +7,6 @@
   - constructor constraints?
 
 todo:
-  - support use of T[]
   - support use of eg T<String>
   - use in abstract class (not interface)
 
