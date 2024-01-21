@@ -51,4 +51,18 @@ public class ParameterizedReturnTypeTest {
                 () -> PartialInterface.check(WrongReturnType.class)
         );
     }
+
+    @HasTypeParameter(name = "X", value = int.class)
+    public static class WrongTypeParameterName implements ReturnsLoneTypeParameter {
+        public int method() {
+            return 3;
+        }
+    }
+    @Test
+    void test_invalidTypeParameterName() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(WrongTypeParameterName.class)
+        );
+    }
 }
