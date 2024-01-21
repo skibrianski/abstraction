@@ -9,6 +9,7 @@
 todo:
   - support use of eg List<R>
   - support use of eg R<X>
+  - use in abstract class (not interface)
 
 caveats:
 - for now, you have to call PartialInterface.check() at clinit time.
