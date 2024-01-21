@@ -12,6 +12,7 @@ public @interface Type {
 
     Class<?> value();
     String parameterName() default "";
+    Type[] childParameters() default {};
 
     interface TypeParameter { }
 
