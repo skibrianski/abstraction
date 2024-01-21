@@ -23,4 +23,45 @@ public class ParameterizedArrayTypeTest {
     void test_valid_happyPath() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
+
+    public static class A { }
+    public static class AChild extends A { }
+    @HasTypeParameter(name = "R", value = A.class)
+    public static class ChildType implements WithSummation {
+        public A sum(AChild... addends) {
+            return new A();
+        }
+    }
+    @Test
+    void test_valid_arrayOfChildType() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ChildType.class));
+    }
+
+    @HasTypeParameter(name = "R", value = int.class)
+    public static class NotArray implements WithSummation {
+        public int sum(int addends) {
+            return 3;
+        }
+    }
+    @Test
+    void test_invalid_notArray() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(NotArray.class)
+        );
+    }
+
+    @HasTypeParameter(name = "R", value = int.class)
+    public static class WrongArrayType implements WithSummation {
+        public int sum(String... addends) {
+            return 3;
+        }
+    }
+    @Test
+    void test_invalid_wrongArrayType() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(WrongArrayType.class)
+        );
+    }
 }
