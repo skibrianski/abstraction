@@ -96,7 +96,6 @@ public final class PartialInterface {
         }
     }
 
-    // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
     private static boolean validateArgumentTypes(
             Method implementedMethod,
             Type[] requiredParameterTypes,
@@ -119,43 +118,48 @@ public final class PartialInterface {
         return true;
     }
 
-    // TODO: change signature to void and throw exception on mismatch so we can provide more detailed messages
     private static boolean validateType(
             Class<?> implementedType,
             Type type,
             Map<String, Class<?>> typeParameterMap
     ) {
-        if (Type.TypeParameter.class.equals(type.value())) {
-            StringTruncator parameterNameTruncator = new StringTruncator(type.parameterName())
-                    .truncateOnce("...")
-                    .truncateAll("[]");
-            String baseParameterName = parameterNameTruncator.value();
-            int arrayLevels = parameterNameTruncator.truncationCount();
+        Class<?> actualType = Type.TypeParameter.class.equals(type.value())
+                ? getActualTypeForTypeParameter(type, typeParameterMap)
+                : type.value();
+        return actualType.isAssignableFrom(implementedType);
+    }
 
-            Class<?> baseType = typeParameterMap.get(baseParameterName);
-            if (baseType == null) {
-                if (baseParameterName.equals(type.parameterName())) {
-                    throw new PartialInterfaceNotCompletedException(
-                            "cannot find type parameter: " + type.parameterName() // TODO: more detail
-                    );
-                } else {
-                    // TODO: test coverage
-                    throw new PartialInterfaceNotCompletedException(
-                            "cannot find base type parameter: " + baseParameterName // TODO: more detail
-                                    + " for parameter: " + type.parameterName()
-                    );
-                }
-            }
+    private static Class<?> getActualTypeForTypeParameter(
+            Type type,
+            Map<String, Class<?>> typeParameterMap
+    ) {
+        StringTruncator parameterNameTruncator = new StringTruncator(type.parameterName())
+                .truncateOnce("...")
+                .truncateAll("[]");
+        String baseParameterName = parameterNameTruncator.value();
+        int arrayLevels = parameterNameTruncator.truncationCount();
 
-            Class<?> actualType = baseType;
-            while (arrayLevels > 0) {
-                actualType = Array.newInstance(actualType, 0).getClass();
-                arrayLevels--;
+        Class<?> baseType = typeParameterMap.get(baseParameterName);
+        if (baseType == null) {
+            if (baseParameterName.equals(type.parameterName())) {
+                throw new PartialInterfaceNotCompletedException(
+                        "cannot find type parameter: " + type.parameterName() // TODO: more detail
+                );
+            } else {
+                // TODO: test coverage
+                throw new PartialInterfaceNotCompletedException(
+                        "cannot find base type parameter: " + baseParameterName // TODO: more detail
+                                + " for parameter: " + type.parameterName()
+                );
             }
-            return actualType.isAssignableFrom(implementedType);
-        } else {
-            return type.value().isAssignableFrom(implementedType);
         }
+
+        Class<?> actualType = baseType;
+        while (arrayLevels > 0) {
+            actualType = Array.newInstance(actualType, 0).getClass();
+            arrayLevels--;
+        }
+        return actualType;
     }
 }
 
