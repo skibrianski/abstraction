@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class ParameterizedReturnTypeTest {
 
     @RequiresChildMethod(
-            returnType = @Type(value = Type.TypeParameter.class, parameterName = "R"),
+            returnType = @Type(parameterName = "R"),
             argumentTypes = {},
             methodName = "method"
     )

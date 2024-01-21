@@ -61,7 +61,6 @@ public final class PartialInterface {
             Class<?> implementation,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
-        HasTypeParameters hasTypeParameters2 = implementation.getAnnotation(HasTypeParameters.class);
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> typeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
@@ -124,6 +123,10 @@ public final class PartialInterface {
             Type type,
             Map<String, Class<?>> typeParameterMap
     ) {
+        if (type.value() != Type.TypeParameter.class && !type.parameterName().isEmpty()) {
+            // TODO: pass more info about context here.
+            throw new PartialInterfaceException("@Type cannot have both a value and a parameterName");
+        }
         if (Type.TypeParameter.class.isAssignableFrom(type.value())) {
             Class<?> actualType = typeParameterMap.get(type.parameterName());
             if (actualType == null) {

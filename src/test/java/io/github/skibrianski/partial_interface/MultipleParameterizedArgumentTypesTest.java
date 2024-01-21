@@ -8,10 +8,7 @@ public class MultipleParameterizedArgumentTypesTest {
 
     @RequiresChildMethod(
             returnType = @Type(void.class),
-            argumentTypes = {
-                    @Type(value = Type.TypeParameter.class, parameterName = "T"),
-                    @Type(value = Type.TypeParameter.class, parameterName = "X"),
-            },
+            argumentTypes = {@Type(parameterName = "T"), @Type(parameterName = "X"),},
             methodName = "method"
     )
     interface HasMethodWithMultipleTypeParameters { }
