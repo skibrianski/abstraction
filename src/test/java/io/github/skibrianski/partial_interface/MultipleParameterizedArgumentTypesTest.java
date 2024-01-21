@@ -16,7 +16,7 @@ public class MultipleParameterizedArgumentTypesTest {
     )
     interface HasMethodWithMultipleTypeParameters { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     @HasTypeParameter(name = "X", value = String.class)
     static class Valid implements HasMethodWithMultipleTypeParameters {
@@ -32,7 +32,7 @@ public class MultipleParameterizedArgumentTypesTest {
     public static class B { }
     public static class BChild extends B { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = A.class)
     @HasTypeParameter(name = "X", value = B.class)
     static class ChildReturnTypes implements HasMethodWithMultipleTypeParameters {
@@ -43,7 +43,7 @@ public class MultipleParameterizedArgumentTypesTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     @HasTypeParameter(name = "X", value = String.class)
     static class FirstParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
@@ -57,7 +57,7 @@ public class MultipleParameterizedArgumentTypesTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     @HasTypeParameter(name = "X", value = String.class)
     static class SecondParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
@@ -71,7 +71,7 @@ public class MultipleParameterizedArgumentTypesTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     @HasTypeParameter(name = "X", value = String.class)
     static class ExtraParameter implements HasMethodWithMultipleTypeParameters {

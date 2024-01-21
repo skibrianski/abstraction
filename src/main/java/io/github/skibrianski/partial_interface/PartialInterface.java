@@ -60,7 +60,7 @@ public final class PartialInterface {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
                 // TODO: this implementation is uggo.
                 if (!manual) {
-                    if (implementationClassInfo.getAnnotationInfo(ValidatePartialInterfaceManually.class) != null) {
+                    if (implementationClassInfo.getAnnotationInfo(PartialInterfaceWithManualValidation.class) != null) {
                         continue;
                     }
                 }

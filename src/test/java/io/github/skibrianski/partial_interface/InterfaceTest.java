@@ -13,7 +13,7 @@ public class InterfaceTest {
     )
     interface WithScrambler { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public interface ValidInterface extends WithScrambler {
         String scramble(String input1);
     }
@@ -22,7 +22,7 @@ public class InterfaceTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public interface InvalidInterface extends WithScrambler { }
     @Test
     void test_invalid() {

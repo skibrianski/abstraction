@@ -12,7 +12,7 @@ public class VoidReturnTest {
     )
     interface WithDoer { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class Doer implements WithDoer {
         public void doIt() { }
     }

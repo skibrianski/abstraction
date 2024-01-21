@@ -18,7 +18,7 @@ public class RepeatedAnnotationTest {
     )
     interface WithMultipleAnnotations { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ValidClass implements WithMultipleAnnotations {
         public int intSupplier() {
             return 3;
@@ -33,7 +33,7 @@ public class RepeatedAnnotationTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ClassWithoutIntSupplier implements WithMultipleAnnotations {
         public String stringSupplier() {
             return "three";
@@ -47,7 +47,7 @@ public class RepeatedAnnotationTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ClassWithoutStringSupplier implements WithMultipleAnnotations {
         public int intSupplier() {
             return 3;

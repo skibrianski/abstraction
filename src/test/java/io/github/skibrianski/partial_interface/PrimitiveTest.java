@@ -13,7 +13,7 @@ public class PrimitiveTest {
     )
     interface WithTriple { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class Valid implements WithTriple {
         public int triple(int input) {
             return input * 3;
@@ -24,7 +24,7 @@ public class PrimitiveTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class Invalid implements WithTriple { }
     @Test
     void test_invalid() {

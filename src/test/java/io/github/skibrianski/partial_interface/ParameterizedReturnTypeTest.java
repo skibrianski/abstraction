@@ -13,7 +13,7 @@ public class ParameterizedReturnTypeTest {
     )
     interface ReturnsLoneTypeParameter { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "R", value = int.class)
     public static class ValidWithExactTypeParameterMatch implements ReturnsLoneTypeParameter {
         public int method() {
@@ -28,7 +28,7 @@ public class ParameterizedReturnTypeTest {
     public interface A { }
     public interface AChild extends A { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "R", value = A.class)
     public static class ValidWithChildOfTypeParameter implements ReturnsLoneTypeParameter {
         public AChild method() {
@@ -40,7 +40,7 @@ public class ParameterizedReturnTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildOfTypeParameter.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "R", value = int.class)
     public static class WrongReturnType implements ReturnsLoneTypeParameter {
         public String method() {
@@ -55,7 +55,7 @@ public class ParameterizedReturnTypeTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "X", value = int.class)
     public static class WrongTypeParameterName implements ReturnsLoneTypeParameter {
         public int method() {

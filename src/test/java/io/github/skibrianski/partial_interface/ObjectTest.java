@@ -16,7 +16,7 @@ public class ObjectTest {
     )
     interface WithScrambler { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ValidClassExactMatch implements WithScrambler {
         public A scramble(A input1) {
             return input1;
@@ -27,7 +27,7 @@ public class ObjectTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassExactMatch.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ValidWithChildReturnType implements WithScrambler {
         public AChild scramble(A input1) {
             return null;
@@ -38,7 +38,7 @@ public class ObjectTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildReturnType.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ValidWithChildParameterType implements WithScrambler {
         public A scramble(AChild input1) {
             return null;
@@ -49,7 +49,7 @@ public class ObjectTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildParameterType.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class NoMethodClass implements WithScrambler { }
     @Test
     void test_invalid_noMethod() {
@@ -59,7 +59,7 @@ public class ObjectTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class WrongReturnTypeClass implements WithScrambler {
         public int scramble(A input1) {
             return 3;
@@ -73,7 +73,7 @@ public class ObjectTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class MissingArgumentClass implements WithScrambler {
         public A scramble() {
             return new A();
@@ -87,7 +87,7 @@ public class ObjectTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class ExtraArgumentClass implements WithScrambler {
         public A scramble(A input, int extraArg) {
             return input;
@@ -101,7 +101,7 @@ public class ObjectTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     public static class WrongArgumentTypeClass implements WithScrambler {
         public A scramble(int input) {
             return new A();

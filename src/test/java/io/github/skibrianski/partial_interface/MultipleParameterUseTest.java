@@ -16,7 +16,7 @@ public class MultipleParameterUseTest {
     )
     interface ThePartialInterface { }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     static class Valid implements ThePartialInterface {
         public int method(int foo, int bar) {
@@ -28,7 +28,7 @@ public class MultipleParameterUseTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     static class BadReturnType implements ThePartialInterface {
         public void method(int foo, int bar) { }
@@ -41,7 +41,7 @@ public class MultipleParameterUseTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     static class BadArgument1Type implements ThePartialInterface {
         public int method(String foo, int bar) {
@@ -56,7 +56,7 @@ public class MultipleParameterUseTest {
         );
     }
 
-    @ValidatePartialInterfaceManually
+    @PartialInterfaceWithManualValidation
     @HasTypeParameter(name = "T", value = int.class)
     static class BadArgument2Type implements ThePartialInterface {
         public int method(int foo, boolean bar) {
