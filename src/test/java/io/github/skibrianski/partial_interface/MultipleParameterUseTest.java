@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 public class MultipleParameterUseTest {
 
-    @RequiresTypeParameters(count = 2)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(
                     value = RequiresChildMethod.TypeParameter.class,

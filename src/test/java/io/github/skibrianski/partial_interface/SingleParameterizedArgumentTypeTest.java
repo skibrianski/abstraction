@@ -9,7 +9,6 @@ public class SingleParameterizedArgumentTypeTest {
     public static class A { }
     public static class AChild extends A { }
 
-    @RequiresTypeParameters(count = 1)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(void.class),
             argumentTypes = {@RequiresChildMethod.Type(

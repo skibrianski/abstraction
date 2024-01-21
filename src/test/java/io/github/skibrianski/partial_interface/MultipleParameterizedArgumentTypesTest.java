@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 public class MultipleParameterizedArgumentTypesTest {
 
-    @RequiresTypeParameters(count = 2)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(void.class),
             argumentTypes = {
