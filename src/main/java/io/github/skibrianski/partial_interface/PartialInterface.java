@@ -61,7 +61,6 @@ public final class PartialInterface {
             Class<?> implementation,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
-        HasTypeParameters hasTypeParameters2 = implementation.getAnnotation(HasTypeParameters.class);
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> typeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
@@ -130,7 +129,7 @@ public final class PartialInterface {
 //                // TODO: needs test?
 //                // TODO: special case for no params "no type parameter. missing @HasTypeParameters?"
                 throw new PartialInterfaceUsageException(
-                        "not enough type parameters" // TODO: more detail
+                        "cannot find type parameter: " + type.parameterName() // TODO: more detail
                 );
             }
             return actualType.isAssignableFrom(implementedType);
