@@ -4,56 +4,77 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class ParameterizedReturnTypeTest {
+public class MultipleParameterUseTest {
+    // TODO: something like T foo(T theT, T theOtherT)
 
-    // TODO: return type can be child of typeParam, eg `LocalDate foo()` satisfies `Temporal foo()`
-    @RequiresTypeParameters(count = 1)
+    @RequiresTypeParameters(count = 2)
     @RequiresChildMethod(
             returnType = @RequiresChildMethod.Type(
                     value = RequiresChildMethod.TypeParameter.class,
-                    parameterName = "R"
+                    parameterName = "T"
             ),
-            argumentTypes = {},
+            argumentTypes = {
+                    @RequiresChildMethod.Type(
+                            value = RequiresChildMethod.TypeParameter.class,
+                            parameterName = "T"
+                    ),
+                    @RequiresChildMethod.Type(
+                            value = RequiresChildMethod.TypeParameter.class,
+                            parameterName = "T"
+                    )
+            },
             methodName = "method"
     )
-    interface ReturnsLoneTypeParameter { }
+    interface ThePartialInterface { }
 
-    @HasTypeParameter(name = "R", value = int.class)
-    public static class ValidWithExactTypeParameterMatch implements ReturnsLoneTypeParameter {
-        public int method() {
+    @HasTypeParameter(name = "T", value = int.class)
+    static class Valid implements ThePartialInterface {
+        public int method(int foo, int bar) {
+            return -1;
+        }
+    }
+    @Test
+    void test_valid_happyPath() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
+    }
+
+    @HasTypeParameter(name = "T", value = int.class)
+    static class BadReturnType implements ThePartialInterface {
+        public void method(int foo, int bar) { }
+    }
+    @Test
+    void test_invalid_badReturnType() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(BadReturnType.class)
+        );
+    }
+
+    @HasTypeParameter(name = "T", value = int.class)
+    static class BadArgument1Type implements ThePartialInterface {
+        public int method(String foo, int bar) {
             return 3;
         }
     }
     @Test
-    void test_valid_exactTypeMatch() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithExactTypeParameterMatch.class));
-    }
-
-    public interface A { }
-    public interface AChild extends A { }
-
-    @HasTypeParameter(name = "R", value = A.class)
-    public static class ValidWithChildOfTypeParameter implements ReturnsLoneTypeParameter {
-        public AChild method() {
-            return null;
-        }
-    }
-    @Test
-    void test_valid_childTypeMatch() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidWithChildOfTypeParameter.class));
-    }
-
-    @HasTypeParameter(name = "R", value = int.class)
-    public static class WrongReturnType implements ReturnsLoneTypeParameter {
-        public String method() {
-            return "three";
-        }
-    }
-    @Test
-    void test_wrongReturnType() {
+    void test_invalid_badFirstArgumentType() {
         Assertions.assertThrows(
                 PartialInterfaceNotCompletedException.class,
-                () -> PartialInterface.check(WrongReturnType.class)
+                () -> PartialInterface.check(BadArgument1Type.class)
+        );
+    }
+
+    @HasTypeParameter(name = "T", value = int.class)
+    static class BadArgument2Type implements ThePartialInterface {
+        public int method(int foo, boolean bar) {
+            return 3;
+        }
+    }
+    @Test
+    void test_invalid_badSecondArgumentType() {
+        Assertions.assertThrows(
+                PartialInterfaceNotCompletedException.class,
+                () -> PartialInterface.check(BadArgument2Type.class)
         );
     }
 }

@@ -6,10 +6,14 @@
   - non-public methods in interface (bad idea?)
   - constructor constraints?
 
+todo:
+  - support use of eg List<R>
+  - support use of eg R<X>
+
 caveats:
 - for now, you have to call PartialInterface.check() at clinit time.
 - refactoring cannot be done automatically in an IDE
-- varargs should be specified as eg int[].class, as under the covers that is how java treats it.
+- varargs must be specified as eg int[].class, as under the covers that is how java treats it.
 
 questions:
 - how can check() be triggered automatically at clinit time of the child class?
