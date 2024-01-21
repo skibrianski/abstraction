@@ -18,6 +18,11 @@ public final class TestUtil {
             public Class<?> value() {
                 return classType;
             }
+
+            @Override
+            public String parameterName() {
+                return "";
+            }
         };
     }
 

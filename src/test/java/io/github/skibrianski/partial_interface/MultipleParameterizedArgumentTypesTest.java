@@ -12,18 +12,19 @@ public class MultipleParameterizedArgumentTypesTest {
             argumentTypes = {
                     @RequiresChildMethod.Type(
                             value = RequiresChildMethod.TypeParameter.class,
-                            parameterNumber = 1
+                            parameterName = "T"
                     ),
                     @RequiresChildMethod.Type(
                             value = RequiresChildMethod.TypeParameter.class,
-                            parameterNumber = 2
+                            parameterName = "X"
                     )
             },
             methodName = "method"
     )
     interface HasMethodWithMultipleTypeParameters { }
 
-    @HasTypeParameters({int.class, String.class})
+    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "X", value = String.class)
     static class Valid implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, String bar) { }
     }
@@ -37,7 +38,8 @@ public class MultipleParameterizedArgumentTypesTest {
     public static class B { }
     public static class BChild extends B { }
 
-    @HasTypeParameters({A.class, B.class})
+    @HasTypeParameter(name = "T", value = A.class)
+    @HasTypeParameter(name = "X", value = B.class)
     static class ChildReturnTypes implements HasMethodWithMultipleTypeParameters {
         public void method(AChild foo, BChild bar) { }
     }
@@ -46,7 +48,8 @@ public class MultipleParameterizedArgumentTypesTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @HasTypeParameters({int.class, String.class})
+    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "X", value = String.class)
     static class FirstParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
         public void method(String String, int bar) { }
     }
@@ -58,7 +61,8 @@ public class MultipleParameterizedArgumentTypesTest {
         );
     }
 
-    @HasTypeParameters({int.class, String.class})
+    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "X", value = String.class)
     static class SecondParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, int bar) { }
     }
@@ -70,7 +74,8 @@ public class MultipleParameterizedArgumentTypesTest {
         );
     }
 
-    @HasTypeParameters({int.class, String.class})
+    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "X", value = String.class)
     static class ExtraParameter implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, String bar, boolean extra) { }
     }
@@ -81,5 +86,4 @@ public class MultipleParameterizedArgumentTypesTest {
                 () -> PartialInterface.check(ExtraParameter.class)
         );
     }
-
 }

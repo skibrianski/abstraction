@@ -12,6 +12,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageEx
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class PartialInterface {
@@ -48,7 +49,10 @@ public final class PartialInterface {
                     .map(RequiresChildMethod.class::cast)
                     .collect(Collectors.toList());
             for (ClassInfo implementationClassInfo : implementations) {
-                validateImplementation(implementationClassInfo.loadClass(), requiresChildMethodAnnotations);
+                validateImplementation(
+                        implementationClassInfo.loadClass(),
+                        requiresChildMethodAnnotations
+                );
             }
         }
     }
@@ -57,23 +61,25 @@ public final class PartialInterface {
             Class<?> implementation,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
+        HasTypeParameters hasTypeParameters2 = implementation.getAnnotation(HasTypeParameters.class);
+        HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
+        Map<String, Class<?>> typeParameterMap = Arrays.stream(hasTypeParameters)
+                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
         Method[] methods = implementation.getMethods();
-        HasTypeParameters hasTypeParameters = implementation.getAnnotation(HasTypeParameters.class);
-        Class<?>[] typeParameters = hasTypeParameters == null ? new Class<?>[0] : hasTypeParameters.value();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> validateType(m.getReturnType(), requiresChildMethod.returnType(), typeParameters))
+                    .filter(m -> validateType(m.getReturnType(), requiresChildMethod.returnType(), typeParameterMap))
                     .filter(m ->
-                        validateArgumentTypes(m, requiresChildMethod.argumentTypes(), typeParameters)
+                        validateArgumentTypes(m, requiresChildMethod.argumentTypes(), typeParameterMap)
                     )
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
                 String message = "implementation " + implementation.getName()
                         + " does not implement partial interface method: "
                         + RequiresChildMethod.Util.stringify(requiresChildMethod);
-                if (typeParameters.length > 0) {
-                    message += " with type parameters: " + Arrays.toString(typeParameters);
+                if (!typeParameterMap.isEmpty()) {
+                    message += " with type parameters: " + typeParameterMap; // TODO: is this readable?
                 }
                 throw new PartialInterfaceNotCompletedException(message);
             }
@@ -93,14 +99,18 @@ public final class PartialInterface {
     private static boolean validateArgumentTypes(
             Method implementedMethod,
             RequiresChildMethod.Type[] requiredParameterTypes,
-            Class<?>[] typeParameters
+            Map<String, Class<?>> typeParameterMap
     ) {
         Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
         if (requiredParameterTypes.length != parameterTypes.length) {
             return false;
         }
         for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
-            boolean argumentOk = validateType(implementedMethod.getParameterTypes()[pos], requiredParameterTypes[pos], typeParameters);
+            boolean argumentOk = validateType(
+                    implementedMethod.getParameterTypes()[pos],
+                    requiredParameterTypes[pos],
+                    typeParameterMap
+            );
             if (!argumentOk) {
                 return false;
             }
@@ -112,18 +122,19 @@ public final class PartialInterface {
     private static boolean validateType(
             Class<?> implementedType,
             RequiresChildMethod.Type type,
-            Class<?>[] typeParameters
+            Map<String, Class<?>> typeParameterMap
     ) {
         if (RequiresChildMethod.TypeParameter.class.isAssignableFrom(type.value())) {
-            int parameterIndex = type.parameterNumber() - 1;
-            if (parameterIndex >= typeParameters.length) {
-                // TODO: needs test?
-                // TODO: special case for no params "no type parameter. missing @HasTypeParameters?"
+            Class<?> actualType = typeParameterMap.get(type.parameterName());
+            if (actualType == null) {
+//                // TODO: needs test?
+//                // TODO: special case for no params "no type parameter. missing @HasTypeParameters?"
                 throw new PartialInterfaceUsageException(
                         "not enough type parameters" // TODO: more detail
                 );
             }
-            return typeParameters[parameterIndex].isAssignableFrom(implementedType);
+            return actualType.isAssignableFrom(implementedType);
+//            return typeParameters[parameterIndex].isAssignableFrom(implementedType);
         } else {
             return type.value().isAssignableFrom(implementedType);
         }

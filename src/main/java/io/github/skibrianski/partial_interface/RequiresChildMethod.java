@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 @Repeatable(RequiresChildMethods.class)
 public @interface RequiresChildMethod {
-    // TODO: should return type default to Void and argumentTypes default to {} ?
+    // TODO: should return type default to void and argumentTypes default to {} ?
     Type returnType();
     Type[] argumentTypes();
     String methodName();
@@ -15,7 +15,7 @@ public @interface RequiresChildMethod {
 
     @interface Type {
         Class<?> value();
-        int parameterNumber() default -1; // TODO: a little weird that these start at 0. names would be better anyhow
+        String parameterName() default "";
     }
 
     interface TypeParameter { }
@@ -38,8 +38,7 @@ public @interface RequiresChildMethod {
 
         public static String stringify(Type type) {
             if (TypeParameter.class.isAssignableFrom(type.value())) {
-                int parameterNumber = type.parameterNumber();
-                return "P" + parameterNumber;
+                return type.parameterName();
             } else {
                 return type.value().getSimpleName();
             }

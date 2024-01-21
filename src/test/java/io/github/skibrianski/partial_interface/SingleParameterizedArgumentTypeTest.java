@@ -14,13 +14,13 @@ public class SingleParameterizedArgumentTypeTest {
             returnType = @RequiresChildMethod.Type(void.class),
             argumentTypes = {@RequiresChildMethod.Type(
                     value = RequiresChildMethod.TypeParameter.class,
-                    parameterNumber = 1
+                    parameterName = "T"
             )},
             methodName = "method"
     )
     interface HasMethodWithLoneTypeParameter { }
 
-    @HasTypeParameters(int.class)
+    @HasTypeParameter(name = "T", value = int.class)
     static class ValidClassPrimitiveMatch implements HasMethodWithLoneTypeParameter {
         public void method(int foo) { }
     }
@@ -29,7 +29,7 @@ public class SingleParameterizedArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassPrimitiveMatch.class));
     }
 
-    @HasTypeParameters(A.class)
+    @HasTypeParameter(name = "T", value = A.class)
     static class ValidClassExactObjectMatch implements HasMethodWithLoneTypeParameter {
         public void method(A foo) { }
     }
@@ -38,7 +38,7 @@ public class SingleParameterizedArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassExactObjectMatch.class));
     }
 
-    @HasTypeParameters(A.class)
+    @HasTypeParameter(name = "T", value = A.class)
     public static class ValidClassChildObjectTypeMatch implements HasMethodWithLoneTypeParameter {
         public void method(AChild foo) { }
     }
@@ -47,8 +47,7 @@ public class SingleParameterizedArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassChildObjectTypeMatch.class));
     }
 
-
-    @HasTypeParameters(int.class)
+    @HasTypeParameter(name = "T", value = int.class)
     static class WrongArgumentType implements HasMethodWithLoneTypeParameter {
         public void method(String foo) { }
     }
