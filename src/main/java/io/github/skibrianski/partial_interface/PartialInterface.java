@@ -8,6 +8,7 @@ import io.github.classgraph.ScanResult;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
+import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -125,29 +126,31 @@ public final class PartialInterface {
             Map<String, Class<?>> typeParameterMap
     ) {
         if (Type.TypeParameter.class.equals(type.value())) {
-            String baseParameterName = type.parameterName();
 
-            int levels = 0;
-            if (baseParameterName.endsWith("...")) {
-                levels++;
-                baseParameterName = baseParameterName.replace("...", "");
-            }
-            while (baseParameterName.endsWith("[]")) {
-                levels++;
-                baseParameterName = baseParameterName.replace("[]", "");
-            }
+            StringTruncator parameterNameTruncator = new StringTruncator(type.parameterName())
+                    .truncateOnce("...")
+                    .truncateAll("[]");
+            String baseParameterName = parameterNameTruncator.value();
+            int arrayLevels = parameterNameTruncator.truncationCount();
 
             Class<?> baseType = typeParameterMap.get(baseParameterName);
             if (baseType == null) {
-                throw new PartialInterfaceUsageException(
-                        "cannot find type parameter: " + type.parameterName() // TODO: more detail
-                );
+                if (baseParameterName.equals(type.parameterName())) {
+                    throw new PartialInterfaceUsageException(
+                            "cannot find type parameter: " + type.parameterName() // TODO: more detail
+                    );
+                } else {
+                    throw new PartialInterfaceUsageException(
+                            "cannot find base type parameter: " + baseParameterName // TODO: more detail
+                                    + " for parameter: " + type.parameterName()
+                    );
+                }
             }
 
             Class<?> actualType = baseType;
-            while (levels > 0) {
+            while (arrayLevels > 0) {
                 actualType = Array.newInstance(actualType, 0).getClass();
-                levels--;
+                arrayLevels--;
             }
             return actualType.isAssignableFrom(implementedType);
         } else {

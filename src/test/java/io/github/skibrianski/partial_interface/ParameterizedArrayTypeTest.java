@@ -11,10 +11,10 @@ public class ParameterizedArrayTypeTest {
             argumentTypes = {@Type(value = Type.TypeParameter.class, parameterName = "R...")},
             methodName = "sum"
     )
-    interface ReturnsLoneTypeParameter { }
+    interface WithSummation { }
 
     @HasTypeParameter(name = "R", value = int.class)
-    public static class Valid implements ReturnsLoneTypeParameter {
+    public static class Valid implements WithSummation {
         public int sum(int... addends) {
             return 3;
         }
