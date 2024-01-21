@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 public class MultipleParameterUseTest {
 
     @RequiresChildMethod(
-            returnType = @Type(parameterName = "T"),
-            argumentTypes = {@Type(parameterName = "T"), @Type(parameterName = "T")},
+            returnType = @Type(value = Type.TypeParameter.class, parameterName = "T"),
+            argumentTypes = {
+                    @Type(value = Type.TypeParameter.class, parameterName = "T"),
+                    @Type(value = Type.TypeParameter.class, parameterName = "T")
+            },
             methodName = "method"
     )
     interface ThePartialInterface { }

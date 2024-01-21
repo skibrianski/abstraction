@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Target({ElementType.TYPE})
 public @interface Type {
 
-    Class<?> value() default TypeParameter.class;
+    Class<?> value();
     String parameterName() default "";
 
     interface TypeParameter { }
