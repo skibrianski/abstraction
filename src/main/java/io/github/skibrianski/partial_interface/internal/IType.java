@@ -1,10 +1,8 @@
 package io.github.skibrianski.partial_interface.internal;
 
 import io.github.skibrianski.partial_interface.Type;
-import io.github.skibrianski.partial_interface.TypeParameterMap;
+import io.github.skibrianski.partial_interface.TypeParameterResolver;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
 import java.util.Map;
 
@@ -12,37 +10,37 @@ public abstract class IType {
 
 
     // TODO: this probably doesn't belong here, but rather in our parser
-    private final TypeParameterMap typeParameterMap;
+    private final TypeParameterResolver typeParameterResolver;
 
-    public IType(TypeParameterMap typeParameterMap) {
-        this.typeParameterMap = typeParameterMap;
+    public IType(TypeParameterResolver typeParameterResolver) {
+        this.typeParameterResolver = typeParameterResolver;
     }
 
     protected Class<?> getTypeParameter(String name) {
-        return typeParameterMap.resolve(name);
+        return typeParameterResolver.resolve(name);
     }
 
     public abstract Class<?> getActualType();
 
-    public static IType convertFromAnnotation(Type type, TypeParameterMap typeParameterMap) {
+    public static IType convertFromAnnotation(Type type, TypeParameterResolver typeParameterResolver) {
         if (!type.byClass().equals(Type.NotSpecified.class)) {
-            return new ClassType<>(type.byClass(), typeParameterMap);
+            return new ClassType<>(type.byClass(), typeParameterResolver);
         }
-        return parse(type.value(), typeParameterMap);
+        return parse(type.value(), typeParameterResolver);
     }
 
     public static IType parse(
             String typeString,
-            TypeParameterMap typeParameterMap
+            TypeParameterResolver typeParameterResolver
     ) {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
             // TODO: typeParameterMap needs to be a bit smarter and handle de-arrayification
-            if (typeParameterMap.canResolve(typeString)) {
+            if (typeParameterResolver.canResolve(typeString)) {
                 // TODO: resolve the variable?
-                return new TypeVariable(typeString, typeParameterMap);
+                return new TypeVariable(typeString, typeParameterResolver);
             } else {
-                return new ClassType<>(classForName(typeString), typeParameterMap);
+                return new ClassType<>(classForName(typeString), typeParameterResolver);
             }
         }
 

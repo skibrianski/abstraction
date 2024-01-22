@@ -1,11 +1,7 @@
 package io.github.skibrianski.partial_interface.internal;
 
-import io.github.skibrianski.partial_interface.TypeParameterMap;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
-import io.github.skibrianski.partial_interface.util.StringTruncator;
+import io.github.skibrianski.partial_interface.TypeParameterResolver;
 
-import java.lang.reflect.Array;
-import java.util.Map;
 
 public class TypeVariable extends IType {
 
@@ -14,10 +10,10 @@ public class TypeVariable extends IType {
     private final String typeString;
     private final Class<?> klazz;
 
-    public TypeVariable(String typeString, TypeParameterMap typeParameterMap) {
-        super(typeParameterMap);
+    public TypeVariable(String typeString, TypeParameterResolver typeParameterResolver) {
+        super(typeParameterResolver);
         this.typeString = typeString;
-        this.klazz = typeParameterMap.mustResolve(typeString);
+        this.klazz = typeParameterResolver.mustResolve(typeString);
     }
 
     public String name() {

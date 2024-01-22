@@ -1,23 +1,16 @@
 package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
-import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Array;
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.Map;
 
-public class TypeParameterMap {
+public class TypeParameterResolver {
 
     private final Map<String, Class<?>> scalarTypeParameterMap;
 
-    public TypeParameterMap(Map<String, Class<?>> scalarTypeParameterMap) {
+    public TypeParameterResolver(Map<String, Class<?>> scalarTypeParameterMap) {
         this.scalarTypeParameterMap = scalarTypeParameterMap;
     }
 

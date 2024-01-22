@@ -1,8 +1,6 @@
 package io.github.skibrianski.partial_interface.internal;
 
-import io.github.skibrianski.partial_interface.TypeParameterMap;
-
-import java.util.Map;
+import io.github.skibrianski.partial_interface.TypeParameterResolver;
 
 public class ClassType<E> extends IType {
 
@@ -10,8 +8,8 @@ public class ClassType<E> extends IType {
 
     private final Class<E> klazz;
 
-    public ClassType(Class<E> klazz, TypeParameterMap typeParameterMap) {
-        super(typeParameterMap);
+    public ClassType(Class<E> klazz, TypeParameterResolver typeParameterResolver) {
+        super(typeParameterResolver);
         this.klazz = klazz;
     }
 
