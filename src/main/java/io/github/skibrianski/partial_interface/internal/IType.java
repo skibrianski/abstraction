@@ -2,12 +2,7 @@ package io.github.skibrianski.partial_interface.internal;
 
 import io.github.skibrianski.partial_interface.Type;
 import io.github.skibrianski.partial_interface.TypeParameterParser;
-import io.github.skibrianski.partial_interface.TypeParameterResolver;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import io.github.skibrianski.partial_interface.TypeNameResolver;
 
 public abstract class IType {
 
@@ -20,11 +15,11 @@ public abstract class IType {
 
     public abstract String name();
 
-    public static IType convertFromAnnotation(Type type, TypeParameterResolver typeParameterResolver) {
+    public static IType convertFromAnnotation(Type type, TypeNameResolver typeNameResolver) {
         if (!type.byClass().equals(Type.NotSpecified.class)) {
             return new ClassType<>(type.byClass());
         }
-        TypeParameterParser typeParameterParser = new TypeParameterParser(typeParameterResolver);
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
         return typeParameterParser.parse(type.value());
     }
 }

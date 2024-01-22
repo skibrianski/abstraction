@@ -77,10 +77,10 @@ public final class PartialInterface {
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
-        TypeParameterResolver typeParameterResolver = new TypeParameterResolver(scalarTypeParameterMap);
+        TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
-            TypeValidator typeValidator = new TypeValidator(typeParameterResolver);
+            TypeValidator typeValidator = new TypeValidator(typeNameResolver);
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
                     .filter(m -> typeValidator.isAssignableType(m.getReturnType(), requiresChildMethod.returnType()))
@@ -90,8 +90,8 @@ public final class PartialInterface {
                 String message = "implementation " + implementation.getName()
                         + " does not implement partial interface method: "
                         + RequiresChildMethod.Util.stringify(requiresChildMethod);
-                if (!typeParameterResolver.isEmpty()) {
-                    message += " with type parameters: " + typeParameterResolver; // TODO: is this readable?
+                if (!typeNameResolver.isEmpty()) {
+                    message += " with type parameters: " + typeNameResolver; // TODO: is this readable?
                 }
                 throw new PartialInterfaceNotCompletedException(message);
             }

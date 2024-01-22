@@ -6,10 +6,10 @@ import java.lang.reflect.Method;
 
 public class TypeValidator {
 
-    private final TypeParameterResolver typeParameterResolver;
+    private final TypeNameResolver typeNameResolver;
 
-    public TypeValidator(TypeParameterResolver typeParameterResolver) {
-        this.typeParameterResolver = typeParameterResolver;
+    public TypeValidator(TypeNameResolver typeNameResolver) {
+        this.typeNameResolver = typeNameResolver;
     }
 
     public boolean hasAssignableArgumentTypes(Method implementedMethod, Type[] requiredParameterTypes) {
@@ -26,7 +26,7 @@ public class TypeValidator {
     }
 
     public boolean isAssignableType(Class<?> implementedType, Type type) {
-        IType internalType = IType.convertFromAnnotation(type, typeParameterResolver);
+        IType internalType = IType.convertFromAnnotation(type, typeNameResolver);
         Class<?> actualType = internalType.getActualType();
         return actualType.isAssignableFrom(implementedType);
     }

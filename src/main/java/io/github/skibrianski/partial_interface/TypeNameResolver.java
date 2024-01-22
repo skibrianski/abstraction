@@ -6,11 +6,11 @@ import io.github.skibrianski.partial_interface.util.StringTruncator;
 import java.lang.reflect.Array;
 import java.util.Map;
 
-public class TypeParameterResolver {
+public class TypeNameResolver {
 
     private final Map<String, Class<?>> scalarTypeParameterMap;
 
-    public TypeParameterResolver(Map<String, Class<?>> scalarTypeParameterMap) {
+    public TypeNameResolver(Map<String, Class<?>> scalarTypeParameterMap) {
         this.scalarTypeParameterMap = scalarTypeParameterMap;
     }
 

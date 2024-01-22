@@ -1,7 +1,5 @@
 package io.github.skibrianski.partial_interface.internal;
 
-import io.github.skibrianski.partial_interface.TypeParameterResolver;
-
 import java.util.List;
 
 public class ParameterizedType extends IType {

@@ -1,6 +1,6 @@
 package io.github.skibrianski.partial_interface.internal;
 
-import io.github.skibrianski.partial_interface.TypeParameterResolver;
+import io.github.skibrianski.partial_interface.TypeNameResolver;
 
 
 public class TypeVariable extends IType {
@@ -10,9 +10,9 @@ public class TypeVariable extends IType {
     private final String typeString;
     private final Class<?> klazz;
 
-    public TypeVariable(String typeString, TypeParameterResolver typeParameterResolver) {
+    public TypeVariable(String typeString, TypeNameResolver typeNameResolver) {
         this.typeString = typeString;
-        this.klazz = typeParameterResolver.mustResolve(typeString);
+        this.klazz = typeNameResolver.mustResolve(typeString);
     }
 
     public String name() {
