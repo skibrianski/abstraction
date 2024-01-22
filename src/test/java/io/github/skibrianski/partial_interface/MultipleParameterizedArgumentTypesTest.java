@@ -7,11 +7,8 @@ import org.junit.jupiter.api.Test;
 public class MultipleParameterizedArgumentTypesTest {
 
     @RequiresChildMethod(
-            returnType = @Type(void.class),
-            argumentTypes = {
-                    @Type(value = Type.TypeParameter.class, parameterName = "T"),
-                    @Type(value = Type.TypeParameter.class, parameterName = "X")
-            },
+            returnType = @Type(type = void.class),
+            argumentTypes = {@Type("T"), @Type("X")},
             methodName = "method"
     )
     interface HasMethodWithMultipleTypeParameters { }

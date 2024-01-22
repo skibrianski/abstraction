@@ -8,9 +8,7 @@ import io.github.classgraph.ScanResult;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
-import io.github.skibrianski.partial_interface.util.StringTruncator;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
@@ -84,8 +82,8 @@ public final class PartialInterface {
             TypeValidator typeValidator = new TypeValidator(typeParameterMap);
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> typeValidator.validateType(m.getReturnType(), requiresChildMethod.returnType()))
-                    .filter(m -> typeValidator.validateArgumentTypes(m, requiresChildMethod.argumentTypes()))
+                    .filter(m -> typeValidator.isAssignableType(m.getReturnType(), requiresChildMethod.returnType()))
+                    .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
                 String message = "implementation " + implementation.getName()

@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 public final class TestUtil {
 
     public static Type buildParameterizedType(String parameterName) {
-        return buildType(Type.TypeParameter.class, parameterName);
+        return buildType(Type.NotSpecified.class, parameterName);
     }
 
     public static Type buildRegularType(Class<?> classType) {
@@ -24,12 +24,12 @@ public final class TestUtil {
 
 
             @Override
-            public Class<?> value() {
+            public Class<?> type() {
                 return classType;
             }
 
             @Override
-            public String parameterName() {
+            public String value() {
                 return parameterName;
             }
         };

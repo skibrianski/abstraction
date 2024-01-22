@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class ParameterizedArrayTypeTest {
 
     @RequiresChildMethod(
-            returnType = @Type(value = Type.TypeParameter.class, parameterName = "R"),
-            argumentTypes = {@Type(value = Type.TypeParameter.class, parameterName = "R...")},
+            returnType = @Type("R"),
+            argumentTypes = {@Type("R...")},
             methodName = "sum"
     )
     interface WithSummation { }

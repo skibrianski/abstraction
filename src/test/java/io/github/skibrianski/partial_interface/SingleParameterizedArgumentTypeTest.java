@@ -10,8 +10,8 @@ public class SingleParameterizedArgumentTypeTest {
     public static class AChild extends A { }
 
     @RequiresChildMethod(
-            returnType = @Type(void.class),
-            argumentTypes = {@Type(value = Type.TypeParameter.class, parameterName = "T")},
+            returnType = @Type(type = void.class),
+            argumentTypes = {@Type("T")},
             methodName = "method"
     )
     interface HasMethodWithLoneTypeParameter { }

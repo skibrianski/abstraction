@@ -10,8 +10,8 @@ public class ObjectTest {
     public static class AChild extends A { }
 
     @RequiresChildMethod(
-            returnType = @Type(A.class),
-            argumentTypes = {@Type(A.class)},
+            returnType = @Type(type = A.class),
+            argumentTypes = {@Type(type = A.class)},
             methodName = "scramble"
     )
     interface WithScrambler { }

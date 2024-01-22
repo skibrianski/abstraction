@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 public class RepeatedAnnotationTest {
 
     @RequiresChildMethod(
-            returnType = @Type(int.class),
+            returnType = @Type(type = int.class),
             argumentTypes = {},
             methodName = "intSupplier"
     )
     @RequiresChildMethod(
-            returnType = @Type(String.class),
+            returnType = @Type(type = String.class),
             argumentTypes = {},
             methodName = "stringSupplier"
     )

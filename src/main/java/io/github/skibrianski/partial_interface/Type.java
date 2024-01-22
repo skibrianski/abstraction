@@ -1,25 +1,21 @@
 package io.github.skibrianski.partial_interface;
 
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
 import java.lang.annotation.Target;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Target({ElementType.TYPE})
 public @interface Type {
-    Class<?> value();
-    String parameterName() default "";
+    Class<?> type() default NotSpecified.class;
+    String value() default "";
 
-    interface TypeParameter { }
+    interface NotSpecified { }
 
     class Util {
         public static String stringify(Type type) {
-            if (TypeParameter.class.isAssignableFrom(type.value())) {
-                return type.parameterName();
+            if (NotSpecified.class.isAssignableFrom(type.type())) {
+                return type.value();
             } else {
-                return type.value().getSimpleName();
+                return type.type().getSimpleName();
             }
         }
     }
