@@ -75,8 +75,9 @@ public final class PartialInterface {
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
-        Map<String, Class<?>> typeParameterMap = Arrays.stream(hasTypeParameters)
+        Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
+        TypeParameterMap typeParameterMap = new TypeParameterMap(scalarTypeParameterMap);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
             TypeValidator typeValidator = new TypeValidator(typeParameterMap);

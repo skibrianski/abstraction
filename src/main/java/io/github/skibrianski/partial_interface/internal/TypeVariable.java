@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface.internal;
 
+import io.github.skibrianski.partial_interface.TypeParameterMap;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
@@ -11,10 +12,12 @@ public class TypeVariable extends IType {
     // handles eg @Type("R"), @Type("Z"), @Type("CONTAINER")
 
     private final String typeString;
+    private final Class<?> klazz;
 
-    public TypeVariable(String typeString, Map<String, Class<?>> typeParameterMap) {
+    public TypeVariable(String typeString, TypeParameterMap typeParameterMap) {
         super(typeParameterMap);
         this.typeString = typeString;
+        this.klazz = typeParameterMap.mustResolve(typeString);
     }
 
     public String name() {
@@ -23,32 +26,6 @@ public class TypeVariable extends IType {
 
     @Override
     public Class<?> getActualType() {
-        StringTruncator parameterNameTruncator = new StringTruncator(typeString)
-                .truncateOnce("...")
-                .truncateAll("[]");
-        String baseParameterName = parameterNameTruncator.value();
-        int arrayLevels = parameterNameTruncator.truncationCount();
-
-        Class<?> baseType = getTypeParameter(baseParameterName);
-        if (baseType == null) {
-            if (baseParameterName.equals(typeString)) {
-                throw new PartialInterfaceNotCompletedException(
-                        "cannot find type parameter: " + typeString // TODO: more detail
-                );
-            } else {
-                // TODO: test coverage
-                throw new PartialInterfaceNotCompletedException(
-                        "cannot find base type parameter: " + baseParameterName // TODO: more detail
-                                + " for parameter: " + typeString
-                );
-            }
-        }
-
-        Class<?> actualType = baseType;
-        while (arrayLevels > 0) {
-            actualType = Array.newInstance(actualType, 0).getClass();
-            arrayLevels--;
-        }
-        return actualType;
+        return klazz;
     }
 }

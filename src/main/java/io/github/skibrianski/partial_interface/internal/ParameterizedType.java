@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface.internal;
 
+import io.github.skibrianski.partial_interface.TypeParameterMap;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
@@ -16,7 +17,7 @@ public class ParameterizedType extends IType {
     public ParameterizedType(
             Class<?> baseClass,
             IType[] parameters,
-            Map<String, Class<?>> typeParameterMap
+            TypeParameterMap typeParameterMap
     ) {
         super(typeParameterMap);
         this.baseClass = baseClass;

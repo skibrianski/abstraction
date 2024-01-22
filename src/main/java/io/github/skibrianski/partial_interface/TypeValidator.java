@@ -15,9 +15,9 @@ import java.util.Map;
 
 public class TypeValidator {
 
-    private final Map<String, Class<?>> typeParameterMap;
+    private final TypeParameterMap typeParameterMap;
 
-    public TypeValidator(Map<String, Class<?>> typeParameterMap) {
+    public TypeValidator(TypeParameterMap typeParameterMap) {
         this.typeParameterMap = typeParameterMap;
     }
 

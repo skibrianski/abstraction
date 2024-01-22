@@ -25,18 +25,24 @@ public class TypeParameterMap {
         return scalarTypeParameterMap.isEmpty();
     }
 
-
+    @Deprecated
+    public boolean containsKey(String typeString) {
+        return scalarTypeParameterMap.containsKey(typeString);
+    }
 
     public boolean canResolve(String typeString) {
-        StringTruncator parameterNameTruncator = new StringTruncator(typeString)
-                .truncateOnce("...")
-                .truncateAll("[]");
-        String baseParameterName = parameterNameTruncator.value();
+        return resolve(typeString, false) != null;
+    }
 
-        return scalarTypeParameterMap.containsKey(baseParameterName);
+    public Class<?> resolve(String typeString) {
+        return resolve(typeString, false);
     }
 
     public Class<?> mustResolve(String typeString) {
+        return resolve(typeString, true);
+    }
+
+    private Class<?> resolve(String typeString, boolean shouldThrow) {
         StringTruncator parameterNameTruncator = new StringTruncator(typeString)
                 .truncateOnce("...")
                 .truncateAll("[]");
@@ -45,6 +51,10 @@ public class TypeParameterMap {
 
         Class<?> baseType = scalarTypeParameterMap.get(baseParameterName);
         if (baseType == null) {
+            if (!shouldThrow) {
+                return null;
+            }
+
             if (baseParameterName.equals(typeString)) {
                 throw new PartialInterfaceNotCompletedException(
                         "cannot find type parameter: " + typeString // TODO: more detail
@@ -56,37 +66,6 @@ public class TypeParameterMap {
                                 + " for parameter: " + typeString
                 );
             }
-        }
-
-        Class<?> actualType = baseType;
-        while (arrayLevels > 0) {
-            actualType = Array.newInstance(actualType, 0).getClass();
-            arrayLevels--;
-        }
-        return actualType;
-    }
-
-    public Class<?> resolve(String typeString) {
-        StringTruncator parameterNameTruncator = new StringTruncator(typeString)
-                .truncateOnce("...")
-                .truncateAll("[]");
-        String baseParameterName = parameterNameTruncator.value();
-        int arrayLevels = parameterNameTruncator.truncationCount();
-
-        Class<?> baseType = scalarTypeParameterMap.get(baseParameterName);
-        if (baseType == null) {
-            return null;
-//            if (baseParameterName.equals(typeString)) {
-//                throw new PartialInterfaceNotCompletedException(
-//                        "cannot find type parameter: " + typeString // TODO: more detail
-//                );
-//            } else {
-//                 TODO: test coverage
-//                throw new PartialInterfaceNotCompletedException(
-//                        "cannot find base type parameter: " + baseParameterName // TODO: more detail
-//                                + " for parameter: " + typeString
-//                );
-//            }
         }
 
         Class<?> actualType = baseType;

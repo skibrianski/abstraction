@@ -1,6 +1,8 @@
 package io.github.skibrianski.partial_interface.internal;
 
 import io.github.skibrianski.partial_interface.Type;
+import io.github.skibrianski.partial_interface.TypeParameterMap;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
@@ -10,19 +12,19 @@ public abstract class IType {
 
 
     // TODO: this probably doesn't belong here, but rather in our parser
-    private final Map<String, Class<?>> typeParameterMap;
+    private final TypeParameterMap typeParameterMap;
 
-    public IType(Map<String, Class<?>> typeParameterMap) {
+    public IType(TypeParameterMap typeParameterMap) {
         this.typeParameterMap = typeParameterMap;
     }
 
     protected Class<?> getTypeParameter(String name) {
-        return typeParameterMap.get(name);
+        return typeParameterMap.resolve(name);
     }
 
     public abstract Class<?> getActualType();
 
-    public static IType convertFromAnnotation(Type type, Map<String, Class<?>> typeParameterMap) {
+    public static IType convertFromAnnotation(Type type, TypeParameterMap typeParameterMap) {
         if (!type.byClass().equals(Type.NotSpecified.class)) {
             return new ClassType<>(type.byClass(), typeParameterMap);
         }
@@ -31,12 +33,12 @@ public abstract class IType {
 
     public static IType parse(
             String typeString,
-            Map<String, Class<?>> typeParameterMap
+            TypeParameterMap typeParameterMap
     ) {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
             // TODO: typeParameterMap needs to be a bit smarter and handle de-arrayification
-            if (typeParameterMap.containsKey(typeString)) {
+            if (typeParameterMap.canResolve(typeString)) {
                 // TODO: resolve the variable?
                 return new TypeVariable(typeString, typeParameterMap);
             } else {
@@ -60,8 +62,10 @@ public abstract class IType {
             return Class.forName(name);
 //            return new ParameterizedType(baseClass, ...);
         } catch (ClassNotFoundException e) {
-            throw new PartialInterfaceUsageException(
-                    "cannot load class: " + name + ", try a fully qualified type like java.util.List instead"
+            throw new PartialInterfaceException(
+                    "cannot load class: " + name + "."
+                            + " maybe you misspelled your type variable?"
+                            + " or try a fully qualified type like java.util.List instead?"
             );
         }
     }

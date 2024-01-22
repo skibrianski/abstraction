@@ -1,5 +1,7 @@
 package io.github.skibrianski.partial_interface.internal;
 
+import io.github.skibrianski.partial_interface.TypeParameterMap;
+
 import java.util.Map;
 
 public class ClassType<E> extends IType {
@@ -8,7 +10,7 @@ public class ClassType<E> extends IType {
 
     private final Class<E> klazz;
 
-    public ClassType(Class<E> klazz, Map<String, Class<?>> typeParameterMap) {
+    public ClassType(Class<E> klazz, TypeParameterMap typeParameterMap) {
         super(typeParameterMap);
         this.klazz = klazz;
     }
