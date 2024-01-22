@@ -18,11 +18,6 @@ public class TypeParameterResolver {
         return scalarTypeParameterMap.isEmpty();
     }
 
-    @Deprecated
-    public boolean containsKey(String typeString) {
-        return scalarTypeParameterMap.containsKey(typeString);
-    }
-
     public boolean canResolve(String typeString) {
         return resolve(typeString, false) != null;
     }
