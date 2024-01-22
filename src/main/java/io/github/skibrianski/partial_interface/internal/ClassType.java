@@ -13,6 +13,11 @@ public class ClassType<E> extends IType {
     }
 
     @Override
+    public String name() {
+        return klazz.getName();
+    }
+
+    @Override
     public Class<?> getActualType() {
         return klazz;
     }

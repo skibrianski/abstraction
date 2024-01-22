@@ -15,6 +15,8 @@ public abstract class IType {
 
     public abstract Class<?> getActualType();
 
+    public abstract String name();
+
     public static IType convertFromAnnotation(Type type, TypeParameterResolver typeParameterResolver) {
         if (!type.byClass().equals(Type.NotSpecified.class)) {
             return new ClassType<>(type.byClass());
@@ -28,9 +30,7 @@ public abstract class IType {
     ) {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
-            // TODO: typeParameterMap needs to be a bit smarter and handle de-arrayification
             if (typeParameterResolver.canResolve(typeString)) {
-                // TODO: resolve the variable?
                 return new TypeVariable(typeString, typeParameterResolver);
             } else {
                 return new ClassType<>(classForName(typeString));

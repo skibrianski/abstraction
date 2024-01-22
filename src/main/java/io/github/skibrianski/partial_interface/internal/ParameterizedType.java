@@ -19,6 +19,11 @@ public class ParameterizedType extends IType {
     }
 
     @Override
+    public String name() {
+        throw new RuntimeException("unimplemented");
+    }
+
+    @Override
     public Class<?> getActualType() {
         throw new RuntimeException("unimplemented");
     }
