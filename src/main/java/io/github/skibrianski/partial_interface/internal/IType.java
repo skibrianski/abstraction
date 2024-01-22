@@ -23,21 +23,25 @@ public abstract class IType {
     public abstract Class<?> getActualType();
 
     public static IType convertFromAnnotation(Type type, Map<String, Class<?>> typeParameterMap) {
-        return parse(type.byClass(), type.value(), typeParameterMap);
+        if (!type.byClass().equals(Type.NotSpecified.class)) {
+            return new ClassType<>(type.byClass(), typeParameterMap);
+        }
+        return parse(type.value(), typeParameterMap);
     }
 
     public static IType parse(
-            Class<?> typeClass,
             String typeString,
             Map<String, Class<?>> typeParameterMap
     ) {
-        if (!typeClass.equals(Type.NotSpecified.class)) {
-            return new ClassType<>(typeClass, typeParameterMap);
-        }
-
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
-            return new TypeVariable(typeString, typeParameterMap);
+            // TODO: typeParameterMap needs to be a bit smarter and handle de-arrayification
+            if (typeParameterMap.containsKey(typeString)) {
+                // TODO: resolve the variable?
+                return new TypeVariable(typeString, typeParameterMap);
+            } else {
+                return new ClassType<>(classForName(typeString), typeParameterMap);
+            }
         }
 
         String variable = typeString.substring(0, nextOpen);
@@ -46,16 +50,20 @@ public abstract class IType {
                 typeString.lastIndexOf('>')
         );
         // if input was: `Map<R, X<String>>`, variable will be `Map` and typeParameterArgumentsString `R, X<String>`
-        try {
-            Class<?> baseClass = Class.forName(variable);
+        Class<?> baseClass = classForName(variable);
             // TODO: we now have `Foo, Map<UUID, Bar>, Baz` or something. call parseList(typeParameterArgumentsString)
+        throw new RuntimeException("not implemented");
+    }
+
+    private static Class<?> classForName(String name) {
+        try {
+            return Class.forName(name);
 //            return new ParameterizedType(baseClass, ...);
         } catch (ClassNotFoundException e) {
             throw new PartialInterfaceUsageException(
-                    "cannot load class: " + variable + ", try a fully qualified type like java.util.List instead"
+                    "cannot load class: " + name + ", try a fully qualified type like java.util.List instead"
             );
         }
-        throw new RuntimeException("not implemented");
     }
 
     public static IType[] parseList(String typeParameterArgumentString, Map<String, Class<?>> typeParameterMap) {
