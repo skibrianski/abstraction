@@ -2,6 +2,7 @@ package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
@@ -27,7 +28,15 @@ public class TypeParameterParser {
             if (typeParameterResolver.canResolve(typeString)) {
                 return new TypeVariable(typeString, typeParameterResolver);
             } else {
-                return new ClassType<>(classForName(typeString));
+                try {
+                    return new ClassType<>(classForName(typeString));
+                } catch (ClassNotFoundException e) {
+                    throw new PartialInterfaceUsageException(
+                            "cannot find class: " + typeString + "."
+                                    + " maybe you misspelled your type variable?"
+                                    + " or try a fully qualified type like java.util.List instead?"
+                    );
+                }
             }
         }
 
@@ -37,11 +46,25 @@ public class TypeParameterParser {
                 typeString.lastIndexOf('>')
         );
         // if input was: `Map<R, X<String>>`, variable will be `Map` and typeParameterArgumentsString `R, X<String>`
-        Class<?> baseClass = typeParameterResolver.canResolve(typeVariableName)
-                ? typeParameterResolver.resolve(typeVariableName)
-                : classForName(typeVariableName);
-        List<IType> argumentTypes = parseList(typeParameterArgumentsString);
-        return new ParameterizedType(baseClass, argumentTypes);
+        Class<?> baseClass;
+
+        if (typeParameterResolver.canResolve(typeVariableName)) {
+            baseClass = typeParameterResolver.resolve(typeVariableName);
+        } else {
+            // wrong. we want type params, too
+//            try {
+//                baseClass = classForName(typeVariableName);
+//            } catch (ClassNotFoundException e) {
+//                throw new PartialInterfaceUsageException(
+//                        "cannot find class: " + typeString + "."
+//                                + " maybe you misspelled your type variable?"
+//                                + " or try a fully qualified type like java.util.List instead?"
+//                );
+//            }
+        }
+//        List<IType> argumentTypes = parseList(typeParameterArgumentsString);
+//        return new ParameterizedType(baseClass, argumentTypes);
+        return null;
     }
 
     public List<IType> parseList(String typeParameterArgumentString) {
@@ -58,17 +81,23 @@ public class TypeParameterParser {
         return argumentTypes;
     }
 
-    // TODO: probably: stop wrapping this in try-catch and let caller throw a more precise exception type?
-    private static Class<?> classForName(String name) {
-        try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            throw new PartialInterfaceException(
-                    "cannot load class: " + name + "."
-                            + " maybe you misspelled your type variable?"
-                            + " or try a fully qualified type like java.util.List instead?"
-            );
-        }
+    // TODO: this is a bit of am abuse of the name "TypeParameterResolver". rename TypeParameterResolver?
+    private static final TypeParameterResolver primitiveResolver = new TypeParameterResolver(
+            Map.ofEntries(
+                    Map.entry("boolean", boolean.class),
+                    Map.entry("byte", byte.class),
+                    Map.entry("char", char.class),
+                    Map.entry("double", double.class),
+                    Map.entry("float", float.class),
+                    Map.entry("int", int.class),
+                    Map.entry("long", long.class),
+                    Map.entry("short", short.class)
+            )
+    );
+
+    private static Class<?> classForName(String name) throws ClassNotFoundException {
+        Class<?> primitiveClass = primitiveResolver.resolve(name);
+        return primitiveClass == null ? Class.forName(name) : primitiveClass;
     }
 
     private static int findArgumentEndPos(String haystack) {
@@ -91,7 +120,6 @@ public class TypeParameterParser {
             }
             pos++;
         }
-
     }
 }
 

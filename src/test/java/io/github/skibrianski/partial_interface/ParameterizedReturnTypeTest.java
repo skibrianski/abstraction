@@ -2,6 +2,7 @@ package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -65,8 +66,9 @@ public class ParameterizedReturnTypeTest {
     }
     @Test
     void test_invalidTypeParameterName() {
+        // TODO: should validate HasTypeParameter and throw a precise exception on that instead.
         Assertions.assertThrows(
-                PartialInterfaceException.class,
+                PartialInterfaceUsageException.class,
                 () -> PartialInterface.check(WrongTypeParameterName.class)
         );
     }
