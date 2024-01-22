@@ -6,8 +6,8 @@ import java.util.Map;
 
 public abstract class IType {
 
-    // parameterized types eg: @Type("List<R>"), @Type("Map<UUID, R"), @Type("R<String>"), @Type("R<X>")
 
+    // TODO: this probably doesn't belong here, but rather in our parser
     private final Map<String, Class<?>> typeParameterMap;
 
     public IType(Map<String, Class<?>> typeParameterMap) {
@@ -21,10 +21,18 @@ public abstract class IType {
     public abstract Class<?> getActualType();
 
     public static IType convertFromAnnotation(Type type, Map<String, Class<?>> typeParameterMap) {
-        if (type.byClass().equals(Type.NotSpecified.class)) {
-            return new TypeVariable(type.value(), typeParameterMap);
-        } else {
+        if (!type.byClass().equals(Type.NotSpecified.class)) {
             return new ClassType<>(type.byClass(), typeParameterMap);
         }
+
+        String typeString = type.value();
+        if (!typeString.contains("<")) {
+            return new TypeVariable(typeString, typeParameterMap);
+        }
+
+        if (typeString.matches("^[^<]+<[^>]+>$")) {
+            throw new RuntimeException("unimplemented - match");
+        }
+        throw new RuntimeException("unimplemented");
     }
 }
