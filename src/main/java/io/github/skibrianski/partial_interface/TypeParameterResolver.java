@@ -22,10 +22,12 @@ public class TypeParameterResolver {
         return resolve(typeString, false) != null;
     }
 
+    // returns null on failure to lookup
     public Class<?> resolve(String typeString) {
         return resolve(typeString, false);
     }
 
+    // throws Exception on failure to lookup
     public Class<?> mustResolve(String typeString) {
         return resolve(typeString, true);
     }
