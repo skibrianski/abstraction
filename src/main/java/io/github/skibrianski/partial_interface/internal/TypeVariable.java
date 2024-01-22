@@ -10,6 +10,17 @@ public class TypeVariable extends IType {
 
     // handles eg @Type("R"), @Type("Z"), @Type("CONTAINER")
 
+    private final String typeString;
+
+    public TypeVariable(String typeString, Map<String, Class<?>> typeParameterMap) {
+        super(typeParameterMap);
+        this.typeString = typeString;
+    }
+
+    public String name() {
+        return this.typeString;
+    }
+
     @Override
     public Class<?> getActualType() {
         StringTruncator parameterNameTruncator = new StringTruncator(typeString)
@@ -39,16 +50,5 @@ public class TypeVariable extends IType {
             arrayLevels--;
         }
         return actualType;
-    }
-
-    private final String typeString;
-
-    public TypeVariable(String typeString, Map<String, Class<?>> typeParameterMap) {
-        super(typeParameterMap);
-        this.typeString = typeString;
-    }
-
-    public String name() {
-        return this.typeString;
     }
 }

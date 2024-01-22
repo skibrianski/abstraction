@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class VoidReturnTest {
 
     @RequiresChildMethod(
-            returnType = @Type(type = void.class),
+            returnType = @Type(byClass = void.class),
             argumentTypes = {},
             methodName = "doIt"
     )

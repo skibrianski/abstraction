@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class PrimitiveTest {
 
     @RequiresChildMethod(
-            returnType = @Type(type = int.class),
-            argumentTypes = {@Type(type = int.class)},
+            returnType = @Type(byClass = int.class),
+            argumentTypes = {@Type(byClass = int.class)},
             methodName = "triple"
     )
     interface WithTriple { }

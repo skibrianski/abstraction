@@ -10,7 +10,7 @@ public class SingleParameterizedArgumentTypeTest {
     public static class AChild extends A { }
 
     @RequiresChildMethod(
-            returnType = @Type(type = void.class),
+            returnType = @Type(byClass = void.class),
             argumentTypes = {@Type("T")},
             methodName = "method"
     )

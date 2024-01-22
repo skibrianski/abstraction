@@ -5,17 +5,17 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE})
 public @interface Type {
-    Class<?> type() default NotSpecified.class;
+    Class<?> byClass() default NotSpecified.class;
     String value() default "";
 
     interface NotSpecified { }
 
     class Util {
         public static String stringify(Type type) {
-            if (NotSpecified.class.isAssignableFrom(type.type())) {
+            if (NotSpecified.class.equals(type.byClass())) {
                 return type.value();
             } else {
-                return type.type().getSimpleName();
+                return type.byClass().getSimpleName();
             }
         }
     }

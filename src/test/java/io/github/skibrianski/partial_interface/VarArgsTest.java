@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class VarArgsTest {
 
     @RequiresChildMethod(
-            returnType = @Type(type = String.class),
-            argumentTypes = {@Type(type = String[].class)},
+            returnType = @Type(byClass = String.class),
+            argumentTypes = {@Type(byClass = String[].class)},
             methodName = "concat"
     )
     interface WithConcatenation { }

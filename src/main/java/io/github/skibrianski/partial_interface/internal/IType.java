@@ -21,10 +21,10 @@ public abstract class IType {
     public abstract Class<?> getActualType();
 
     public static IType convertFromAnnotation(Type type, Map<String, Class<?>> typeParameterMap) {
-        if (type.type().equals(Type.NotSpecified.class)) {
+        if (type.byClass().equals(Type.NotSpecified.class)) {
             return new TypeVariable(type.value(), typeParameterMap);
         } else {
-            return new ClassType<>(type.type(), typeParameterMap);
+            return new ClassType<>(type.byClass(), typeParameterMap);
         }
     }
 }
