@@ -21,11 +21,7 @@ public class TypeValidator {
             return false;
         }
         for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
-            boolean argumentOk = isAssignableType(
-                    implementedMethod.getParameterTypes()[pos],
-                    requiredParameterTypes[pos]
-            );
-            if (!argumentOk) {
+            if (!isAssignableType(parameterTypes[pos], requiredParameterTypes[pos])) {
                 return false;
             }
         }
