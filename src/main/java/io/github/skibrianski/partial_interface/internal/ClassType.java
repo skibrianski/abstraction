@@ -8,8 +8,7 @@ public class ClassType<E> extends IType {
 
     private final Class<E> klazz;
 
-    public ClassType(Class<E> klazz, TypeParameterResolver typeParameterResolver) {
-        super(typeParameterResolver);
+    public ClassType(Class<E> klazz) {
         this.klazz = klazz;
     }
 

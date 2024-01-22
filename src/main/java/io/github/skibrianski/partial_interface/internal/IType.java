@@ -10,21 +10,14 @@ public abstract class IType {
 
 
     // TODO: this probably doesn't belong here, but rather in our parser
-    private final TypeParameterResolver typeParameterResolver;
 
-    public IType(TypeParameterResolver typeParameterResolver) {
-        this.typeParameterResolver = typeParameterResolver;
-    }
-
-    protected Class<?> getTypeParameter(String name) {
-        return typeParameterResolver.resolve(name);
-    }
+    public IType() { }
 
     public abstract Class<?> getActualType();
 
     public static IType convertFromAnnotation(Type type, TypeParameterResolver typeParameterResolver) {
         if (!type.byClass().equals(Type.NotSpecified.class)) {
-            return new ClassType<>(type.byClass(), typeParameterResolver);
+            return new ClassType<>(type.byClass());
         }
         return parse(type.value(), typeParameterResolver);
     }
@@ -40,7 +33,7 @@ public abstract class IType {
                 // TODO: resolve the variable?
                 return new TypeVariable(typeString, typeParameterResolver);
             } else {
-                return new ClassType<>(classForName(typeString), typeParameterResolver);
+                return new ClassType<>(classForName(typeString));
             }
         }
 

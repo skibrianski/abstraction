@@ -11,7 +11,6 @@ public class TypeVariable extends IType {
     private final Class<?> klazz;
 
     public TypeVariable(String typeString, TypeParameterResolver typeParameterResolver) {
-        super(typeParameterResolver);
         this.typeString = typeString;
         this.klazz = typeParameterResolver.mustResolve(typeString);
     }

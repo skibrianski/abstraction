@@ -14,7 +14,6 @@ public class ParameterizedType extends IType {
             IType[] parameters,
             TypeParameterResolver typeParameterResolver
     ) {
-        super(typeParameterResolver);
         this.baseClass = baseClass;
         this.parameters = parameters;
     }
