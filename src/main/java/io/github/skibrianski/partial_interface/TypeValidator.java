@@ -39,28 +39,5 @@ public class TypeValidator {
         Class<?> actualType = internalType.getActualType();
         return actualType.isAssignableFrom(implementedType);
     }
-
-    // TODO
-    private static Class<?> boxClass(Class<?> primitiveClass) {
-        if (primitiveClass.equals(boolean.class)) {
-            return Boolean.class;
-        } else if (primitiveClass.equals(byte.class)) {
-            return Byte.class;
-        } else if (primitiveClass.equals(char.class)) {
-            return Character.class;
-        } else if (primitiveClass.equals(double.class)) {
-            return Double.class;
-        } else if (primitiveClass.equals(float.class)) {
-            return Float.class;
-        } else if (primitiveClass.equals(int.class)) {
-            return Integer.class;
-        } else if (primitiveClass.equals(long.class)) {
-            return Long.class;
-        } else if (primitiveClass.equals(short.class)) {
-            return Short.class;
-        } else {
-            throw new RuntimeException("internal error: cannot box class: " + primitiveClass.getName());
-        }
-    }
 }
 
