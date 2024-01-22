@@ -7,16 +7,15 @@
   - constructor constraints?
 
 todo:
-  - special support for primitives requires support in annotation, eg.
-    instead of just @Type(int.class), @type(int.class, object=Integer.class) or so?
-  - support use of eg T<String> when T is Object
+  - support eg Foo<T>. if T == primitive, Foo<BOXED<T>> will be used instead.
+    - requires a buncha gnarly reflective stuff to determine type params and junk.
+  - support eg T<String>
+  - support eg T<X>
   - use in abstract class (not interface)
 
 questions:
-- support use of eg Stream<T> -- will not work if T is primitive
+- alternative to boxing support of eg Stream<T>
   - could be supported with some alternative, eg Stream<T> for int would be an IntStream
-  - or instead of requiring List<primitive>, require List<BOX<primitive>>
-- support use of eg T<X> -- will not work if X is primitive.
 
 caveats:
 - refactoring cannot be done automatically in an IDE
