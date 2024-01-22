@@ -15,16 +15,6 @@ public class TypeValidator {
         this.typeParameterMap = typeParameterMap;
     }
 
-    public void validateType(Type type) {
-        // @Type(type = int.class) == @Type("int")
-        // @Type("R")
-        // @Type("List<R>")
-        // @Type("Map<UUID, R>")
-        if (!type.value().isEmpty()) {
-
-        }
-    }
-
     public boolean hasAssignableArgumentTypes(Method implementedMethod, Type[] requiredParameterTypes) {
         Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
         if (requiredParameterTypes.length != parameterTypes.length) {
@@ -49,7 +39,7 @@ public class TypeValidator {
         return actualType.isAssignableFrom(implementedType);
     }
 
-    public Class<?> getActualTypeForTypeParameter(String typeString) {
+    private Class<?> getActualTypeForTypeParameter(String typeString) {
         StringTruncator parameterNameTruncator = new StringTruncator(typeString)
                 .truncateOnce("...")
                 .truncateAll("[]");
