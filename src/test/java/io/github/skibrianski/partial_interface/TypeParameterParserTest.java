@@ -152,4 +152,20 @@ public class TypeParameterParserTest {
         Assertions.assertInstanceOf(TypeVariable.class, secondParameterInternalType);
         Assertions.assertEquals(char.class, secondParameterInternalType.getActualType());
     }
+
+    @Test
+    void test_parameterized_withTypeVariableAsBaseOfTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("C", List.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        IType baseInternalType = typeParameterParser.parse("C<String>");
+        Assertions.assertEquals(List.class, baseInternalType.getActualType());
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType baseParameterizedType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(1, baseParameterizedType.getParameters().size());
+
+        IType firstParameterInternalType = baseParameterizedType.getParameters().get(0);
+        Assertions.assertInstanceOf(ClassType.class, firstParameterInternalType);
+        Assertions.assertEquals(String.class, firstParameterInternalType.getActualType());
+    }
 }
