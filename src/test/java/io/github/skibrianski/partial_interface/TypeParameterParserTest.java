@@ -14,7 +14,7 @@ import java.util.UUID;
 public class TypeParameterParserTest {
 
     @Test
-    void test_unparameterizedPrimitive_scalar() {
+    void test_unparameterized_primitive_scalar() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -23,7 +23,7 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_unparameterizedPrimitive_array() {
+    void test_unparameterized_primitive_array() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -32,7 +32,7 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_multiDimensionalArray() {
+    void test_unparameterized_multiDimensionalArray() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -41,7 +41,7 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_unparameterizedObjectBuiltIn_scalar() {
+    void test_unparameterized_builtIn_scalar() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -50,12 +50,28 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_unparameterizedObjectBuiltIn_array() {
+    void test_unparameterized_builtIn_array() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
         IType integerType = typeParameterParser.parse("Comparable[]");
         Assertions.assertEquals(Comparable[].class, integerType.getActualType());
+    }
+
+    @Test
+    void test_unparameterized_withNonVariableTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        IType baseInternalType = typeParameterParser.parse("List<Integer>");
+        Assertions.assertEquals(List.class, baseInternalType.getActualType());
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(1, parameterizedBaseType.getParameters().size());
+
+        IType parameterInternalType = parameterizedBaseType.getParameters().get(0);
+        Assertions.assertInstanceOf(ClassType.class, parameterInternalType);
+        Assertions.assertEquals(Integer.class, parameterInternalType.getActualType());
     }
 
     @Test
@@ -78,24 +94,7 @@ public class TypeParameterParserTest {
 
 
     @Test
-    void test_unparameterizedObject_withNonVariableTypeParameter() {
-        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-
-        IType baseInternalType = typeParameterParser.parse("List<Integer>");
-        Assertions.assertEquals(List.class, baseInternalType.getActualType());
-        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
-        Assertions.assertEquals(1, parameterizedBaseType.getParameters().size());
-
-        IType parameterInternalType = parameterizedBaseType.getParameters().get(0);
-        Assertions.assertInstanceOf(ClassType.class, parameterInternalType);
-        Assertions.assertEquals(Integer.class, parameterInternalType.getActualType());
-    }
-
-
-    @Test
-    void test_unparameterizedObject_withVariableTypeParameter() {
+    void test_parameterized_withVariableTypeParameter() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -111,7 +110,7 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_unparameterizedObject_withMultipleTypeParameters() {
+    void test_parameterized_withMultipleTypeParameters() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
@@ -131,7 +130,7 @@ public class TypeParameterParserTest {
     }
 
     @Test
-    void test_unparameterizedObject_withNestedTypeParameters() {
+    void test_parameterized_withNestedTypeParameters() {
         TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", char.class));
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
