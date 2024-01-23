@@ -32,7 +32,8 @@ public class TypeParameterParser {
                     throw new PartialInterfaceUsageException(
                             "cannot find class: " + typeString + "."
                                     + " maybe you misspelled your type variable?"
-                                    + " or try a fully qualified type like java.util.List instead?"
+                                    + " or try a fully qualified type like java.util.List instead?",
+                            e
                     );
                 }
             }
