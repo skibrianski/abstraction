@@ -13,7 +13,7 @@ public class TypeValidator {
     }
 
     public boolean hasAssignableArgumentTypes(Method implementedMethod, Type[] requiredParameterTypes) {
-        Class<?>[] parameterTypes = implementedMethod.getParameterTypes();
+        Class<?>[] parameterTypes = implementedMethod.getParameterTypes(); // TODO: use getGenericParameterTypes() instead?
         if (requiredParameterTypes.length != parameterTypes.length) {
             return false;
         }
@@ -26,6 +26,7 @@ public class TypeValidator {
     }
 
     public boolean isAssignableType(Class<?> implementedType, Type type) {
+        // TODO: pass in type arguments for implementedType, compare both.
         IType internalType = IType.convertFromAnnotation(type, typeNameResolver);
         Class<?> actualType = internalType.getActualType();
         return actualType.isAssignableFrom(implementedType);
