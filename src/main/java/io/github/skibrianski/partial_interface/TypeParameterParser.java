@@ -58,14 +58,8 @@ public class TypeParameterParser {
         List<IType> argumentTypes = new ArrayList<>();
         while (true) {
             int argumentEndPos = findArgumentEndPos(workingString);
-            boolean lastArgument = argumentEndPos == -1;
-            if (lastArgument) {
-                argumentEndPos = workingString.length();
-            }
-            String typeParameterString = workingString.substring(0, argumentEndPos);
-            IType type = parse(typeParameterString);
-            argumentTypes.add(type);
-            if (lastArgument) {
+            argumentTypes.add(parse(workingString.substring(0, argumentEndPos)));
+            if (argumentEndPos == workingString.length()) {
                 break;
             }
             workingString = workingString.substring(argumentEndPos + 1).trim();
@@ -98,7 +92,7 @@ public class TypeParameterParser {
             }
             pos++;
         }
-        return -1;
+        return pos;
     }
 }
 
