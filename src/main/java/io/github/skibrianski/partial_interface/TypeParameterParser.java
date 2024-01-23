@@ -77,14 +77,10 @@ public class TypeParameterParser {
         int nestCount = 0;
         while (pos < haystack.length()) {
             char c = haystack.charAt(pos);
-            // TOOD: use switch instead, probably.
             if (c == '<') {
                 nestCount++;
             }
             if (c == '>') {
-                if (nestCount == 0) {
-                    return pos;
-                }
                 nestCount--;
             }
             if (c == ',' && nestCount == 0) {
