@@ -10,9 +10,9 @@ public class TypeVariable extends IType {
     private final String typeString;
     private final Class<?> klazz;
 
-    public TypeVariable(String typeString, TypeNameResolver typeNameResolver) {
+    public TypeVariable(String typeString, Class<?> klazz) {
         this.typeString = typeString;
-        this.klazz = typeNameResolver.mustResolve(typeString);
+        this.klazz = klazz;
     }
 
     public String name() {

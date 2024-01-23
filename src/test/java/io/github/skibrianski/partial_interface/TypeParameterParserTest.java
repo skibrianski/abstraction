@@ -1,10 +1,13 @@
 package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.internal.IType;
+import io.github.skibrianski.partial_interface.internal.ParameterizedType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class TypeParameterParserTest {
 
@@ -69,5 +72,47 @@ public class TypeParameterParserTest {
 
         Assertions.assertEquals(int[].class, typeParameterParser.parse("R...").getActualType());
         Assertions.assertEquals(int[].class, typeParameterParser.parse("R[]").getActualType());
+    }
+
+
+    @Test
+    void test_unparameterizedObject_withNonVariableTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        IType internalType = typeParameterParser.parse("List<Integer>");
+        Assertions.assertEquals(List.class, internalType.getActualType());
+        Assertions.assertInstanceOf(ParameterizedType.class, internalType);
+        ParameterizedType parameterizedType = (ParameterizedType) internalType;
+        Assertions.assertEquals(1, parameterizedType.getParameters().size());
+        Assertions.assertEquals(Integer.class, parameterizedType.getParameters().get(0).getActualType());
+    }
+
+
+    @Test
+    void test_unparameterizedObject_withVariableTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        IType internalType = typeParameterParser.parse("List<R>");
+        Assertions.assertEquals(List.class, internalType.getActualType());
+        Assertions.assertInstanceOf(ParameterizedType.class, internalType);
+        ParameterizedType parameterizedType = (ParameterizedType) internalType;
+        Assertions.assertEquals(1, parameterizedType.getParameters().size());
+        Assertions.assertEquals(String.class, parameterizedType.getParameters().get(0).getActualType());
+    }
+
+    @Test
+    void test_unparameterizedObject_withMultipleTypeParameters() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        IType internalType = typeParameterParser.parse("Map<UUID, R>");
+        Assertions.assertEquals(Map.class, internalType.getActualType());
+        Assertions.assertInstanceOf(ParameterizedType.class, internalType);
+        ParameterizedType parameterizedType = (ParameterizedType) internalType;
+        Assertions.assertEquals(2, parameterizedType.getParameters().size());
+        Assertions.assertEquals(UUID.class, parameterizedType.getParameters().get(0).getActualType());
+        Assertions.assertEquals(String.class, parameterizedType.getParameters().get(1).getActualType());
     }
 }

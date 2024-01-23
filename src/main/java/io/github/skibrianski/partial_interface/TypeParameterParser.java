@@ -3,6 +3,7 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
+import io.github.skibrianski.partial_interface.internal.ParameterizedType;
 import io.github.skibrianski.partial_interface.internal.TypeVariable;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class TypeParameterParser {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
             if (typeNameResolver.canResolve(typeString)) {
-                return new TypeVariable(typeString, typeNameResolver);
+                return new TypeVariable(typeString, typeNameResolver.mustResolve(typeString));
             } else {
                 try {
                     return new ClassType<>(classForName(typeString));
@@ -43,37 +44,31 @@ public class TypeParameterParser {
                 typeString.lastIndexOf('>')
         );
         // if input was: `Map<R, X<String>>`, variable will be `Map` and typeParameterArgumentsString `R, X<String>`
-        Class<?> baseClass;
-
-        if (typeNameResolver.canResolve(typeVariableName)) {
-            baseClass = typeNameResolver.resolve(typeVariableName);
-        } else {
-            // wrong. we want type params, too
-//            try {
-//                baseClass = classForName(typeVariableName);
-//            } catch (ClassNotFoundException e) {
-//                throw new PartialInterfaceUsageException(
-//                        "cannot find class: " + typeString + "."
-//                                + " maybe you misspelled your type variable?"
-//                                + " or try a fully qualified type like java.util.List instead?"
-//                );
-//            }
+        Class<?> baseClass = typeNameResolver.resolve(typeVariableName);
+        if (baseClass == null) {
+            baseClass = BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName);
         }
-//        List<IType> argumentTypes = parseList(typeParameterArgumentsString);
-//        return new ParameterizedType(baseClass, argumentTypes);
-        return null;
+
+        List<IType> argumentTypes = parseList(typeParameterArgumentsString);
+        return new ParameterizedType(baseClass, argumentTypes);
     }
 
-    public List<IType> parseList(String typeParameterArgumentString) {
-        String workingString = typeParameterArgumentString;
-        int argumentEndPos = findArgumentEndPos(workingString);
+    public List<IType> parseList(String typeParameterArgumentsString) {
+        String workingString = typeParameterArgumentsString;
         List<IType> argumentTypes = new ArrayList<>();
-        while (argumentEndPos != -1) {
-            String typeParameterString = typeParameterArgumentString.substring(0, argumentEndPos);
+        while (true) {
+            int argumentEndPos = findArgumentEndPos(workingString);
+            boolean lastArgument = argumentEndPos == -1;
+            if (lastArgument) {
+                argumentEndPos = workingString.length();
+            }
+            String typeParameterString = workingString.substring(0, argumentEndPos);
             IType type = parse(typeParameterString);
             argumentTypes.add(type);
+            if (lastArgument) {
+                break;
+            }
             workingString = workingString.substring(argumentEndPos + 1).trim();
-            argumentEndPos = findArgumentEndPos(workingString);
         }
         return argumentTypes;
     }
@@ -86,7 +81,7 @@ public class TypeParameterParser {
     private static int findArgumentEndPos(String haystack) {
         int pos = 0;
         int nestCount = 0;
-        while (true) {
+        while (pos < haystack.length()) {
             char c = haystack.charAt(pos);
             // TOOD: use switch instead, probably.
             if (c == '<') {
@@ -103,6 +98,7 @@ public class TypeParameterParser {
             }
             pos++;
         }
+        return -1;
     }
 }
 

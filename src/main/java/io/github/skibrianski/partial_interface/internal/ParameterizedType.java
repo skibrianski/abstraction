@@ -24,6 +24,10 @@ public class ParameterizedType extends IType {
 
     @Override
     public Class<?> getActualType() {
-        throw new RuntimeException("unimplemented");
+        return baseClass;
+    }
+
+    public List<IType> getParameters() {
+        return parameters;
     }
 }
