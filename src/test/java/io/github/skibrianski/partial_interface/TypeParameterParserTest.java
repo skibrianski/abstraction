@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface;
 
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
@@ -12,6 +13,17 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TypeParameterParserTest {
+
+    @Test
+    void test_unknownType() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertThrows(
+                PartialInterfaceUsageException.class,
+                () -> typeParameterParser.parse("NotAValidType")
+        );
+    }
 
     @Test
     void test_unparameterized_primitive_scalar() {
