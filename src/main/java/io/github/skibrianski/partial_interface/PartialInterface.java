@@ -83,7 +83,7 @@ public final class PartialInterface {
             TypeValidator typeValidator = new TypeValidator(typeNameResolver);
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> typeValidator.isAssignableType(m.getReturnType(), requiresChildMethod.returnType()))
+                    .filter(m -> typeValidator.isAssignableType(m.getGenericReturnType(), requiresChildMethod.returnType()))
                     .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
                     .collect(Collectors.toList());
             if (matchingMethods.isEmpty()) {
