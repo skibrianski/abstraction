@@ -4,7 +4,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MultipleParameterizedArgumentTypesTest {
+public class MultipleTypeVariableArgumentTypesTest {
 
     @RequiresChildMethod(
             returnType = @Type(byClass = void.class),

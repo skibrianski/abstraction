@@ -4,7 +4,7 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SingleParameterizedArgumentTypeTest {
+public class SingleTypeVariableArgumentTypeTest {
 
     public static class A { }
     public static class AChild extends A { }
