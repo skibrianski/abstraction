@@ -10,14 +10,14 @@ public class SingleTypeVariableArgumentTypeTest {
     public static class AChild extends A { }
 
     @RequiresChildMethod(
-            returnType = @Type(byClass = void.class),
+            returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},
             methodName = "method"
     )
     interface HasMethodWithLoneTypeParameter { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class ValidClassPrimitiveMatch implements HasMethodWithLoneTypeParameter {
         public void method(int foo) { }
     }
@@ -27,7 +27,7 @@ public class SingleTypeVariableArgumentTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = A.class)
+    @HasTypeParameter(name = "T", ofClass = A.class)
     static class ValidClassExactObjectMatch implements HasMethodWithLoneTypeParameter {
         public void method(A foo) { }
     }
@@ -37,7 +37,7 @@ public class SingleTypeVariableArgumentTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = A.class)
+    @HasTypeParameter(name = "T", ofClass = A.class)
     public static class ValidClassChildObjectTypeMatch implements HasMethodWithLoneTypeParameter {
         public void method(AChild foo) { }
     }
@@ -47,7 +47,7 @@ public class SingleTypeVariableArgumentTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class WrongArgumentType implements HasMethodWithLoneTypeParameter {
         public void method(String foo) { }
     }

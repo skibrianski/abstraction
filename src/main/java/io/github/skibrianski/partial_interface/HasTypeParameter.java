@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface HasTypeParameter {
     String name();
-    Class<?> value();
+    // TODO: validation - must have either ofClass != None.class, or non-blank ofString(), but not both
+    Class<?> ofClass() default None.class;
+    String ofString() default "";
+    class None { }
 }
 

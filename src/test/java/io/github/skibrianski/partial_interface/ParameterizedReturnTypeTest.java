@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +15,7 @@ public class ParameterizedReturnTypeTest {
     interface ReturnsLoneTypeParameter { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int.class)
+    @HasTypeParameter(name = "R", ofClass = int.class)
     public static class ValidWithExactTypeParameterMatch implements ReturnsLoneTypeParameter {
         public int method() {
             return 3;
@@ -31,7 +30,7 @@ public class ParameterizedReturnTypeTest {
     public interface AChild extends A { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = A.class)
+    @HasTypeParameter(name = "R", ofClass = A.class)
     public static class ValidWithChildOfTypeParameter implements ReturnsLoneTypeParameter {
         public AChild method() {
             return null;
@@ -43,7 +42,7 @@ public class ParameterizedReturnTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int.class)
+    @HasTypeParameter(name = "R", ofClass = int.class)
     public static class WrongReturnType implements ReturnsLoneTypeParameter {
         public String method() {
             return "three";
@@ -58,7 +57,7 @@ public class ParameterizedReturnTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "X", value = int.class)
+    @HasTypeParameter(name = "X", ofClass = int.class)
     public static class WrongTypeParameterName implements ReturnsLoneTypeParameter {
         public int method() {
             return 3;

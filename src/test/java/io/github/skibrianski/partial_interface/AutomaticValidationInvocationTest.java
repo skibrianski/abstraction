@@ -7,8 +7,8 @@ public class AutomaticValidationInvocationTest {
 
 
     @RequiresChildMethod(
-            returnType = @Type(byClass = int.class),
-            argumentTypes = {@Type(byClass = int.class)},
+            returnType = @Type(ofClass = int.class),
+            argumentTypes = {@Type(ofClass = int.class)},
             methodName = "method"
     )
     interface WithScrambler { }

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class InterfaceTest {
 
     @RequiresChildMethod(
-            returnType = @Type(byClass = String.class),
-            argumentTypes = {@Type(byClass = String.class)},
+            returnType = @Type(ofClass = String.class),
+            argumentTypes = {@Type(ofClass = String.class)},
             methodName = "scramble"
     )
     interface WithScrambler { }

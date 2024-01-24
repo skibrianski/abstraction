@@ -24,7 +24,7 @@ public final class TestUtil {
 
 
             @Override
-            public Class<?> byClass() {
+            public Class<?> ofClass() {
                 return classType;
             }
 

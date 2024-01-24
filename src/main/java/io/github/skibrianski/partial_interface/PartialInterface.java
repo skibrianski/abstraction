@@ -76,7 +76,7 @@ public final class PartialInterface {
     ) {
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
-                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::value));
+                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::ofClass));
         TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {

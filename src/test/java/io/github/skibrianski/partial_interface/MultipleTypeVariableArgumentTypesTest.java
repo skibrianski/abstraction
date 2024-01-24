@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 public class MultipleTypeVariableArgumentTypesTest {
 
     @RequiresChildMethod(
-            returnType = @Type(byClass = void.class),
+            returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("X")},
             methodName = "method"
     )
     interface HasMethodWithMultipleTypeParameters { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
-    @HasTypeParameter(name = "X", value = String.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
+    @HasTypeParameter(name = "X", ofClass = String.class)
     static class Valid implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, String bar) { }
     }
@@ -30,8 +30,8 @@ public class MultipleTypeVariableArgumentTypesTest {
     public static class BChild extends B { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = A.class)
-    @HasTypeParameter(name = "X", value = B.class)
+    @HasTypeParameter(name = "T", ofClass = A.class)
+    @HasTypeParameter(name = "X", ofClass = B.class)
     static class ChildReturnTypes implements HasMethodWithMultipleTypeParameters {
         public void method(AChild foo, BChild bar) { }
     }
@@ -41,8 +41,8 @@ public class MultipleTypeVariableArgumentTypesTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
-    @HasTypeParameter(name = "X", value = String.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
+    @HasTypeParameter(name = "X", ofClass = String.class)
     static class FirstParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
         public void method(String String, int bar) { }
     }
@@ -55,8 +55,8 @@ public class MultipleTypeVariableArgumentTypesTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
-    @HasTypeParameter(name = "X", value = String.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
+    @HasTypeParameter(name = "X", ofClass = String.class)
     static class SecondParameterIsIncorrect implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, int bar) { }
     }
@@ -69,8 +69,8 @@ public class MultipleTypeVariableArgumentTypesTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
-    @HasTypeParameter(name = "X", value = String.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
+    @HasTypeParameter(name = "X", ofClass = String.class)
     static class ExtraParameter implements HasMethodWithMultipleTypeParameters {
         public void method(int foo, String bar, boolean extra) { }
     }

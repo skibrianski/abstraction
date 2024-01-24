@@ -14,7 +14,7 @@ public class MultipleTypeVariableUseTest {
     interface ThePartialInterface { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class Valid implements ThePartialInterface {
         public int method(int foo, int bar) {
             return -1;
@@ -26,7 +26,7 @@ public class MultipleTypeVariableUseTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class BadReturnType implements ThePartialInterface {
         public void method(int foo, int bar) { }
     }
@@ -39,7 +39,7 @@ public class MultipleTypeVariableUseTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class BadArgument1Type implements ThePartialInterface {
         public int method(String foo, int bar) {
             return 3;
@@ -54,7 +54,7 @@ public class MultipleTypeVariableUseTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "T", value = int.class)
+    @HasTypeParameter(name = "T", ofClass = int.class)
     static class BadArgument2Type implements ThePartialInterface {
         public int method(int foo, boolean bar) {
             return 3;

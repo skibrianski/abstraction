@@ -14,7 +14,7 @@ public class ParameterizedArrayTypeTest {
     interface WithSummation { }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int.class)
+    @HasTypeParameter(name = "R", ofClass = int.class)
     public static class Valid implements WithSummation {
         public int sum(int... addends) {
             return 3;
@@ -26,7 +26,7 @@ public class ParameterizedArrayTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int[].class)
+    @HasTypeParameter(name = "R", ofClass = int[].class)
     public static class MultiDimensionalArray implements WithSummation {
         public int[] sum(int[]... addends) {
             return new int[]{3};
@@ -40,7 +40,7 @@ public class ParameterizedArrayTypeTest {
     public static class A { }
     public static class AChild extends A { }
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = A.class)
+    @HasTypeParameter(name = "R", ofClass = A.class)
     public static class ChildType implements WithSummation {
         public A sum(AChild... addends) {
             return new A();
@@ -52,7 +52,7 @@ public class ParameterizedArrayTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int.class)
+    @HasTypeParameter(name = "R", ofClass = int.class)
     public static class NotArray implements WithSummation {
         public int sum(int addends) {
             return 3;
@@ -67,7 +67,7 @@ public class ParameterizedArrayTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
-    @HasTypeParameter(name = "R", value = int.class)
+    @HasTypeParameter(name = "R", ofClass = int.class)
     public static class WrongArrayType implements WithSummation {
         public int sum(String... addends) {
             return 3;
