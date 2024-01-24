@@ -4,10 +4,8 @@ import io.github.skibrianski.partial_interface.Type;
 import io.github.skibrianski.partial_interface.TypeParameterParser;
 import io.github.skibrianski.partial_interface.TypeNameResolver;
 
+// TODO: consider using java.lang.reflect types instead if they are instantiable
 public abstract class IType {
-
-
-    // TODO: this probably doesn't belong here, but rather in our parser
 
     public IType() { }
 
