@@ -3,12 +3,9 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
 
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TypeValidator {
@@ -72,13 +69,9 @@ public class TypeValidator {
             }
             return true;
 
-        }
-        // TODO: compare
-        throw new RuntimeException("unimplemented: parameterized type");
-
-        // note: this is yucky because
-        // Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
+        } // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
         //  but Map<? extends Number, String> CAN
+        throw new RuntimeException("unimplemented: parameterized type");
     }
 }
 
