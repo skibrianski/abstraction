@@ -72,9 +72,10 @@ public class TypeParameterParserTest {
         Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
         ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
         Assertions.assertEquals(List.class, parameterizedBaseType.getRawType());
-        Assertions.assertEquals(1, parameterizedBaseType.getActualTypeArguments().length);
+        Type[] actualTypeArguments = parameterizedBaseType.getActualTypeArguments();
+        Assertions.assertEquals(1, actualTypeArguments.length);
 
-        Type parameterInternalType = parameterizedBaseType.getActualTypeArguments()[0];
+        Type parameterInternalType = actualTypeArguments[0];
         Assertions.assertInstanceOf(Class.class, parameterInternalType);
         Assertions.assertEquals(Integer.class, parameterInternalType);
     }
@@ -96,79 +97,85 @@ public class TypeParameterParserTest {
         Assertions.assertEquals(int[].class, typeParameterParser.parse("R[]"));
     }
 
-//    @Test
-//    void test_parameterized_withVariableTypeParameter() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType baseInternalType = typeParameterParser.parse("List<R>");
-//        Assertions.assertEquals(List.class, baseInternalType.getActualType());
-//        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-//        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
-//        Assertions.assertEquals(1, parameterizedBaseType.getParameters().size());
-//
-//        IType parameterInternalType = parameterizedBaseType.getParameters().get(0);
-//        Assertions.assertInstanceOf(ClassType.class, parameterInternalType);
-//        Assertions.assertEquals(String.class, parameterInternalType.getActualType());
-//    }
-//
-//    @Test
-//    void test_parameterized_withMultipleTypeParameters() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType baseInternalType = typeParameterParser.parse("Map<UUID, R>");
-//        Assertions.assertEquals(Map.class, baseInternalType.getActualType());
-//        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-//        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
-//        Assertions.assertEquals(2, parameterizedBaseType.getParameters().size());
-//
-//        IType firstParameterInternalType = parameterizedBaseType.getParameters().get(0);
-//        Assertions.assertInstanceOf(ClassType.class, firstParameterInternalType);
-//        Assertions.assertEquals(UUID.class, firstParameterInternalType.getActualType());
-//
-//        IType secondParameterInternalType = parameterizedBaseType.getParameters().get(1);
-//        Assertions.assertInstanceOf(ClassType.class, secondParameterInternalType);
-//        Assertions.assertEquals(String.class, secondParameterInternalType.getActualType());
-//    }
-//
-//    @Test
-//    void test_parameterized_withNestedTypeParameters() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", char.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType baseInternalType = typeParameterParser.parse("Map<List<String>, R>");
-//        Assertions.assertEquals(Map.class, baseInternalType.getActualType());
-//        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-//        ParameterizedType baseParameterizedType = (ParameterizedType) baseInternalType;
-//        Assertions.assertEquals(2, baseParameterizedType.getParameters().size());
-//
-//        IType firstParameterInternalType = baseParameterizedType.getParameters().get(0);
-//        Assertions.assertInstanceOf(ParameterizedType.class, firstParameterInternalType);
-//        Assertions.assertEquals(List.class, firstParameterInternalType.getActualType());
-//
-//        IType firstSubParameterInternalType = ((ParameterizedType) firstParameterInternalType).getParameters().get(0);
-//        Assertions.assertInstanceOf(ClassType.class, firstSubParameterInternalType);
-//        Assertions.assertEquals(String.class, firstSubParameterInternalType.getActualType());
-//
-//        IType secondParameterInternalType = baseParameterizedType.getParameters().get(1);
-//        Assertions.assertInstanceOf(ClassType.class, secondParameterInternalType);
-//        Assertions.assertEquals(char.class, secondParameterInternalType.getActualType());
-//    }
-//
-//    @Test
-//    void test_parameterized_withTypeVariableAsBaseOfTypeParameter() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("C", List.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType baseInternalType = typeParameterParser.parse("C<String>");
-//        Assertions.assertEquals(List.class, baseInternalType.getActualType());
-//        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-//        ParameterizedType baseParameterizedType = (ParameterizedType) baseInternalType;
-//        Assertions.assertEquals(1, baseParameterizedType.getParameters().size());
-//
-//        IType firstParameterInternalType = baseParameterizedType.getParameters().get(0);
-//        Assertions.assertInstanceOf(ClassType.class, firstParameterInternalType);
-//        Assertions.assertEquals(String.class, firstParameterInternalType.getActualType());
-//    }
+    @Test
+    void test_parameterized_withVariableTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("List<R>");
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(List.class, parameterizedBaseType.getRawType());
+        Type[] actualTypeArguments = parameterizedBaseType.getActualTypeArguments();
+        Assertions.assertEquals(1, actualTypeArguments.length);
+
+        Type parameterInternalType = actualTypeArguments[0];
+        Assertions.assertInstanceOf(Class.class, parameterInternalType);
+        Assertions.assertEquals(String.class, parameterInternalType);
+    }
+
+    @Test
+    void test_parameterized_withMultipleTypeParameters() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("Map<UUID, R>");
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(Map.class, parameterizedBaseType.getRawType());
+        Type[] actualTypeArguments = parameterizedBaseType.getActualTypeArguments();
+        Assertions.assertEquals(2, actualTypeArguments.length);
+
+        Type firstParameterInternalType = actualTypeArguments[0];
+        Assertions.assertInstanceOf(Class.class, firstParameterInternalType);
+        Assertions.assertEquals(UUID.class, firstParameterInternalType);
+
+        Type secondParameterInternalType = actualTypeArguments[1];
+        Assertions.assertInstanceOf(Class.class, secondParameterInternalType);
+        Assertions.assertEquals(String.class, secondParameterInternalType);
+    }
+
+    @Test
+    void test_parameterized_withNestedTypeParameters() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", char.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("Map<List<String>, R>");
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(Map.class, parameterizedBaseType.getRawType());
+        Type[] topLevelTypeArguments = parameterizedBaseType.getActualTypeArguments();
+        Assertions.assertEquals(2, topLevelTypeArguments.length);
+
+        Type firstParameterInternalType = topLevelTypeArguments[0];
+        Assertions.assertInstanceOf(ParameterizedType.class, firstParameterInternalType);
+        ParameterizedType firstParameterParameterType = (ParameterizedType) firstParameterInternalType;
+        Assertions.assertEquals(List.class, firstParameterParameterType.getRawType());
+        Type[] firstParameterTypeArgs = firstParameterParameterType.getActualTypeArguments();
+
+        Type firstSubParameterInternalType = firstParameterTypeArgs[0];
+        Assertions.assertInstanceOf(Class.class, firstSubParameterInternalType);
+        Assertions.assertEquals(String.class, firstSubParameterInternalType);
+
+        Type secondParameterInternalType = topLevelTypeArguments[1];
+        Assertions.assertInstanceOf(Class.class, secondParameterInternalType);
+        Assertions.assertEquals(char.class, secondParameterInternalType);
+    }
+
+    @Test
+    void test_parameterized_withTypeVariableAsBaseOfTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("C", List.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("C<String>");
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(List.class, parameterizedBaseType.getRawType());
+        Type[] firstParameterTypeArgs = parameterizedBaseType.getActualTypeArguments();
+        Assertions.assertEquals(1, firstParameterTypeArgs.length);
+
+        Type firstParameterInternalType = firstParameterTypeArgs[0];
+        Assertions.assertInstanceOf(Class.class, firstParameterInternalType);
+        Assertions.assertEquals(String.class, firstParameterInternalType);
+    }
 }
