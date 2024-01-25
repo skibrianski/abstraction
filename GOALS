@@ -7,7 +7,6 @@
   - constructor constraints?
 
 todo:
-  - tests for baseClass requiring multiple type params, eg Map<T, U>
   - tests for eg T<X>
   - support type parameters with constraints, eg class Foo<T extends Number>
   - support autoboxing eg. if Foo<T> required and T = int.class, expect Foo<Integer> instead
