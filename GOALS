@@ -2,12 +2,12 @@
   what is defined in the contract. this can be useful for a number of reasons:
 - uses:
   ✅ primitive-friendly parameterization
+    - when T = int.class, implementing `List<T> foo()` requires `List<Integer> foo()`
   - interfaces that require static methods
   - non-public methods in interface (bad idea?)
   - constructor constraints?
 
 todo:
-  - support autoboxing eg. if Foo<T> required and T = int.class, expect Foo<Integer> instead
   - support type parameters with constraints, eg class Foo<T extends Number>
 
 questions:

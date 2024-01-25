@@ -64,7 +64,8 @@ public class TypeValidator {
             }
 
             for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
-                if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameters[pos])) {
+                java.lang.reflect.Type requiredTypeParameter = possiblyBox(requiredTypeParameters[pos]);
+                if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameter)) {
                     return false;
                 }
             }
@@ -73,6 +74,28 @@ public class TypeValidator {
         } // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
         //  but Map<? extends Number, String> CAN
         throw new RuntimeException("unimplemented: parameterized type");
+    }
+
+    private static java.lang.reflect.Type possiblyBox(java.lang.reflect.Type unboxed) {
+        if (unboxed.equals(boolean.class)) {
+            return Boolean.class;
+        } else if (unboxed.equals(byte.class)) {
+            return Byte.class;
+        } else if (unboxed.equals(char.class)) {
+            return Character.class;
+        } else if (unboxed.equals(double.class)) {
+            return Double.class;
+        } else if (unboxed.equals(float.class)) {
+            return Float.class;
+        } else if (unboxed.equals(int.class)) {
+            return Integer.class;
+        } else if (unboxed.equals(long.class)) {
+            return Long.class;
+        } else if (unboxed.equals(short.class)) {
+            return Short.class;
+        } else {
+            return unboxed;
+        }
     }
 }
 
