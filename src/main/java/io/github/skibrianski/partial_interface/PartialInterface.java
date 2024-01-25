@@ -109,7 +109,7 @@ public final class PartialInterface {
             RequiresTypeParameter requiresTypeParameterAnnotation,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
-        // TODO: probably should throw error on duplicate @HasTypeParameter annotation for same type
+        // TODO: should throw error on duplicate @HasTypeParameter annotation for same type
         Set<String> requiredTypeParameters = requiresTypeParameterAnnotation == null
                 ? Set.of()
                 : Arrays.stream(requiresTypeParameterAnnotation.value()).collect(Collectors.toSet());
