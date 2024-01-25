@@ -39,13 +39,16 @@ public final class PartialInterface {
 
     private static void check(ScanResult scanResult, boolean manual) {
         for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
-            if (!annotationClassInfo.isInterface()) {
+            if (!annotationClassInfo.isAbstract()) {
                 throw new PartialInterfaceException.UsageException(
-                        "attempt to use @PartialInterface on non-interface" + annotationClassInfo.getName()
+                        "attempt to use @PartialInterface on non-abstract class: " + annotationClassInfo.getName()
                 );
             }
-            // note: getClassesImplementing() includes interfaces, abstract classes, and concrete classes
-            ClassInfoList implementations = annotationClassInfo.getClassesImplementing();
+            // note: for interfaces, getClassesImplementing() includes interfaces, abstract classes, and concrete
+            // classes, but getSubClasses() is required for abstract classes.
+            ClassInfoList implementations = annotationClassInfo.isInterface()
+                    ? annotationClassInfo.getClassesImplementing()
+                    : annotationClassInfo.getSubclasses();
             List<RequiresChildMethod> requiresChildMethodAnnotations = annotationClassInfo
                     .getAnnotationInfoRepeatable(RequiresChildMethod.class)
                     .stream()
@@ -117,9 +120,9 @@ public final class PartialInterface {
         validateHasAllTypeParameters(implementation, scalarTypeParameterMap.keySet(), requiredTypeParameters);
 
         TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
+        TypeValidator typeValidator = new TypeValidator(typeNameResolver);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
-            TypeValidator typeValidator = new TypeValidator(typeNameResolver);
             List<Method> matchingMethods = Arrays.stream(methods)
                     .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
                     .filter(m -> typeValidator.isAssignableType(m.getGenericReturnType(), requiresChildMethod.returnType()))
