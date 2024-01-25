@@ -37,7 +37,7 @@ public final class PartialInterface {
         }
     }
 
-    private static void check(ScanResult scanResult, boolean manual) {
+    private static void check(ScanResult scanResult, boolean isManualRun) {
         for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
             if (!annotationClassInfo.isAbstract()) {
                 throw new PartialInterfaceException.UsageException(
@@ -62,17 +62,16 @@ public final class PartialInterface {
                     : (RequiresTypeParameter) requiresTypeParameterAnnotationInfo.loadClassAndInstantiate();
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
-                // TODO: this implementation is uggo.
-                if (!manual) {
-                    if (implementationClassInfo.getAnnotationInfo(PartialInterfaceWithManualValidation.class) != null) {
-                        continue;
-                    }
+                boolean classShouldBeAutoValidated =
+                        implementationClassInfo.getAnnotationInfo(PartialInterfaceWithManualValidation.class) == null;
+                if (classShouldBeAutoValidated || isManualRun) {
+                    validateImplementation(
+                            implementationClassInfo.loadClass(),
+                            requiresTypeParameterAnnotation,
+                            requiresChildMethodAnnotations
+                    );
+
                 }
-                validateImplementation(
-                        implementationClassInfo.loadClass(),
-                        requiresTypeParameterAnnotation,
-                        requiresChildMethodAnnotations
-                );
             }
         }
     }
