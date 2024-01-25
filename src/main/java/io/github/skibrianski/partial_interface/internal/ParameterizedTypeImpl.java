@@ -2,6 +2,7 @@ package io.github.skibrianski.partial_interface.internal;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 public class ParameterizedTypeImpl implements ParameterizedType {
 
@@ -18,6 +19,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         this.parameters = parameters;
     }
 
+
     @Override
     public Class<?> getRawType() {
         return baseClass;
@@ -31,5 +33,20 @@ public class ParameterizedTypeImpl implements ParameterizedType {
     @Override
     public Type getOwnerType() {
         return null;
+    }
+
+    // TODO: tests
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ParameterizedType)) {
+            return false;
+        }
+
+        ParameterizedType otherParameterizedType = (ParameterizedType) other;
+        if (!otherParameterizedType.getRawType().equals(baseClass)) {
+            return false;
+        }
+
+        return Arrays.equals(getActualTypeArguments(), otherParameterizedType.getActualTypeArguments());
     }
 }
