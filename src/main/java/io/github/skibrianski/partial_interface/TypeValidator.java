@@ -54,7 +54,7 @@ public class TypeValidator {
             Class<?> baseImplementedClass = (Class<?>) implementedParameterizedType.getRawType();
             Class<?> baseRequiredClass = requiredType.getActualType();
 
-            if (!baseImplementedClass.isAssignableFrom(baseRequiredClass)) {
+            if (!baseRequiredClass.isAssignableFrom(baseImplementedClass)) {
                 return false;
             }
 
