@@ -1,15 +1,11 @@
 package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
-import io.github.skibrianski.partial_interface.internal.ClassType;
-import io.github.skibrianski.partial_interface.internal.IType;
-import io.github.skibrianski.partial_interface.internal.ParameterizedType;
-import io.github.skibrianski.partial_interface.internal2.ParameterizedTypeImpl;
+import io.github.skibrianski.partial_interface.internal.ParameterizedTypeImpl;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TypeParameterParser {
 

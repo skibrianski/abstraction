@@ -1,7 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.internal.IType;
-import io.github.skibrianski.partial_interface.internal.ParameterizedType;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -30,8 +28,16 @@ public class TypeValidator {
     }
 
     public boolean isAssignableType(java.lang.reflect.Type implementedType, Type type) {
-        return isAssignableType(implementedType, IType.convertFromAnnotation(type, typeNameResolver));
+        return isAssignableType(implementedType, convertFromAnnotation(type));
 
+    }
+
+    public java.lang.reflect.Type convertFromAnnotation(Type type) {
+        if (!type.ofClass().equals(Type.NotSpecified.class)) {
+            return type.ofClass();
+        }
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+        return typeParameterParser.parse(type.value());
     }
 
     public boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {

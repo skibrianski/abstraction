@@ -1,4 +1,4 @@
-package io.github.skibrianski.partial_interface.internal2;
+package io.github.skibrianski.partial_interface.internal;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

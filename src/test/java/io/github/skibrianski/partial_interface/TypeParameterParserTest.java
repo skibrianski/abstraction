@@ -1,109 +1,101 @@
-//package io.github.skibrianski.partial_interface;
-//
-//import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
-//import io.github.skibrianski.partial_interface.internal.ClassType;
-//import io.github.skibrianski.partial_interface.internal.IType;
-//import io.github.skibrianski.partial_interface.internal.ParameterizedType;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//
-//import java.util.List;
-//import java.util.Map;
-//import java.util.UUID;
-//
-//public class TypeParameterParserTest {
-//
-//    @Test
-//    void test_unknownType() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        Assertions.assertThrows(
-//                PartialInterfaceUsageException.class,
-//                () -> typeParameterParser.parse("NotAValidType")
-//        );
-//    }
-//
-//    @Test
-//    void test_unparameterized_primitive_scalar() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType intType = typeParameterParser.parse("int");
-//        Assertions.assertEquals(int.class, intType.getActualType());
-//    }
-//
-//    @Test
-//    void test_unparameterized_primitive_array() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType intArrayType = typeParameterParser.parse("int[]");
-//        Assertions.assertEquals(int[].class, intArrayType.getActualType());
-//    }
-//
-//    @Test
-//    void test_unparameterized_multiDimensionalArray() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType intArrayType = typeParameterParser.parse("double[][][]");
-//        Assertions.assertEquals(double[][][].class, intArrayType.getActualType());
-//    }
-//
-//    @Test
-//    void test_unparameterized_builtIn_scalar() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType integerType = typeParameterParser.parse("Integer");
-//        Assertions.assertEquals(Integer.class, integerType.getActualType());
-//    }
-//
-//    @Test
-//    void test_unparameterized_builtIn_array() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType integerType = typeParameterParser.parse("Comparable[]");
-//        Assertions.assertEquals(Comparable[].class, integerType.getActualType());
-//    }
-//
-//    @Test
-//    void test_unparameterized_withNonVariableTypeParameter() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType baseInternalType = typeParameterParser.parse("List<Integer>");
-//        Assertions.assertEquals(List.class, baseInternalType.getActualType());
-//        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
-//        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
-//        Assertions.assertEquals(1, parameterizedBaseType.getParameters().size());
-//
-//        IType parameterInternalType = parameterizedBaseType.getParameters().get(0);
-//        Assertions.assertInstanceOf(ClassType.class, parameterInternalType);
-//        Assertions.assertEquals(Integer.class, parameterInternalType.getActualType());
-//    }
-//
-//    @Test
-//    void test_parameterized_scalar() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", int.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        IType integerType = typeParameterParser.parse("R");
-//        Assertions.assertEquals(int.class, integerType.getActualType());
-//    }
-//
-//    @Test
-//    void test_parameterized_array() {
-//        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", int.class));
-//        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-//
-//        Assertions.assertEquals(int[].class, typeParameterParser.parse("R...").getActualType());
-//        Assertions.assertEquals(int[].class, typeParameterParser.parse("R[]").getActualType());
-//    }
-//
-//
+package io.github.skibrianski.partial_interface;
+
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+public class TypeParameterParserTest {
+
+    @Test
+    void test_unknownType() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertThrows(
+                PartialInterfaceUsageException.class,
+                () -> typeParameterParser.parse("NotAValidType")
+        );
+    }
+
+    @Test
+    void test_unparameterized_primitive_scalar() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(int.class, typeParameterParser.parse("int"));
+    }
+
+    @Test
+    void test_unparameterized_primitive_array() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(int[].class, typeParameterParser.parse("int[]"));
+    }
+
+    @Test
+    void test_unparameterized_multiDimensionalArray() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(double[][][].class, typeParameterParser.parse("double[][][]"));
+    }
+
+    @Test
+    void test_unparameterized_builtIn_scalar() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(Integer.class, typeParameterParser.parse("Integer"));
+    }
+
+    @Test
+    void test_unparameterized_builtIn_array() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(Comparable[].class, typeParameterParser.parse("Comparable[]"));
+    }
+
+    @Test
+    void test_unparameterized_withNonVariableTypeParameter() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of());
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("List<Integer>");
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedBaseType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(List.class, parameterizedBaseType.getRawType());
+        Assertions.assertEquals(1, parameterizedBaseType.getActualTypeArguments().length);
+
+        Type parameterInternalType = parameterizedBaseType.getActualTypeArguments()[0];
+        Assertions.assertInstanceOf(Class.class, parameterInternalType);
+        Assertions.assertEquals(Integer.class, parameterInternalType);
+    }
+
+    @Test
+    void test_parameterized_scalar() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", int.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(int.class, typeParameterParser.parse("R"));
+    }
+
+    @Test
+    void test_parameterized_array() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", int.class));
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertEquals(int[].class, typeParameterParser.parse("R..."));
+        Assertions.assertEquals(int[].class, typeParameterParser.parse("R[]"));
+    }
+
 //    @Test
 //    void test_parameterized_withVariableTypeParameter() {
 //        TypeNameResolver typeNameResolver = new TypeNameResolver(Map.of("R", String.class));
@@ -179,4 +171,4 @@
 //        Assertions.assertInstanceOf(ClassType.class, firstParameterInternalType);
 //        Assertions.assertEquals(String.class, firstParameterInternalType.getActualType());
 //    }
-//}
+}
