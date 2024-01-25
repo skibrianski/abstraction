@@ -7,10 +7,10 @@
   - constructor constraints?
 
 todo:
-  - support eg Foo<T>. if T == primitive, Foo<BOXED<T>> will be used instead.
-    - requires a buncha gnarly reflective stuff to determine type params and junk.
   - support eg T<String>
   - support eg T<X>
+  - support type parameters with constraints, eg class Foo<T extends Number>
+  - support autoboxing eg. if Foo<T> required and T = int.class, expect Foo<Integer> instead
   - use in abstract class (not interface)
 
 questions:
