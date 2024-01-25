@@ -4,7 +4,6 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageEx
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
-import io.github.skibrianski.partial_interface.internal.TypeVariable;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -117,7 +116,7 @@ public class TypeParameterParserTest {
         Assertions.assertEquals(1, parameterizedBaseType.getParameters().size());
 
         IType parameterInternalType = parameterizedBaseType.getParameters().get(0);
-        Assertions.assertInstanceOf(TypeVariable.class, parameterInternalType);
+        Assertions.assertInstanceOf(ClassType.class, parameterInternalType);
         Assertions.assertEquals(String.class, parameterInternalType.getActualType());
     }
 
@@ -137,7 +136,7 @@ public class TypeParameterParserTest {
         Assertions.assertEquals(UUID.class, firstParameterInternalType.getActualType());
 
         IType secondParameterInternalType = parameterizedBaseType.getParameters().get(1);
-        Assertions.assertInstanceOf(TypeVariable.class, secondParameterInternalType);
+        Assertions.assertInstanceOf(ClassType.class, secondParameterInternalType);
         Assertions.assertEquals(String.class, secondParameterInternalType.getActualType());
     }
 
@@ -161,7 +160,7 @@ public class TypeParameterParserTest {
         Assertions.assertEquals(String.class, firstSubParameterInternalType.getActualType());
 
         IType secondParameterInternalType = baseParameterizedType.getParameters().get(1);
-        Assertions.assertInstanceOf(TypeVariable.class, secondParameterInternalType);
+        Assertions.assertInstanceOf(ClassType.class, secondParameterInternalType);
         Assertions.assertEquals(char.class, secondParameterInternalType.getActualType());
     }
 

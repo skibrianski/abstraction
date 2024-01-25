@@ -4,7 +4,6 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageEx
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
-import io.github.skibrianski.partial_interface.internal.TypeVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class TypeParameterParser {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
             if (typeNameResolver.canResolve(typeString)) {
-                return new TypeVariable(typeString, typeNameResolver.mustResolve(typeString));
+                return new ClassType<>(typeNameResolver.mustResolve(typeString));
             } else {
                 try {
                     return new ClassType<>(classForName(typeString));
