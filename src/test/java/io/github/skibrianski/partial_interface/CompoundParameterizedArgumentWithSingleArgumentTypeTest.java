@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CompoundParameterizedArgumentArgumentTypeTest {
+public class CompoundParameterizedArgumentWithSingleArgumentTypeTest {
 
     @RequiresTypeParameter("T")
     @RequiresChildMethod(
