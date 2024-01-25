@@ -12,7 +12,6 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotComp
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

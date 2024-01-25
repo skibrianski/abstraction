@@ -3,7 +3,6 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceExtraneousTypeParameterException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceMissingTypeParameterException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
