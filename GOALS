@@ -9,7 +9,6 @@
 todo:
   - support type parameters with constraints, eg class Foo<T extends Number>
   - support autoboxing eg. if Foo<T> required and T = int.class, expect Foo<Integer> instead
-  - use in abstract class (not interface)
 
 questions:
 - alternative to boxing support of eg Stream<T>
