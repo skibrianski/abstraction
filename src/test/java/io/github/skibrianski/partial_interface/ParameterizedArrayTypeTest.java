@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -62,7 +61,7 @@ public class ParameterizedArrayTypeTest {
     @Test
     void test_invalid_notArray() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(NotArray.class)
         );
     }
@@ -77,7 +76,7 @@ public class ParameterizedArrayTypeTest {
     @Test
     void test_invalid_wrongArrayType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongArrayType.class)
         );
     }

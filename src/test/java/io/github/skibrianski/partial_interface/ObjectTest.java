@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +53,7 @@ public class ObjectTest {
     @Test
     void test_invalid_noMethod() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(NoMethodClass.class)
         );
     }
@@ -68,7 +67,7 @@ public class ObjectTest {
     @Test
     void test_invalid_wrongReturnType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongReturnTypeClass.class)
         );
     }
@@ -82,7 +81,7 @@ public class ObjectTest {
     @Test
     void test_invalid_missingArgument() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(MissingArgumentClass.class)
         );
     }
@@ -96,7 +95,7 @@ public class ObjectTest {
     @Test
     void test_invalid_extraArgument() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(ExtraArgumentClass.class)
         );
     }
@@ -110,7 +109,7 @@ public class ObjectTest {
     @Test
     void test_invalid_wrongArgumentType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongArgumentTypeClass.class)
         );
     }

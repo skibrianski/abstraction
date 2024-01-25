@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
@@ -46,12 +45,12 @@ public class TypeNameResolver {
             }
 
             if (baseParameterName.equals(typeString)) {
-                throw new PartialInterfaceNotCompletedException(
+                throw new PartialInterfaceException.NotCompletedException(
                         "cannot find type parameter: " + typeString // TODO: more detail
                 );
             } else {
                  // TODO: test coverage
-                throw new PartialInterfaceNotCompletedException(
+                throw new PartialInterfaceException.NotCompletedException(
                         "cannot find base type parameter: " + baseParameterName // TODO: more detail
                                 + " for parameter: " + typeString
                 );

@@ -1,8 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceExtraneousTypeParameterException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceMissingTypeParameterException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +50,7 @@ public class ParameterizedReturnTypeTest {
     @Test
     void test_wrongReturnType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongReturnType.class)
         );
     }
@@ -67,7 +64,7 @@ public class ParameterizedReturnTypeTest {
     @Test
     void test_missingTypeParameterName() {
         Assertions.assertThrows(
-                PartialInterfaceMissingTypeParameterException.class,
+                PartialInterfaceException.MissingTypeParameterException.class,
                 () -> PartialInterface.check(MissingTypeParameter.class)
         );
     }
@@ -83,7 +80,7 @@ public class ParameterizedReturnTypeTest {
     @Test
     void test_invalidTypeParameterName() {
         Assertions.assertThrows(
-                PartialInterfaceExtraneousTypeParameterException.class,
+                PartialInterfaceException.ExtraneousTypeParameterException.class,
                 () -> PartialInterface.check(ExtraneousTypeParameter.class)
         );
     }

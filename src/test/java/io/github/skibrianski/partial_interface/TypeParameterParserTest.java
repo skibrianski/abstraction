@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,7 @@ public class TypeParameterParserTest {
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
         Assertions.assertThrows(
-                PartialInterfaceUsageException.class,
+                PartialInterfaceException.UsageException.class,
                 () -> typeParameterParser.parse("NotAValidType")
         );
     }

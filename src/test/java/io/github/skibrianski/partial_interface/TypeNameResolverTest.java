@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ public class TypeNameResolverTest {
         Assertions.assertNull(typeNameResolver.resolve(somethingElse));
         Assertions.assertEquals(int.class, typeNameResolver.resolve(typeName));
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> typeNameResolver.mustResolve(somethingElse)
         );
         Assertions.assertEquals(int.class, typeNameResolver.mustResolve(typeName));

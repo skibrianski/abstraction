@@ -5,11 +5,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceExtraneousTypeParameterException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceMissingTypeParameterException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -45,7 +40,7 @@ public final class PartialInterface {
     private static void check(ScanResult scanResult, boolean manual) {
         for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
             if (!annotationClassInfo.isInterface()) {
-                throw new PartialInterfaceUsageException(
+                throw new PartialInterfaceException.UsageException(
                         "attempt to use @PartialInterface on non-interface" + annotationClassInfo.getName()
                 );
             }
@@ -91,7 +86,7 @@ public final class PartialInterface {
                 .filter(requiredTypeParameter -> !implementedTypeParameters.contains(requiredTypeParameter))
                 .collect(Collectors.toList());
         if (!missingTypeParameters.isEmpty()) {
-            throw new PartialInterfaceMissingTypeParameterException(
+            throw new PartialInterfaceException.MissingTypeParameterException(
                     "implementation: " + implementation
                             + " is missing type parameter(s): " + String.join(", ", missingTypeParameters)
             );
@@ -100,7 +95,7 @@ public final class PartialInterface {
                 .filter(implementedTypeParameter -> !requiredTypeParameters.contains(implementedTypeParameter))
                 .collect(Collectors.toList());
         if (!extraneousTypeParameters.isEmpty()) {
-            throw new PartialInterfaceExtraneousTypeParameterException(
+            throw new PartialInterfaceException.ExtraneousTypeParameterException(
                     "implementation: " + implementation
                             + " has extraneous type parameter(s): " + String.join(", ", missingTypeParameters)
             );
@@ -137,7 +132,7 @@ public final class PartialInterface {
                 if (!typeNameResolver.isEmpty()) {
                     message += " with type parameters: " + typeNameResolver; // TODO: is this readable?
                 }
-                throw new PartialInterfaceNotCompletedException(message);
+                throw new PartialInterfaceException.NotCompletedException(message);
             }
             if (matchingMethods.size() > 1) {
                 // TODO: is this possible? if not, remove it.

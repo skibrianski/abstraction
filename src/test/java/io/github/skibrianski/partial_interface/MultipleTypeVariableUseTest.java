@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +33,7 @@ public class MultipleTypeVariableUseTest {
     @Test
     void test_invalid_badReturnType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(BadReturnType.class)
         );
     }
@@ -49,7 +48,7 @@ public class MultipleTypeVariableUseTest {
     @Test
     void test_invalid_badFirstArgumentType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(BadArgument1Type.class)
         );
     }
@@ -64,7 +63,7 @@ public class MultipleTypeVariableUseTest {
     @Test
     void test_invalid_badSecondArgumentType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(BadArgument2Type.class)
         );
     }

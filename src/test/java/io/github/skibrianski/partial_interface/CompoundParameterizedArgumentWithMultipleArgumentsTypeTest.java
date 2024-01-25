@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongBaseType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongBaseType.class)
         );
     }
@@ -51,7 +50,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongFirstParameterType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongFirstParameterType.class)
         );
     }
@@ -65,7 +64,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongSecondParameterType() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(WrongSecondParameterType.class)
         );
     }

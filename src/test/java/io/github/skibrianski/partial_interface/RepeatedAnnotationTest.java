@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +41,7 @@ public class RepeatedAnnotationTest {
     @Test
     void test_invalid_noIntSupplier() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(ClassWithoutIntSupplier.class)
         );
     }
@@ -56,7 +55,7 @@ public class RepeatedAnnotationTest {
     @Test
     void test_invalid_noStringSupplier() {
         Assertions.assertThrows(
-                PartialInterfaceNotCompletedException.class,
+                PartialInterfaceException.NotCompletedException.class,
                 () -> PartialInterface.check(ClassWithoutStringSupplier.class)
         );
     }

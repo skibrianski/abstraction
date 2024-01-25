@@ -1,6 +1,5 @@
 package io.github.skibrianski.partial_interface;
 
-import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import io.github.skibrianski.partial_interface.internal.ParameterizedTypeImpl;
 
 import java.lang.reflect.Type;
@@ -26,7 +25,7 @@ public class TypeParameterParser {
                 try {
                     return classForName(typeString);
                 } catch (ClassNotFoundException e) {
-                    throw new PartialInterfaceUsageException(
+                    throw new PartialInterfaceException.UsageException(
                             "cannot find class: " + typeString + "."
                                     + " maybe you misspelled your type variable?"
                                     + " or try a fully qualified type like java.util.List instead?",
