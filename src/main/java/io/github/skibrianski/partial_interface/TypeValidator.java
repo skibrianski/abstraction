@@ -1,10 +1,7 @@
 package io.github.skibrianski.partial_interface;
 
-
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.lang.reflect.ParameterizedType;
 
 public class TypeValidator {
 
@@ -47,14 +44,12 @@ public class TypeValidator {
         // not sure about GenericArrayType
         if (implementedType instanceof Class) {
             return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
-        } else if (implementedType instanceof java.lang.reflect.ParameterizedType) {
-            java.lang.reflect.ParameterizedType implementedParameterizedType =
-                    (java.lang.reflect.ParameterizedType) implementedType;
-            if (!(requiredType instanceof java.lang.reflect.ParameterizedType)) {
+        } else if (implementedType instanceof ParameterizedType) {
+            ParameterizedType implementedParameterizedType = (ParameterizedType) implementedType;
+            if (!(requiredType instanceof ParameterizedType)) {
                 throw new RuntimeException("unimplemented"); // TODO: possible?
             }
-            java.lang.reflect.ParameterizedType requiredParameterizedType =
-                    (java.lang.reflect.ParameterizedType) requiredType;
+            ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
             Class<?> baseImplementedClass = (Class<?>) implementedParameterizedType.getRawType();
             Class<?> baseRequiredClass = (Class<?>) requiredParameterizedType.getRawType();
 
