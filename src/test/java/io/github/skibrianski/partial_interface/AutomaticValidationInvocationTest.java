@@ -15,8 +15,8 @@ public class AutomaticValidationInvocationTest {
 
     // note: NOT annotated with @ValidatePartialInterfaceManually
     public static class ValidClassExactMatch implements WithScrambler {
-        public int method(int input1) {
-            return input1;
+        public int method(int input) {
+            return input;
         }
     }
     @Test

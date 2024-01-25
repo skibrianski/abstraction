@@ -17,8 +17,8 @@ public class ObjectTest {
 
     @PartialInterfaceWithManualValidation
     public static class ValidClassExactMatch implements WithScrambler {
-        public A scramble(A input1) {
-            return input1;
+        public A scramble(A input) {
+            return input;
         }
     }
     @Test
@@ -28,7 +28,7 @@ public class ObjectTest {
 
     @PartialInterfaceWithManualValidation
     public static class ValidWithChildReturnType implements WithScrambler {
-        public AChild scramble(A input1) {
+        public AChild scramble(A input) {
             return null;
         }
     }
@@ -39,7 +39,7 @@ public class ObjectTest {
 
     @PartialInterfaceWithManualValidation
     public static class ValidWithChildParameterType implements WithScrambler {
-        public A scramble(AChild input1) {
+        public A scramble(AChild input) {
             return null;
         }
     }
@@ -60,7 +60,7 @@ public class ObjectTest {
 
     @PartialInterfaceWithManualValidation
     public static class WrongReturnTypeClass implements WithScrambler {
-        public int scramble(A input1) {
+        public int scramble(A input) {
             return 3;
         }
     }

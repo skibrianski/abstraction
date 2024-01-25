@@ -14,7 +14,7 @@ public class AbstractClassExtendingAbstractClassTest {
 
     @PartialInterfaceWithManualValidation
     public abstract static class Valid extends WithScrambler {
-        public abstract String scramble(String input1);
+        public abstract String scramble(String input);
     }
     @Test
     void test_valid() {

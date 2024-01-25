@@ -14,7 +14,7 @@ public class InterfaceExtendingInterfaceTest {
 
     @PartialInterfaceWithManualValidation
     public interface ValidInterface extends WithScrambler {
-        String scramble(String input1);
+        String scramble(String input);
     }
     @Test
     void test_valid() {
