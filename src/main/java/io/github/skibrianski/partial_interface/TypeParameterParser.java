@@ -2,6 +2,7 @@ package io.github.skibrianski.partial_interface;
 
 import io.github.skibrianski.partial_interface.internal.ParameterizedTypeImpl;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +42,31 @@ public class TypeParameterParser {
                 typeString.lastIndexOf('>')
         );
         // if input was: `Map<R, X<String>>`, typeVariableName = `Map` and typeParameterArgumentsString = `R, X<String>`
-        Class<?> baseClass = typeNameResolver.resolve(typeVariableName);
-        if (baseClass == null) {
-            baseClass = BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName);
-        }
+        Class<?> baseClass = resolveParameterOrBuiltIn(typeVariableName, typeNameResolver);
+        Type[] typeArguments = parseList(typeParameterArgumentsString);
+        return new ParameterizedType() {
+            @Override
+            public Type[] getActualTypeArguments() {
+                return typeArguments;
+            }
 
-        return new ParameterizedTypeImpl(baseClass, parseList(typeParameterArgumentsString));
+            @Override
+            public Type getRawType() {
+                return baseClass;
+            }
+
+            @Override
+            public Type getOwnerType() {
+                return null;
+            }
+        };
+    }
+
+    private static Class<?> resolveParameterOrBuiltIn(String typeVariableName, TypeNameResolver typeNameResolver) {
+        Class<?> baseClass = typeNameResolver.resolve(typeVariableName);
+        return baseClass == null
+                ? BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName)
+                : baseClass;
     }
 
     public Type[] parseList(String typeParameterArgumentsString) {
