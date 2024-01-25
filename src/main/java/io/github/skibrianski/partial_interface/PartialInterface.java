@@ -133,7 +133,7 @@ public final class PartialInterface {
                         + " does not implement partial interface method: "
                         + RequiresChildMethod.Util.stringify(requiresChildMethod);
                 if (!typeNameResolver.isEmpty()) {
-                    message += " with type parameters: " + typeNameResolver; // TODO: is this readable?
+                    message += " with type parameters: " + typeNameResolver;
                 }
                 throw new PartialInterfaceException.NotCompletedException(message);
             }

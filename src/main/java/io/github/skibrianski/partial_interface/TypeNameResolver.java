@@ -64,5 +64,10 @@ public class TypeNameResolver {
         }
         return actualType;
     }
+
+    @Override
+    public String toString() {
+        return scalarTypeParameterMap.toString();
+    }
 }
 
