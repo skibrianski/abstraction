@@ -34,36 +34,36 @@ public class TypeValidator {
 
     }
 
-    public boolean isAssignableType(java.lang.reflect.Type implementedType, IType requiredType) {
+    public boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
         // note: options are Class, GenericArrayType, ParameterizedType, TypeVariable<D>, WildcardType
         // because we expect concrete types here, we know it cannot be TypeVariable here.
         // it can however be a WildcardType eg `? extends Number` or ParameterizedType eg `List<Integer>`
         // not sure about GenericArrayType
         if (implementedType instanceof Class) {
-            return requiredType.getActualType().isAssignableFrom((Class<?>) implementedType);
+            return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
         } else if (implementedType instanceof java.lang.reflect.ParameterizedType) {
             java.lang.reflect.ParameterizedType implementedParameterizedType =
                     (java.lang.reflect.ParameterizedType) implementedType;
-            if (!(requiredType instanceof ParameterizedType)) {
+            if (!(requiredType instanceof java.lang.reflect.ParameterizedType)) {
                 throw new RuntimeException("unimplemented"); // TODO: possible?
             }
-            ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
+            java.lang.reflect.ParameterizedType requiredParameterizedType =
+                    (java.lang.reflect.ParameterizedType) requiredType;
             Class<?> baseImplementedClass = (Class<?>) implementedParameterizedType.getRawType();
-            Class<?> baseRequiredClass = requiredType.getActualType();
+            Class<?> baseRequiredClass = (Class<?>) requiredParameterizedType.getRawType();
 
             if (!baseRequiredClass.isAssignableFrom(baseImplementedClass)) {
                 return false;
             }
 
-            List<java.lang.reflect.Type> implementedTypeParameters =
-                    Arrays.stream(implementedParameterizedType.getActualTypeArguments()).collect(Collectors.toList());
-            List<IType> requiredTypeParameters = requiredParameterizedType.getParameters();
-            if (implementedTypeParameters.size() != requiredTypeParameters.size()) {
+            java.lang.reflect.Type[] implementedTypeParameters = implementedParameterizedType.getActualTypeArguments();
+            java.lang.reflect.Type[] requiredTypeParameters = requiredParameterizedType.getActualTypeArguments();
+            if (implementedTypeParameters.length != requiredTypeParameters.length) {
                 return false;
             }
 
-            for (int pos = 0; pos < implementedTypeParameters.size(); pos++) {
-                if (!isAssignableType(implementedTypeParameters.get(pos), requiredTypeParameters.get(pos))) {
+            for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
+                if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameters[pos])) {
                     return false;
                 }
             }

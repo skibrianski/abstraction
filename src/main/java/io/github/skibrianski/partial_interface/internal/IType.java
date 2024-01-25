@@ -11,9 +11,9 @@ public abstract class IType {
 
     public abstract String name();
 
-    public static IType convertFromAnnotation(Type type, TypeNameResolver typeNameResolver) {
+    public static java.lang.reflect.Type convertFromAnnotation(Type type, TypeNameResolver typeNameResolver) {
         if (!type.ofClass().equals(Type.NotSpecified.class)) {
-            return new ClassType<>(type.ofClass());
+            return type.ofClass();
         }
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
         return typeParameterParser.parse(type.value());

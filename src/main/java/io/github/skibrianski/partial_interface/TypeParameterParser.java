@@ -4,7 +4,9 @@ import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageEx
 import io.github.skibrianski.partial_interface.internal.ClassType;
 import io.github.skibrianski.partial_interface.internal.IType;
 import io.github.skibrianski.partial_interface.internal.ParameterizedType;
+import io.github.skibrianski.partial_interface.internal2.ParameterizedTypeImpl;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,14 +21,14 @@ public class TypeParameterParser {
         this.typeNameResolver = typeNameResolver;
     }
 
-    public IType parse(String typeString) {
+    public Type parse(String typeString) {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
             if (typeNameResolver.canResolve(typeString)) {
-                return new ClassType<>(typeNameResolver.mustResolve(typeString));
+                return typeNameResolver.mustResolve(typeString);
             } else {
                 try {
-                    return new ClassType<>(classForName(typeString));
+                    return classForName(typeString);
                 } catch (ClassNotFoundException e) {
                     throw new PartialInterfaceUsageException(
                             "cannot find class: " + typeString + "."
@@ -49,13 +51,12 @@ public class TypeParameterParser {
             baseClass = BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName);
         }
 
-        List<IType> argumentTypes = parseList(typeParameterArgumentsString);
-        return new ParameterizedType(baseClass, argumentTypes);
+        return new ParameterizedTypeImpl(baseClass, parseList(typeParameterArgumentsString));
     }
 
-    public List<IType> parseList(String typeParameterArgumentsString) {
+    public Type[] parseList(String typeParameterArgumentsString) {
         String workingString = typeParameterArgumentsString;
-        List<IType> argumentTypes = new ArrayList<>();
+        List<Type> argumentTypes = new ArrayList<>();
         while (true) {
             int argumentEndPos = findArgumentEndPos(workingString);
             argumentTypes.add(parse(workingString.substring(0, argumentEndPos)));
@@ -64,7 +65,7 @@ public class TypeParameterParser {
             }
             workingString = workingString.substring(argumentEndPos + 1).trim();
         }
-        return argumentTypes;
+        return argumentTypes.toArray(Type[]::new);
     }
 
     private static Class<?> classForName(String name) throws ClassNotFoundException {
