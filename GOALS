@@ -7,6 +7,7 @@
   - constructor constraints?
 
 todo:
+  - double-extension tests
   - test for / implementation support for calls from child classes to methods in super. (does this need to deal with boxing/unboxing?)
   - support type parameters with constraints, eg class Foo<T extends Number>
 
