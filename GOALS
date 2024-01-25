@@ -7,7 +7,6 @@
   - constructor constraints?
 
 todo:
-  - implement @RequiresTypeParameter so we don't have to guess about T being a type variable
   - tests for baseClass requiring multiple type params, eg Map<T, U>
   - tests for eg T<X>
   - support type parameters with constraints, eg class Foo<T extends Number>

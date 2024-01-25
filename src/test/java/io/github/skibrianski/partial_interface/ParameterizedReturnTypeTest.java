@@ -1,5 +1,7 @@
 package io.github.skibrianski.partial_interface;
 
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceExtraneousTypeParameterException;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceMissingTypeParameterException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 import org.junit.jupiter.api.Assertions;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 public class ParameterizedReturnTypeTest {
 
+    @RequiresTypeParameter("R")
     @RequiresChildMethod(
             returnType = @Type("R"),
             argumentTypes = {},
@@ -57,18 +60,32 @@ public class ParameterizedReturnTypeTest {
     }
 
     @PartialInterfaceWithManualValidation
+    public static class MissingTypeParameter implements ReturnsLoneTypeParameter {
+        public int method() {
+            return 3;
+        }
+    }
+    @Test
+    void test_missingTypeParameterName() {
+        Assertions.assertThrows(
+                PartialInterfaceMissingTypeParameterException.class,
+                () -> PartialInterface.check(MissingTypeParameter.class)
+        );
+    }
+
+    @PartialInterfaceWithManualValidation
+    @HasTypeParameter(name = "R", ofClass = int.class)
     @HasTypeParameter(name = "X", ofClass = int.class)
-    public static class WrongTypeParameterName implements ReturnsLoneTypeParameter {
+    public static class ExtraneousTypeParameter implements ReturnsLoneTypeParameter {
         public int method() {
             return 3;
         }
     }
     @Test
     void test_invalidTypeParameterName() {
-        // TODO: should validate HasTypeParameter and throw a precise exception on that instead.
         Assertions.assertThrows(
-                PartialInterfaceUsageException.class,
-                () -> PartialInterface.check(WrongTypeParameterName.class)
+                PartialInterfaceExtraneousTypeParameterException.class,
+                () -> PartialInterface.check(ExtraneousTypeParameter.class)
         );
     }
 }

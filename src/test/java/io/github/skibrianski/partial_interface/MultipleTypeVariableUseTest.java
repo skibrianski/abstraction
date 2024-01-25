@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class MultipleTypeVariableUseTest {
 
+    @RequiresTypeParameter("T")
     @RequiresChildMethod(
             returnType = @Type("T"),
             argumentTypes = {@Type("T"), @Type("T")},

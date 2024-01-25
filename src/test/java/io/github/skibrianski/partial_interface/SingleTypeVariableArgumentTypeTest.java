@@ -9,6 +9,7 @@ public class SingleTypeVariableArgumentTypeTest {
     public static class A { }
     public static class AChild extends A { }
 
+    @RequiresTypeParameter("T")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},

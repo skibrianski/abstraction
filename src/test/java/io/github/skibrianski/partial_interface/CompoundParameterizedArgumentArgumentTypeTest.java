@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CompoundParameterizedArgumentArgumentTypeTest {
 
-
+    @RequiresTypeParameter("T")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("Collection<T>")},

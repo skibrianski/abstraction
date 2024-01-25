@@ -6,13 +6,17 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceException;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceExtraneousTypeParameterException;
+import io.github.skibrianski.partial_interface.exception.PartialInterfaceMissingTypeParameterException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceNotCompletedException;
 import io.github.skibrianski.partial_interface.exception.PartialInterfaceUsageException;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class PartialInterface {
@@ -46,7 +50,7 @@ public final class PartialInterface {
                         "attempt to use @PartialInterface on non-interface" + annotationClassInfo.getName()
                 );
             }
-            // note: includes extending interfaces, abstract classes, and concrete classes
+            // note: getClassesImplementing() includes interfaces, abstract classes, and concrete classes
             ClassInfoList implementations = annotationClassInfo.getClassesImplementing();
             List<RequiresChildMethod> requiresChildMethodAnnotations = annotationClassInfo
                     .getAnnotationInfoRepeatable(RequiresChildMethod.class)
@@ -54,6 +58,11 @@ public final class PartialInterface {
                     .map(AnnotationInfo::loadClassAndInstantiate)
                     .map(RequiresChildMethod.class::cast)
                     .collect(Collectors.toList());
+            AnnotationInfo requiresTypeParameterAnnotationInfo = annotationClassInfo
+                    .getAnnotationInfo(RequiresTypeParameter.class);
+            RequiresTypeParameter requiresTypeParameterAnnotation = requiresTypeParameterAnnotationInfo == null
+                    ? null
+                    : (RequiresTypeParameter) requiresTypeParameterAnnotationInfo.loadClassAndInstantiate();
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
                 // TODO: this implementation is uggo.
@@ -64,19 +73,55 @@ public final class PartialInterface {
                 }
                 validateImplementation(
                         implementationClassInfo.loadClass(),
+                        requiresTypeParameterAnnotation,
                         requiresChildMethodAnnotations
                 );
             }
         }
     }
 
+    private static void validateHasAllTypeParameters(
+            Class<?> implementation,
+            Set<String> implementedTypeParameters,
+            Set<String> requiredTypeParameters
+    ) {
+        if (implementedTypeParameters.equals(requiredTypeParameters)) {
+            return;
+        }
+        List<String> missingTypeParameters = requiredTypeParameters.stream()
+                .filter(requiredTypeParameter -> !implementedTypeParameters.contains(requiredTypeParameter))
+                .collect(Collectors.toList());
+        if (!missingTypeParameters.isEmpty()) {
+            throw new PartialInterfaceMissingTypeParameterException(
+                    "implementation: " + implementation
+                            + " is missing type parameter(s): " + String.join(", ", missingTypeParameters)
+            );
+        }
+        List<String> extraneousTypeParameters = implementedTypeParameters.stream()
+                .filter(implementedTypeParameter -> !requiredTypeParameters.contains(implementedTypeParameter))
+                .collect(Collectors.toList());
+        if (!extraneousTypeParameters.isEmpty()) {
+            throw new PartialInterfaceExtraneousTypeParameterException(
+                    "implementation: " + implementation
+                            + " has extraneous type parameter(s): " + String.join(", ", missingTypeParameters)
+            );
+        }
+    }
+
     private static void validateImplementation(
             Class<?> implementation,
+            RequiresTypeParameter requiresTypeParameterAnnotation,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
+        // TODO: probably should throw error on duplicate @HasTypeParameter annotation for same type
+        Set<String> requiredTypeParameters = requiresTypeParameterAnnotation == null
+                ? Set.of()
+                : Arrays.stream(requiresTypeParameterAnnotation.value()).collect(Collectors.toSet());
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::ofClass));
+        validateHasAllTypeParameters(implementation, scalarTypeParameterMap.keySet(), requiredTypeParameters);
+
         TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {

@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CompoundArgumentTypeTest {
 
 
+    @RequiresTypeParameter("T")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("Collection<String>")},

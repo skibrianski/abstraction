@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class ParameterizedArrayTypeTest {
 
+    @RequiresTypeParameter("R")
     @RequiresChildMethod(
             returnType = @Type("R"),
             argumentTypes = {@Type("R...")},
