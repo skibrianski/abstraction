@@ -8,10 +8,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class CompoundParameterizedArgumentTypeTest {
+public class CompoundParameterizedArgumentArgumentTypeTest {
 
 
-    // TOOD: @RequiresTypeParameter so we don't have to guess about T being a type variable?
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("Collection<T>")},

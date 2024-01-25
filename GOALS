@@ -7,8 +7,8 @@
   - constructor constraints?
 
 todo:
-  - support eg T<String>
-  - support eg T<X>
+  - implement @RequiresTypeParameter so we don't have to guess about T being a type variable
+  - tests for eg T<X>
   - support type parameters with constraints, eg class Foo<T extends Number>
   - support autoboxing eg. if Foo<T> required and T = int.class, expect Foo<Integer> instead
   - use in abstract class (not interface)
