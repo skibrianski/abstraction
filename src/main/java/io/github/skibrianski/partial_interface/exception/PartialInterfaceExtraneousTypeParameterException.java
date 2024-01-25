@@ -4,9 +4,6 @@ public class PartialInterfaceExtraneousTypeParameterException extends RuntimeExc
     public PartialInterfaceExtraneousTypeParameterException(String s) {
         super(s);
     }
-    public PartialInterfaceExtraneousTypeParameterException(String s, Exception cause) {
-        super(s, cause);
-    }
 
 }
 
