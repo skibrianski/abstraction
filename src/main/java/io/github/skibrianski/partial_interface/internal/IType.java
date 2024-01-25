@@ -7,8 +7,6 @@ import io.github.skibrianski.partial_interface.TypeNameResolver;
 // TODO: consider using java.lang.reflect types instead if they are instantiable
 public abstract class IType {
 
-    public IType() { }
-
     public abstract Class<?> getActualType();
 
     public abstract String name();
