@@ -40,7 +40,7 @@ public class TypeParameterParser {
                 nextOpen + 1,
                 typeString.lastIndexOf('>')
         );
-        // if input was: `Map<R, X<String>>`, variable will be `Map` and typeParameterArgumentsString `R, X<String>`
+        // if input was: `Map<R, X<String>>`, typeVariableName = `Map` and typeParameterArgumentsString = `R, X<String>`
         Class<?> baseClass = typeNameResolver.resolve(typeVariableName);
         if (baseClass == null) {
             baseClass = BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName);
