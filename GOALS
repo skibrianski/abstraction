@@ -7,6 +7,8 @@
   - constructor constraints?
 
 todo:
+  - think: we accept a boxed type when it is not necessary. is this desirable? i guess it gives power to the user,
+      but it could also lead to unecessary boxing.
   - child interface / abstract class should not require existence of a method, but should validate match if @HasParameterType
     - only validate that all methods exist if concrete. if abstract/iface, just validate that any methods that do match have correct args.
   - recursive extension support & tests
