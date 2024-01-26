@@ -151,7 +151,7 @@ public final class PartialInterface {
                 }
             }
 
-            if (methods.length == 1) {
+            if (methodsMatchingNameAndArguments.size() == 1) {
                 if (
                         !typeValidator.isAssignableType(
                                 methods[0].getGenericReturnType(),

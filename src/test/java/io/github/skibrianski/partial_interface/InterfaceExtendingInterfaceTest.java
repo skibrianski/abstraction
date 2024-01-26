@@ -26,7 +26,7 @@ public class InterfaceExtendingInterfaceTest {
         String scramble(String input);
     }
     @Test
-    void test_valid_butUnfulfilled() {
+    void test_valid_unfulfilled() {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidEmpty.class));
     }
 
