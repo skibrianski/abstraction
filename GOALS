@@ -7,10 +7,10 @@
   - constructor constraints?
 
 todo:
-  - recursive extension support & tests
-    - child interface / abstract class should not require existence of a method, but should validate match if @HasParameterTyp
+  - child interface / abstract class should not require existence of a method, but should validate match if @HasParameterType
     - must validate return type in all cases (despite overloads)
     - only validate argument match if concrete
+  - recursive extension support & tests
   - test for calls from child classes to methods in super. (does this need to deal with boxing/unboxing?)
     - should be nothing to do here - java handles this all?
   - support type parameters with constraints, eg class Foo<T extends Number>
