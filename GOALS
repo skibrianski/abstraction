@@ -8,8 +8,7 @@
 
 todo:
   - child interface / abstract class should not require existence of a method, but should validate match if @HasParameterType
-    - must validate return type in all cases (despite overloads)
-    - only validate argument match if concrete
+    - only validate that all methods exist if concrete. if abstract/iface, just validate that any methods that do match have correct args.
   - recursive extension support & tests
   - test for calls from child classes to methods in super. (does this need to deal with boxing/unboxing?)
     - should be nothing to do here - java handles this all?
