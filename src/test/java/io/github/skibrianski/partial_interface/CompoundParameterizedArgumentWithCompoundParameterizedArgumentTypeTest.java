@@ -16,7 +16,7 @@ public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeT
     )
     interface WithCompoundParameterizedArgumentType { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = List.class)
     @HasTypeParameter(name = "U", ofClass = String.class)
     static class ValidExactMatch implements WithCompoundParameterizedArgumentType {
@@ -27,7 +27,7 @@ public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeT
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidExactMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = List.class)
     @HasTypeParameter(name = "U", ofClass = String.class)
     static class WrongBaseType implements WithCompoundParameterizedArgumentType {
@@ -41,7 +41,7 @@ public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeT
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = List.class)
     @HasTypeParameter(name = "U", ofClass = String.class)
     static class WrongParameterType implements WithCompoundParameterizedArgumentType {

@@ -40,10 +40,14 @@ public final class PartialInterface {
 
     private static void check(ScanResult scanResult, boolean isManualRun) {
         for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
-            if (!annotationClassInfo.isAbstract()) {
-                throw new PartialInterfaceException.UsageException(
-                        "attempt to use @PartialInterface on non-abstract class: " + annotationClassInfo.getName()
-                );
+            boolean interfaceShouldBeAutoValidated =
+                    annotationClassInfo.getAnnotationInfo(ManualValidation.class) == null;
+            if (interfaceShouldBeAutoValidated || isManualRun) {
+                if (!annotationClassInfo.isAbstract()) {
+                    throw new PartialInterfaceException.UsageException(
+                            "attempt to use @PartialInterface on non-abstract class: " + annotationClassInfo.getName()
+                    );
+                }
             }
             // note: for interfaces, getClassesImplementing() includes interfaces, abstract classes, and concrete
             // classes, but getSubClasses() is required for abstract classes.
@@ -64,7 +68,7 @@ public final class PartialInterface {
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
                 boolean classShouldBeAutoValidated =
-                        implementationClassInfo.getAnnotationInfo(PartialInterfaceWithManualValidation.class) == null;
+                        implementationClassInfo.getAnnotationInfo(ManualValidation.class) == null;
                 if (classShouldBeAutoValidated || isManualRun) {
                     validateImplementation(
                             implementationClassInfo.loadClass(),

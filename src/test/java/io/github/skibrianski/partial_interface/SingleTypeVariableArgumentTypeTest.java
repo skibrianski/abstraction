@@ -16,7 +16,7 @@ public class SingleTypeVariableArgumentTypeTest {
     )
     interface HasMethodWithLoneTypeParameter { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class ValidClassPrimitiveMatch implements HasMethodWithLoneTypeParameter {
         public void method(int foo) { }
@@ -26,7 +26,7 @@ public class SingleTypeVariableArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassPrimitiveMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = A.class)
     static class ValidClassExactObjectMatch implements HasMethodWithLoneTypeParameter {
         public void method(A foo) { }
@@ -36,7 +36,7 @@ public class SingleTypeVariableArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassExactObjectMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = A.class)
     public static class ValidClassChildObjectTypeMatch implements HasMethodWithLoneTypeParameter {
         public void method(AChild foo) { }
@@ -46,7 +46,7 @@ public class SingleTypeVariableArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClassChildObjectTypeMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class WrongArgumentType implements HasMethodWithLoneTypeParameter {
         public void method(String foo) { }

@@ -12,7 +12,7 @@ public class VarArgsTest {
     )
     interface WithConcatenation { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public static class ValidClass implements WithConcatenation {
         public String concat(String... inputs) {
             return String.join("", inputs);
@@ -23,7 +23,7 @@ public class VarArgsTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidClass.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public static class InvalidClass implements WithConcatenation { }
     @Test
     void test_invalid() {

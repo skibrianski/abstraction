@@ -12,7 +12,7 @@ public class AbstractClassExtendingAbstractClassTest {
     )
     abstract static class WithScrambler { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public abstract static class ValidFull extends WithScrambler {
         public abstract String scramble(String input);
     }
@@ -21,7 +21,7 @@ public class AbstractClassExtendingAbstractClassTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidFull.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public abstract static class ValidMatchingOverride extends WithScrambler {
         public abstract String scramble(String input);
     }
@@ -30,7 +30,7 @@ public class AbstractClassExtendingAbstractClassTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidMatchingOverride.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public abstract static class ValidEmpty extends WithScrambler {
     }
     @Test
@@ -38,7 +38,7 @@ public class AbstractClassExtendingAbstractClassTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidEmpty.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public abstract static class InvalidClashingReturnOnConcreteMethod extends WithScrambler {
         public int scramble(String input) {
             return 3;
@@ -52,7 +52,7 @@ public class AbstractClassExtendingAbstractClassTest {
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public abstract static class InvalidClashingReturnOnAbstractMethod extends WithScrambler {
         public abstract int scramble(String input);
     }

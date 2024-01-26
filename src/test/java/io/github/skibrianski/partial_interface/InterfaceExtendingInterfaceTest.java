@@ -12,7 +12,7 @@ public class InterfaceExtendingInterfaceTest {
     )
     interface WithScrambler { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public interface ValidFull extends WithScrambler {
         String scramble(String input);
     }
@@ -21,7 +21,7 @@ public class InterfaceExtendingInterfaceTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidFull.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public interface ValidEmpty extends WithScrambler {
         String scramble(String input);
     }
@@ -30,7 +30,7 @@ public class InterfaceExtendingInterfaceTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidEmpty.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public interface InvalidInterface extends WithScrambler {
         int scramble(String input);
     }

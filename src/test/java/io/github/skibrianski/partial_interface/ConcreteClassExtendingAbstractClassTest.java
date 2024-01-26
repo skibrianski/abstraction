@@ -12,7 +12,7 @@ public class ConcreteClassExtendingAbstractClassTest {
     )
     abstract static class WithScrambler { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public static class Valid extends WithScrambler {
         public String scramble(String input) {
             return input;
@@ -23,7 +23,7 @@ public class ConcreteClassExtendingAbstractClassTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     public static class Invalid extends WithScrambler {
     }
     @Test

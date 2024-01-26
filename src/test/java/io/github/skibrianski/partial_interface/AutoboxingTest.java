@@ -15,7 +15,7 @@ public class AutoboxingTest {
     )
     interface WithSum { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     public static class Valid implements WithSum {
         public int sum(List<Integer> input) {
@@ -27,7 +27,7 @@ public class AutoboxingTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = double.class)
     public static class Invalid implements WithSum {
         public int sum(List<Integer> input) {

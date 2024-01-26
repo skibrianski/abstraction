@@ -15,7 +15,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     )
     interface WithCompoundParameterizedArgumentType { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
     @HasTypeParameter(name = "U", ofClass = Integer.class)
     static class Valid implements WithCompoundParameterizedArgumentType {
@@ -27,7 +27,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     }
 
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
     @HasTypeParameter(name = "U", ofClass = Integer.class)
     static class WrongBaseType implements WithCompoundParameterizedArgumentType {
@@ -41,7 +41,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
     @HasTypeParameter(name = "U", ofClass = Integer.class)
     static class WrongFirstParameterType implements WithCompoundParameterizedArgumentType {
@@ -55,7 +55,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
     @HasTypeParameter(name = "U", ofClass = Integer.class)
     static class WrongSecondParameterType implements WithCompoundParameterizedArgumentType {

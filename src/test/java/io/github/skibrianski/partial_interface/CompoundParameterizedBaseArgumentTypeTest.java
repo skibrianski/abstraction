@@ -17,7 +17,7 @@ public class CompoundParameterizedBaseArgumentTypeTest {
     )
     interface WithCompoundParameterizedArgumentType { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = Set.class)
     static class ValidExactMatch implements WithCompoundParameterizedArgumentType {
         public void method(Set<String> foo) { }
@@ -27,7 +27,7 @@ public class CompoundParameterizedBaseArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidExactMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = Collection.class)
     static class ValidExtendedBaseType implements WithCompoundParameterizedArgumentType {
         public void method(Set<String> foo) { }
@@ -38,7 +38,7 @@ public class CompoundParameterizedBaseArgumentTypeTest {
     }
 
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = Set.class)
     static class WrongBaseType implements WithCompoundParameterizedArgumentType {
         public void method(AtomicReference<String> foo) { }
@@ -51,7 +51,7 @@ public class CompoundParameterizedBaseArgumentTypeTest {
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = Set.class)
     static class WrongParameterType implements WithCompoundParameterizedArgumentType {
         public void method(Set<Integer> foo) { }

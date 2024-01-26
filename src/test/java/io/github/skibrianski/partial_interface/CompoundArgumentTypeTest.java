@@ -18,7 +18,7 @@ public class CompoundArgumentTypeTest {
     )
     interface WithCompoundArgumentType { }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class ValidExactMatch implements WithCompoundArgumentType {
         public void method(int foo, Collection<String> bar) { }
@@ -28,7 +28,7 @@ public class CompoundArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidExactMatch.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class ValidExtendedBaseType implements WithCompoundArgumentType {
         public void method(int foo, List<String> bar) { }
@@ -38,7 +38,7 @@ public class CompoundArgumentTypeTest {
         Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidExtendedBaseType.class));
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class WrongBaseType implements WithCompoundArgumentType {
         public void method(int foo, AtomicReference<String> bar) { }
@@ -51,7 +51,7 @@ public class CompoundArgumentTypeTest {
         );
     }
 
-    @PartialInterfaceWithManualValidation
+    @ManualValidation
     @HasTypeParameter(name = "T", ofClass = int.class)
     static class WrongParameterType implements WithCompoundArgumentType {
         public void method(int foo, Collection<Integer> bar) { }
