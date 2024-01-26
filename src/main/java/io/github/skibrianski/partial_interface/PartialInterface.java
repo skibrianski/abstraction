@@ -154,7 +154,7 @@ public final class PartialInterface {
             if (methodsMatchingNameAndArguments.size() == 1) {
                 if (
                         !typeValidator.isAssignableType(
-                                methods[0].getGenericReturnType(),
+                                methodsMatchingNameAndArguments.get(0).getGenericReturnType(),
                                 requiresChildMethod.returnType()
                         )
                 ) {
