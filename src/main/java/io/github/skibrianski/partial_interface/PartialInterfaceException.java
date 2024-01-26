@@ -8,6 +8,12 @@ public class PartialInterfaceException extends RuntimeException {
         super(s, cause);
     }
 
+    public static class ClashingReturnTypeException extends PartialInterfaceException {
+        public ClashingReturnTypeException(String s) {
+            super(s);
+        }
+
+    }
     public static class ExtraneousTypeParameterException extends PartialInterfaceException {
         public ExtraneousTypeParameterException(String s) {
             super(s);

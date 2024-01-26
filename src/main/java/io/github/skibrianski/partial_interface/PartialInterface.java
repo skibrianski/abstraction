@@ -7,6 +7,7 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -122,30 +123,62 @@ public final class PartialInterface {
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
-            List<Method> matchingMethods = Arrays.stream(methods)
-                    .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                    .filter(m -> typeValidator.isAssignableType(m.getGenericReturnType(), requiresChildMethod.returnType()))
-                    .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
-                    .collect(Collectors.toList());
-            if (matchingMethods.isEmpty()) {
-                String message = "implementation " + implementation.getName()
-                        + " does not implement partial interface method: "
-                        + RequiresChildMethod.Util.stringify(requiresChildMethod);
-                if (!typeNameResolver.isEmpty()) {
-                    message += " with type parameters: " + typeNameResolver;
-                }
-                throw new PartialInterfaceException.NotCompletedException(message);
-            }
-            if (matchingMethods.size() > 1) {
-                // TODO: is this possible? if not, remove it.
-                throw new PartialInterfaceException(
-                        "bug: internal error: implementation " + implementation.getName()
-                                + " implements more than one matching interface method matching: "
-                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                                + ". please report this error."
+            // for both abstract and concrete, if arguments & name match, return tyoe must as well
+            // or else "attempting to use incompatible return type"
+            List<Method> methodsMatchingNameAndArguments = methodsMatchingNameAndArguments(
+                    methods,
+                    requiresChildMethod,
+                    typeValidator
+            );
+
+            if (methodsMatchingNameAndArguments.size() > 1) {
+                // TODO: think: is this actually possible?
+                throw new RuntimeException(
+                        "internal error: i didn't think this was possible. " + methodsMatchingNameAndArguments
                 );
             }
+            int modifiers = implementation.getModifiers();
+            boolean isConcrete = !(Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers));
+            if (isConcrete) {
+                if (methodsMatchingNameAndArguments.isEmpty()) {
+                    String message = "implementation " + implementation.getName()
+                            + " does not implement partial interface method: "
+                            + RequiresChildMethod.Util.stringify(requiresChildMethod);
+                    if (!typeNameResolver.isEmpty()) {
+                        message += " with type parameters: " + typeNameResolver;
+                    }
+                    throw new PartialInterfaceException.NotCompletedException(message);
+                }
+            }
+
+            if (methods.length == 1) {
+                if (
+                        !typeValidator.isAssignableType(
+                                methods[0].getGenericReturnType(),
+                                requiresChildMethod.returnType()
+                        )
+                ) {
+                    String message = "implementation " + implementation.getName()
+                            + " has clashing return type for method: "
+                            + RequiresChildMethod.Util.stringify(requiresChildMethod);
+                    if (!typeNameResolver.isEmpty()) {
+                        message += " with type parameters: " + typeNameResolver;
+                    }
+                    throw new PartialInterfaceException.ClashingReturnTypeException(message);
+                }
+            }
         }
+    }
+
+    private static List<Method> methodsMatchingNameAndArguments(
+            Method[] methods,
+            RequiresChildMethod requiresChildMethod,
+            TypeValidator typeValidator
+    ) {
+        return Arrays.stream(methods)
+                .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
+                .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
+                .collect(Collectors.toList());
     }
 
 }

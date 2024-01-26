@@ -13,20 +13,31 @@ public class InterfaceExtendingInterfaceTest {
     interface WithScrambler { }
 
     @PartialInterfaceWithManualValidation
-    public interface ValidInterface extends WithScrambler {
+    public interface ValidFull extends WithScrambler {
         String scramble(String input);
     }
     @Test
-    void test_valid() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidInterface.class));
+    void test_valid_fulfilled() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidFull.class));
     }
 
     @PartialInterfaceWithManualValidation
-    public interface InvalidInterface extends WithScrambler { }
+    public interface ValidEmpty extends WithScrambler {
+        String scramble(String input);
+    }
     @Test
-    void test_invalid() {
+    void test_valid_butUnfulfilled() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidEmpty.class));
+    }
+
+    @PartialInterfaceWithManualValidation
+    public interface InvalidInterface extends WithScrambler {
+        int scramble(String input);
+    }
+    @Test
+    void test_invalid_returnTypeClash() {
         Assertions.assertThrows(
-                PartialInterfaceException.NotCompletedException.class,
+                PartialInterfaceException.ClashingReturnTypeException.class,
                 () -> PartialInterface.check(InvalidInterface.class)
         );
     }
