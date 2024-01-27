@@ -24,21 +24,6 @@ public class TypeNameResolver {
         return this;
     }
 
-    public java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter) {
-        boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
-        boolean hasString = !hasTypeParameter.ofString().isEmpty();
-        if (hasClass && hasString) {
-            throw new PartialInterfaceException.UsageException(
-                    "cannot specify both ofClass and ofString for: " + hasTypeParameter
-            );
-        }
-        if (hasClass) {
-            return hasTypeParameter.ofClass();
-        } else {
-            return mustResolve(hasTypeParameter.ofString());
-        }
-    }
-
     public boolean canResolve(String typeString) {
         return resolve(typeString, false) != null;
     }
