@@ -6,12 +6,6 @@ import org.junit.jupiter.api.Test;
 public class TypeNameResolverTest {
 
     @Test
-    void test_isEmpty() {
-        Assertions.assertTrue(new TypeNameResolver().isEmpty());
-        Assertions.assertFalse(new TypeNameResolver().addTypeParameter("I", int.class).isEmpty());
-    }
-
-    @Test
     void test_scalar() {
         String typeName = "R";
         String somethingElse = typeName + "x";

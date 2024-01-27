@@ -3,27 +3,25 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TypeNameResolver {
 
-    private final Map<String, java.lang.reflect.Type> builtinTypeMap;
-    private final Map<String, java.lang.reflect.Type> typeParameterMap;
+    private final Map<String, java.lang.reflect.Type> typeMap;
+    private final Set<String> typeParameterNames;
 
     public TypeNameResolver() {
-        this.builtinTypeMap = BuiltInTypes.builtInClassMap();
-        this.typeParameterMap = new HashMap<>();
+        this.typeMap = BuiltInTypes.builtInClassMap();
+        this.typeParameterNames = new HashSet<>();
     }
 
     public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
-        builtinTypeMap.put(name, type);
-        typeParameterMap.put(name, type);
+        typeMap.put(name, type);
+        typeParameterNames.add(name);
         return this;
-    }
-
-    public boolean isEmpty() {
-        return typeParameterMap.isEmpty();
     }
 
     public boolean canResolve(String typeString) {
@@ -47,7 +45,7 @@ public class TypeNameResolver {
         String baseParameterName = parameterNameTruncator.value();
         int arrayLevels = parameterNameTruncator.truncationCount();
 
-        java.lang.reflect.Type baseType = builtinTypeMap.get(baseParameterName);
+        java.lang.reflect.Type baseType = typeMap.get(baseParameterName);
         if (baseType == null) {
             if (!shouldThrow) {
                 return null;
@@ -80,7 +78,9 @@ public class TypeNameResolver {
 
     @Override
     public String toString() {
-        return typeParameterMap.toString();
+        return typeParameterNames.stream()
+                .collect(Collectors.toMap(x -> x, typeMap::get))
+                .toString();
     }
 }
 

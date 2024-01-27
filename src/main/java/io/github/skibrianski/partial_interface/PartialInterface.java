@@ -170,13 +170,12 @@ public final class PartialInterface {
             boolean isConcrete = !(Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers));
             if (isConcrete) {
                 if (methodsMatchingNameAndArguments.isEmpty()) {
-                    String message = "implementation " + implementation.getName()
-                            + " does not implement partial interface method: "
-                            + RequiresChildMethod.Util.stringify(requiresChildMethod);
-                    if (!typeNameResolver.isEmpty()) {
-                        message += " with type parameters: " + typeNameResolver;
-                    }
-                    throw new PartialInterfaceException.NotCompletedException(message);
+                    throw new PartialInterfaceException.NotCompletedException(
+                            "implementation " + implementation.getName()
+                                    + " does not implement partial interface method: "
+                                    + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                                    + " with type parameters: " + typeNameResolver
+                    );
                 }
             }
 
@@ -187,13 +186,12 @@ public final class PartialInterface {
                                 requiresChildMethod.returnType()
                         )
                 ) {
-                    String message = "implementation " + implementation.getName()
-                            + " has clashing return type for method: "
-                            + RequiresChildMethod.Util.stringify(requiresChildMethod);
-                    if (!typeNameResolver.isEmpty()) {
-                        message += " with type parameters: " + typeNameResolver;
-                    }
-                    throw new PartialInterfaceException.ClashingReturnTypeException(message);
+                    throw new PartialInterfaceException.ClashingReturnTypeException(
+                            "implementation " + implementation.getName()
+                                    + " has clashing return type for method: "
+                                    + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                                    + " with type parameters: " + typeNameResolver
+                    );
                 }
             }
         }
