@@ -84,28 +84,43 @@ public final class PartialInterface {
 
     private static void validateHasAllTypeParameters(
             Class<?> implementation,
-            Set<String> implementedTypeParameters,
-            Set<String> requiredTypeParameters
+            String[] implementedTypeParameters,
+            String[] requiredTypeParameters
     ) {
-        if (implementedTypeParameters.equals(requiredTypeParameters)) {
+        if (Arrays.equals(implementedTypeParameters, requiredTypeParameters)) {
             return;
         }
-        List<String> missingTypeParameters = requiredTypeParameters.stream()
-                .filter(requiredTypeParameter -> !implementedTypeParameters.contains(requiredTypeParameter))
+
+        Set<String> implementedTypeParameterSet = Arrays.stream(implementedTypeParameters)
+                .collect(Collectors.toSet());
+        if (implementedTypeParameterSet.size() != implementedTypeParameters.length) {
+            Map<String, Long> counts = Arrays.stream(implementedTypeParameters)
+                    .collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+            Set<String> duplicates = counts.keySet().stream()
+                    .filter(x -> counts.get(x) > 1)
+                    .collect(Collectors.toSet());
+            throw new PartialInterfaceException.UsageException("duplicate type parameters: " + duplicates);
+        }
+        Set<String> requiredTypeParameterSet = Arrays.stream(requiredTypeParameters)
+                .collect(Collectors.toSet());
+        List<String> missingTypeParameters = Arrays.stream(requiredTypeParameters)
+                .filter(requiredTypeParameter -> !implementedTypeParameterSet.contains(requiredTypeParameter))
                 .collect(Collectors.toList());
         if (!missingTypeParameters.isEmpty()) {
             throw new PartialInterfaceException.MissingTypeParameterException(
                     "implementation: " + implementation
-                            + " is missing type parameter(s): " + String.join(", ", missingTypeParameters)
+                            + " is missing type parameter(s): "
+                            + String.join(", ", missingTypeParameters)
             );
         }
-        List<String> extraneousTypeParameters = implementedTypeParameters.stream()
-                .filter(implementedTypeParameter -> !requiredTypeParameters.contains(implementedTypeParameter))
+        List<String> extraneousTypeParameters = Arrays.stream(implementedTypeParameters)
+                .filter(implementedTypeParameter -> !requiredTypeParameterSet.contains(implementedTypeParameter))
                 .collect(Collectors.toList());
         if (!extraneousTypeParameters.isEmpty()) {
             throw new PartialInterfaceException.ExtraneousTypeParameterException(
                     "implementation: " + implementation
-                            + " has extraneous type parameter(s): " + String.join(", ", missingTypeParameters)
+                            + " has extraneous type parameter(s): "
+                            + String.join(", ", extraneousTypeParameters)
             );
         }
     }
@@ -115,14 +130,17 @@ public final class PartialInterface {
             List<RequiresTypeParameter> requiresTypeParameterAnnotations,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
-        // TODO: should throw error on duplicate @HasTypeParameter annotation for same type
-        Set<String> requiredTypeParameters = requiresTypeParameterAnnotations.stream()
+        String[] requiredTypeParameters = requiresTypeParameterAnnotations.stream()
                 .map(RequiresTypeParameter::value)
-                .collect(Collectors.toSet());
+                .toArray(String[]::new);
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
+        String[] implementedTypeParameters = Arrays.stream(hasTypeParameters)
+                .map(HasTypeParameter::name)
+                .toArray(String[]::new);
+        validateHasAllTypeParameters(implementation, implementedTypeParameters, requiredTypeParameters);
+        // TODO: parse to type instead.
         Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::ofClass));
-        validateHasAllTypeParameters(implementation, scalarTypeParameterMap.keySet(), requiredTypeParameters);
 
         TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
