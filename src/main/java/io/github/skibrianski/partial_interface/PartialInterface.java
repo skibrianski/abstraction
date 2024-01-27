@@ -145,7 +145,7 @@ public final class PartialInterface {
         for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
             typeNameResolver.addTypeParameter(
                     hasTypeParameter.name(),
-                    HasTypeParameter.Util.asType(hasTypeParameter, typeNameResolver)
+                    typeNameResolver.lookup(hasTypeParameter)
             );
         }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
