@@ -12,16 +12,22 @@ public class TypeNameResolver {
 
     private final Map<String, java.lang.reflect.Type> typeMap;
     private final Set<String> typeParameterNames;
+    private final TypeParameterParser typeParameterParser;
 
     public TypeNameResolver() {
         this.typeMap = BuiltInTypes.builtInClassMap();
         this.typeParameterNames = new HashSet<>();
+        this.typeParameterParser = new TypeParameterParser(this);
     }
 
     public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
         typeMap.put(name, type);
         typeParameterNames.add(name);
         return this;
+    }
+
+    public TypeParameterParser getTypeParameterParser() {
+        return this.typeParameterParser;
     }
 
     public boolean canResolve(String typeString) {

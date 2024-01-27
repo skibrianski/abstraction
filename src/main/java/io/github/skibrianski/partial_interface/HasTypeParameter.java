@@ -28,10 +28,7 @@ public @interface HasTypeParameter {
             if (hasClass) {
                 return hasTypeParameter.ofClass();
             } else {
-                // TODO: shouldn't  have to churn a tpp object every time. we also do this in
-                // TypeValidator::convertFromAnnotation
-                TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-                return typeParameterParser.parse(hasTypeParameter.ofString());
+                return typeNameResolver.getTypeParameterParser().parse(hasTypeParameter.ofString());
             }
         }
     }

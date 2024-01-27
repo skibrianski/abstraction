@@ -33,8 +33,7 @@ public class TypeValidator {
         if (!type.ofClass().equals(Type.NotSpecified.class)) {
             return type.ofClass();
         }
-        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
-        return typeParameterParser.parse(type.value());
+        return typeNameResolver.getTypeParameterParser().parse(type.value());
     }
 
     public boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {

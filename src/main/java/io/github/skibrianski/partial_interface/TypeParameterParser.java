@@ -63,7 +63,7 @@ public class TypeParameterParser {
         return typeNameResolver.resolve(typeVariableName);
     }
 
-    public Type[] parseList(String typeParameterArgumentsString) {
+    private Type[] parseList(String typeParameterArgumentsString) {
         String workingString = typeParameterArgumentsString;
         List<Type> argumentTypes = new ArrayList<>();
         while (true) {
