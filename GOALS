@@ -7,8 +7,6 @@
   - constructor constraints?
 
 todo:
-  - test for calls from child classes to methods in super. (does this need to deal with boxing/unboxing?)
-    - should be nothing to do here - java handles this all?
   - support type parameters with constraints, eg class Foo<T extends Number>
   - think: we accept a boxed type when it is not necessary. is this desirable? i guess it gives power to the user,
       but it could also lead to unecessary boxing.
