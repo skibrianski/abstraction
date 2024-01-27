@@ -13,11 +13,11 @@ public class HasTypeParameterOfStringTest {
             argumentTypes = {@Type("T")},
             methodName = "method"
     )
-    interface WithSum { }
+    interface WithMethod { }
 
     @ManualValidation
     @HasTypeParameter(name = "T", ofString = "int")
-    public static class Valid implements WithSum {
+    public static class Valid implements WithMethod {
         public int method(int input) {
             return input;
         }
@@ -29,7 +29,7 @@ public class HasTypeParameterOfStringTest {
 
     @ManualValidation
     @HasTypeParameter(name = "T", ofString = "double")
-    public static class Invalid implements WithSum {
+    public static class Invalid implements WithMethod {
         public int method(int input) {
             return input;
         }
