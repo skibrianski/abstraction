@@ -139,8 +139,6 @@ public final class PartialInterface {
                 .toArray(String[]::new);
         validateHasAllTypeParameters(implementation, implementedTypeParameters, requiredTypeParameters);
 
-        // TODO: need a mutable TypeNameResolver from BuiltInTypeNameResolver
-        //  that we can look up in and set in as we go
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
             typeNameResolver.addTypeParameter(
