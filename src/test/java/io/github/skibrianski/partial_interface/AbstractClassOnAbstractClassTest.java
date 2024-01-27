@@ -3,7 +3,7 @@ package io.github.skibrianski.partial_interface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AbstractClassExtendingAbstractClassTest {
+public class AbstractClassOnAbstractClassTest {
 
     @RequiresChildMethod(
             returnType = @Type(ofClass = String.class),

@@ -3,7 +3,7 @@ package io.github.skibrianski.partial_interface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class InterfaceExtendingInterfaceTest {
+public class InterfaceOnInterfaceTest {
 
     @RequiresChildMethod(
             returnType = @Type(ofClass = String.class),
@@ -23,7 +23,6 @@ public class InterfaceExtendingInterfaceTest {
 
     @ManualValidation
     public interface ValidEmpty extends WithScrambler {
-        String scramble(String input);
     }
     @Test
     void test_valid_unfulfilled() {
