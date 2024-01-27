@@ -150,7 +150,7 @@ public final class PartialInterface {
 
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
-            // for both abstract and concrete, if arguments & name match, return tyoe must as well
+            // for both abstract and concrete, if arguments & name match, return type must as well
             // or else "attempting to use incompatible return type"
             List<Method> methodsMatchingNameAndArguments = methodsMatchingNameAndArguments(
                     methods,
