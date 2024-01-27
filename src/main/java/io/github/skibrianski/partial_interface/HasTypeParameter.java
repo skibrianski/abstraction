@@ -16,6 +16,7 @@ public @interface HasTypeParameter {
     class None { }
 
     class Util {
+        // TODO: move
         public static java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter, TypeNameResolver typeNameResolver) {
             boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
             boolean hasString = !hasTypeParameter.ofString().isEmpty();
@@ -27,8 +28,11 @@ public @interface HasTypeParameter {
             if (hasClass) {
                 return hasTypeParameter.ofClass();
             } else {
-                // TODO: use parser instead of resolver?
-                return typeNameResolver.mustResolve(hasTypeParameter.ofString());
+                // TODO: shouldn't  have to churn a tpp object every time. we also do this in
+                // TypeValidator::convertFromAnnotation
+                TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+                return typeParameterParser.parse(hasTypeParameter.ofString());
+//                return typeNameResolver.mustResolve(hasTypeParameter.ofString());
             }
         }
     }
