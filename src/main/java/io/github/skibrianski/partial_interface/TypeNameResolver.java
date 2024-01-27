@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class TypeNameResolver {
 
-    private final Map<String, Class<?>> scalarTypeParameterMap;
+    private final Map<String, java.lang.reflect.Type> scalarTypeParameterMap;
 
-    public TypeNameResolver(Map<String, Class<?>> scalarTypeParameterMap) {
+    public TypeNameResolver(Map<String, java.lang.reflect.Type> scalarTypeParameterMap) {
         this.scalarTypeParameterMap = scalarTypeParameterMap;
     }
 
@@ -38,7 +38,7 @@ public class TypeNameResolver {
         String baseParameterName = parameterNameTruncator.value();
         int arrayLevels = parameterNameTruncator.truncationCount();
 
-        Class<?> baseType = scalarTypeParameterMap.get(baseParameterName);
+        java.lang.reflect.Type baseType = scalarTypeParameterMap.get(baseParameterName);
         if (baseType == null) {
             if (!shouldThrow) {
                 return null;
@@ -57,12 +57,18 @@ public class TypeNameResolver {
             }
         }
 
-        Class<?> actualType = baseType;
-        while (arrayLevels > 0) {
-            actualType = Array.newInstance(actualType, 0).getClass();
-            arrayLevels--;
+        if (baseType instanceof Class) {
+            Class<?> actualType = (Class<?>) baseType;
+            while (arrayLevels > 0) {
+                actualType = Array.newInstance(actualType, 0).getClass();
+                arrayLevels--;
+            }
+            return actualType;
         }
-        return actualType;
+
+        throw new RuntimeException("unimplemented");
+
+
     }
 
     @Override

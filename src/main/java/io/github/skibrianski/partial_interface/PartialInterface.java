@@ -139,8 +139,8 @@ public final class PartialInterface {
                 .toArray(String[]::new);
         validateHasAllTypeParameters(implementation, implementedTypeParameters, requiredTypeParameters);
         // TODO: parse to type instead.
-        Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
-                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::ofClass));
+        Map<String, java.lang.reflect.Type> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
+                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter.Util::asType));
 
         TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);

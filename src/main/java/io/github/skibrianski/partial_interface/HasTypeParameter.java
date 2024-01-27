@@ -15,5 +15,23 @@ public @interface HasTypeParameter {
     Class<?> ofClass() default None.class;
     String ofString() default "";
     class None { }
+
+    class Util {
+        private static final BuiltInTypeNameResolver BUILT_IN_TYPE_NAME_RESOLVER = new BuiltInTypeNameResolver();
+        public static java.lang.reflect.Type asType(HasTypeParameter hasTypeParameter) {
+            boolean hasClass = !hasTypeParameter.ofClass().equals(None.class);
+            boolean hasString = !hasTypeParameter.ofString().isEmpty();
+            if (hasClass && hasString) {
+                throw new PartialInterfaceException.UsageException(
+                        "cannot specify both ofClass and ofString for: " + hasTypeParameter
+                );
+            }
+            if (hasClass) {
+                return hasTypeParameter.ofClass();
+            } else {
+                return BUILT_IN_TYPE_NAME_RESOLVER.mustResolve(hasTypeParameter.ofString());
+            }
+        }
+    }
 }
 

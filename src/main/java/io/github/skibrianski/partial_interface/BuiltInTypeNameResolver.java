@@ -167,8 +167,13 @@ public class BuiltInTypeNameResolver extends TypeNameResolver {
         );
     }
 
-    private static Map<String, Class<?>> mapForClasses(Class<?>... classes) {
-        return Arrays.stream(classes).collect(Collectors.toMap(Class::getSimpleName, x -> x));
+    private static Map<String, java.lang.reflect.Type> mapForClasses(Class<?>... classes) {
+        return Arrays.stream(classes).collect(
+                Collectors.toMap(
+                        Class::getSimpleName,
+                        java.lang.reflect.Type.class::cast
+                )
+        );
     }
 }
 
