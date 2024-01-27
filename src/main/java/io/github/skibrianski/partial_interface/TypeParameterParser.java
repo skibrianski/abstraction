@@ -7,7 +7,6 @@ import java.util.List;
 
 public class TypeParameterParser {
 
-    private static final BuiltInTypeNameResolver BUILTIN_TYPE_NAME_RESOLVER = new BuiltInTypeNameResolver();
 
     private final TypeNameResolver typeNameResolver;
 
@@ -61,10 +60,7 @@ public class TypeParameterParser {
     }
 
     private static Class<?> resolveParameterOrBuiltIn(String typeVariableName, TypeNameResolver typeNameResolver) {
-        Class<?> baseClass = typeNameResolver.resolve(typeVariableName);
-        return baseClass == null
-                ? BUILTIN_TYPE_NAME_RESOLVER.mustResolve(typeVariableName)
-                : baseClass;
+        return typeNameResolver.resolve(typeVariableName);
     }
 
     public Type[] parseList(String typeParameterArgumentsString) {
@@ -82,8 +78,7 @@ public class TypeParameterParser {
     }
 
     private static Class<?> classForName(String name) throws ClassNotFoundException {
-        Class<?> primitiveClass = BUILTIN_TYPE_NAME_RESOLVER.resolve(name);
-        return primitiveClass == null ? Class.forName(name) : primitiveClass;
+        return Class.forName(name);
     }
 
     private static int findArgumentEndPos(String haystack) {

@@ -59,116 +59,115 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class BuiltInTypeNameResolver extends TypeNameResolver {
-    public BuiltInTypeNameResolver() {
-        super(
-                mapForClasses(
-                        // primitives
-                        boolean.class,
-                        byte.class,
-                        char.class,
-                        double.class,
-                        float.class,
-                        int.class,
-                        long.class,
-                        short.class,
 
-                        // boxed primitives
-                        Boolean.class,
-                        Byte.class,
-                        Character.class,
-                        Double.class,
-                        Float.class,
-                        Integer.class,
-                        Long.class,
-                        Short.class,
+    private static Stream<Class<?>> builtInClasses() {
+        return Stream.of(
+                // primitives
+                boolean.class,
+                byte.class,
+                char.class,
+                double.class,
+                float.class,
+                int.class,
+                long.class,
+                short.class,
 
-                        // java.lang
-                        Comparable.class,
-                        Enum.class,
-                        Error.class,
-                        Exception.class,
-                        CharSequence.class,
-                        Iterable.class,
-                        Number.class,
-                        RuntimeException.class,
-                        String.class,
-                        StringBuilder.class,
-                        Void.class,
-                        void.class,
+                // boxed primitives
+                Boolean.class,
+                Byte.class,
+                Character.class,
+                Double.class,
+                Float.class,
+                Integer.class,
+                Long.class,
+                Short.class,
 
-                        // java.math
-                        BigDecimal.class,
-                        BigInteger.class,
+                // java.lang
+                Comparable.class,
+                Enum.class,
+                Error.class,
+                Exception.class,
+                CharSequence.class,
+                Iterable.class,
+                Number.class,
+                RuntimeException.class,
+                String.class,
+                StringBuilder.class,
+                Void.class,
+                void.class,
 
-                        // java.time
-                        Clock.class,
-                        DayOfWeek.class,
-                        Duration.class,
-                        Instant.class,
-                        LocalDate.class,
-                        LocalDateTime.class,
-                        LocalTime.class,
-                        Month.class,
-                        MonthDay.class,
-                        OffsetDateTime.class,
-                        OffsetTime.class,
-                        Period.class,
-                        Year.class,
-                        YearMonth.class,
-                        ZoneId.class,
-                        ZoneOffset.class,
-                        ZonedDateTime.class,
+                // java.math
+                BigDecimal.class,
+                BigInteger.class,
 
-                        // java.util
-                        BitSet.class,
-                        Collection.class,
-                        Comparator.class,
-                        Currency.class,
-                        Deque.class,
-                        Iterator.class,
-                        List.class,
-                        Locale.class,
-                        Map.class,
-                        Map.Entry.class,
-                        Optional.class,
-                        PriorityQueue.class,
-                        Queue.class,
-                        Set.class,
-                        SortedMap.class,
-                        SortedSet.class,
-                        Spliterator.class,
-                        Stack.class,
-                        TimeZone.class,
-                        UUID.class,
-                        Vector.class,
+                // java.time
+                Clock.class,
+                DayOfWeek.class,
+                Duration.class,
+                Instant.class,
+                LocalDate.class,
+                LocalDateTime.class,
+                LocalTime.class,
+                Month.class,
+                MonthDay.class,
+                OffsetDateTime.class,
+                OffsetTime.class,
+                Period.class,
+                Year.class,
+                YearMonth.class,
+                ZoneId.class,
+                ZoneOffset.class,
+                ZonedDateTime.class,
 
-                        // java.util.function
-                        BiConsumer.class,
-                        BiFunction.class,
-                        BiPredicate.class,
-                        BinaryOperator.class,
-                        Consumer.class,
-                        Function.class,
-                        Predicate.class,
-                        Supplier.class,
-                        UnaryOperator.class,
+                // java.util
+                BitSet.class,
+                Collection.class,
+                Comparator.class,
+                Currency.class,
+                Deque.class,
+                Iterator.class,
+                List.class,
+                Locale.class,
+                Map.class,
+                Map.Entry.class,
+                Optional.class,
+                PriorityQueue.class,
+                Queue.class,
+                Set.class,
+                SortedMap.class,
+                SortedSet.class,
+                Spliterator.class,
+                Stack.class,
+                TimeZone.class,
+                UUID.class,
+                Vector.class,
 
-                        // java.util.regex
-                        Matcher.class,
-                        Pattern.class,
+                // java.util.function
+                BiConsumer.class,
+                BiFunction.class,
+                BiPredicate.class,
+                BinaryOperator.class,
+                Consumer.class,
+                Function.class,
+                Predicate.class,
+                Supplier.class,
+                UnaryOperator.class,
 
-                        // java.util.stream
-                        Collector.class,
-                        DoubleStream.class,
-                        IntStream.class,
-                        LongStream.class,
-                        Stream.class
-                )
+                // java.util.regex
+                Matcher.class,
+                Pattern.class,
+
+                // java.util.stream
+                Collector.class,
+                DoubleStream.class,
+                IntStream.class,
+                LongStream.class,
+                Stream.class
         );
     }
 
-    private static Map<String, java.lang.reflect.Type> mapForClasses(Class<?>... classes) {
-        return Arrays.stream(classes).collect(
+    public static Map<String, java.lang.reflect.Type> builtInClassMap() {
+        return builtInClasses().collect(
                 Collectors.toMap(
                         Class::getSimpleName,
                         java.lang.reflect.Type.class::cast

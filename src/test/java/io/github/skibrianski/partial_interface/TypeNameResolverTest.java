@@ -3,23 +3,20 @@ package io.github.skibrianski.partial_interface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-
 public class TypeNameResolverTest {
 
     @Test
     void test_isEmpty() {
-        Assertions.assertTrue(new TypeNameResolver(Map.of()).isEmpty());
-        Assertions.assertFalse(new TypeNameResolver(Map.of("I", int.class)).isEmpty());
+        Assertions.assertTrue(new TypeNameResolver().isEmpty());
+        Assertions.assertFalse(new TypeNameResolver().addTypeParameter("I", int.class).isEmpty());
     }
 
     @Test
     void test_scalar() {
         String typeName = "R";
         String somethingElse = typeName + "x";
-        TypeNameResolver typeNameResolver = new TypeNameResolver(
-                Map.of(typeName, int.class)
-        );
+        TypeNameResolver typeNameResolver = new TypeNameResolver()
+                .addTypeParameter(typeName, int.class);
 
         Assertions.assertFalse(typeNameResolver.canResolve(somethingElse));
         Assertions.assertTrue(typeNameResolver.canResolve(typeName));
@@ -35,9 +32,8 @@ public class TypeNameResolverTest {
     @Test
     void test_array() {
         String scalarTypeName = "R";
-        TypeNameResolver typeNameResolver = new TypeNameResolver(
-                Map.of(scalarTypeName, int.class)
-        );
+        TypeNameResolver typeNameResolver = new TypeNameResolver()
+                .addTypeParameter(scalarTypeName, int.class);
 
         Assertions.assertEquals(int[].class, typeNameResolver.resolve("R[]"));
         Assertions.assertEquals(int[].class, typeNameResolver.resolve("R..."));

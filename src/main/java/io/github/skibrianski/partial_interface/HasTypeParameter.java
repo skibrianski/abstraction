@@ -17,8 +17,10 @@ public @interface HasTypeParameter {
     class None { }
 
     class Util {
-        private static final BuiltInTypeNameResolver BUILT_IN_TYPE_NAME_RESOLVER = new BuiltInTypeNameResolver();
-        public static java.lang.reflect.Type asType(HasTypeParameter hasTypeParameter) {
+        public static java.lang.reflect.Type asType(
+                HasTypeParameter hasTypeParameter,
+                TypeNameResolver typeNameResolver
+        ) {
             boolean hasClass = !hasTypeParameter.ofClass().equals(None.class);
             boolean hasString = !hasTypeParameter.ofString().isEmpty();
             if (hasClass && hasString) {
@@ -29,7 +31,7 @@ public @interface HasTypeParameter {
             if (hasClass) {
                 return hasTypeParameter.ofClass();
             } else {
-                return BUILT_IN_TYPE_NAME_RESOLVER.mustResolve(hasTypeParameter.ofString());
+                return typeNameResolver.mustResolve(hasTypeParameter.ofString());
             }
         }
     }

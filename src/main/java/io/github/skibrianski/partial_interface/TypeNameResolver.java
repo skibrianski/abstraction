@@ -3,18 +3,34 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class TypeNameResolver {
 
-    private final Map<String, java.lang.reflect.Type> scalarTypeParameterMap;
+    private final Map<String, java.lang.reflect.Type> builtinTypeMap;
+    private final Map<String, java.lang.reflect.Type> typeParameterMap;
 
-    public TypeNameResolver(Map<String, java.lang.reflect.Type> scalarTypeParameterMap) {
-        this.scalarTypeParameterMap = scalarTypeParameterMap;
+    public TypeNameResolver() {
+        this.builtinTypeMap = BuiltInTypeNameResolver.builtInClassMap();
+        this.typeParameterMap = new HashMap<>();
+    }
+
+    @Deprecated
+    public TypeNameResolver addAll(Map<String, java.lang.reflect.Type> typeParameterMap) {
+        builtinTypeMap.putAll(typeParameterMap);
+        return this;
+    }
+
+    public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
+        builtinTypeMap.put(name, type);
+        typeParameterMap.put(name, type);
+        return this;
     }
 
     public boolean isEmpty() {
-        return scalarTypeParameterMap.isEmpty();
+        return typeParameterMap.isEmpty();
     }
 
     public boolean canResolve(String typeString) {
@@ -38,7 +54,7 @@ public class TypeNameResolver {
         String baseParameterName = parameterNameTruncator.value();
         int arrayLevels = parameterNameTruncator.truncationCount();
 
-        java.lang.reflect.Type baseType = scalarTypeParameterMap.get(baseParameterName);
+        java.lang.reflect.Type baseType = builtinTypeMap.get(baseParameterName);
         if (baseType == null) {
             if (!shouldThrow) {
                 return null;
@@ -67,13 +83,11 @@ public class TypeNameResolver {
         }
 
         throw new RuntimeException("unimplemented");
-
-
     }
 
     @Override
     public String toString() {
-        return scalarTypeParameterMap.toString();
+        return typeParameterMap.toString();
     }
 }
 

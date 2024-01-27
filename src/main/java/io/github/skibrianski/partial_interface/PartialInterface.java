@@ -139,11 +139,15 @@ public final class PartialInterface {
                 .toArray(String[]::new);
         validateHasAllTypeParameters(implementation, implementedTypeParameters, requiredTypeParameters);
 
-        // TODO: need a mutable partially complete TypeNameResolver from BuiltInTypeNameResolver
+        // TODO: need a mutable TypeNameResolver from BuiltInTypeNameResolver
         //  that we can look up in and set in as we go
-        Map<String, java.lang.reflect.Type> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
-                .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter.Util::asType));
-        TypeNameResolver typeNameResolver = new TypeNameResolver(scalarTypeParameterMap);
+        TypeNameResolver typeNameResolver = new TypeNameResolver();
+        for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
+            typeNameResolver.addTypeParameter(
+                    hasTypeParameter.name(),
+                    HasTypeParameter.Util.asType(hasTypeParameter, typeNameResolver)
+            );
+        }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
 
         Method[] methods = implementation.getMethods();
