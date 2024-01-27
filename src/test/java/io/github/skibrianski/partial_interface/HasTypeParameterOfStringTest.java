@@ -5,21 +5,21 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class AutoboxingTest {
+public class HasTypeParameterOfStringTest {
 
     @RequiresTypeParameter("T")
     @RequiresChildMethod(
             returnType = @Type("T"),
-            argumentTypes = {@Type("List<T>")},
-            methodName = "sum"
+            argumentTypes = {@Type("T")},
+            methodName = "method"
     )
     interface WithSum { }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = int.class)
+    @HasTypeParameter(name = "T", ofString = "int")
     public static class Valid implements WithSum {
-        public int sum(List<Integer> input) {
-            return input.stream().reduce(0, Integer::sum);
+        public int method(int input) {
+            return input;
         }
     }
     @Test
@@ -28,10 +28,10 @@ public class AutoboxingTest {
     }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = double.class)
+    @HasTypeParameter(name = "T", ofString = "double")
     public static class Invalid implements WithSum {
-        public int sum(List<Integer> input) {
-            return input.stream().reduce(0, Integer::sum);
+        public int method(int input) {
+            return input;
         }
     }
     @Test

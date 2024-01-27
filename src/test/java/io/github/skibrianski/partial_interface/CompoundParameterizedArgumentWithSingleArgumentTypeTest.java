@@ -40,7 +40,7 @@ public class CompoundParameterizedArgumentWithSingleArgumentTypeTest {
 
     @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
-    static class WrongBaseType implements CompoundArgumentTypeTest.WithCompoundArgumentType {
+    static class WrongBaseType implements WithCompoundParameterizedArgumentType {
         public void method(AtomicReference<String> foo) { }
     }
     @Test
@@ -53,7 +53,7 @@ public class CompoundParameterizedArgumentWithSingleArgumentTypeTest {
 
     @ManualValidation
     @HasTypeParameter(name = "T", ofClass = String.class)
-    static class WrongParameterType implements CompoundArgumentTypeTest.WithCompoundArgumentType {
+    static class WrongParameterType implements WithCompoundParameterizedArgumentType {
         public void method(Collection<Integer> foo) { }
     }
     @Test
