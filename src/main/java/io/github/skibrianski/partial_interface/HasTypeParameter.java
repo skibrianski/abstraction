@@ -32,7 +32,6 @@ public @interface HasTypeParameter {
                 // TypeValidator::convertFromAnnotation
                 TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
                 return typeParameterParser.parse(hasTypeParameter.ofString());
-//                return typeNameResolver.mustResolve(hasTypeParameter.ofString());
             }
         }
     }
