@@ -76,25 +76,25 @@ public class TypeValidator {
         throw new RuntimeException("unimplemented: parameterized type");
     }
 
-    private static java.lang.reflect.Type possiblyBox(java.lang.reflect.Type unboxed) {
-        if (unboxed.equals(boolean.class)) {
+    private static java.lang.reflect.Type possiblyBox(java.lang.reflect.Type possiblyPrimitive) {
+        if (possiblyPrimitive.equals(boolean.class)) {
             return Boolean.class;
-        } else if (unboxed.equals(byte.class)) {
+        } else if (possiblyPrimitive.equals(byte.class)) {
             return Byte.class;
-        } else if (unboxed.equals(char.class)) {
+        } else if (possiblyPrimitive.equals(char.class)) {
             return Character.class;
-        } else if (unboxed.equals(double.class)) {
+        } else if (possiblyPrimitive.equals(double.class)) {
             return Double.class;
-        } else if (unboxed.equals(float.class)) {
+        } else if (possiblyPrimitive.equals(float.class)) {
             return Float.class;
-        } else if (unboxed.equals(int.class)) {
+        } else if (possiblyPrimitive.equals(int.class)) {
             return Integer.class;
-        } else if (unboxed.equals(long.class)) {
+        } else if (possiblyPrimitive.equals(long.class)) {
             return Long.class;
-        } else if (unboxed.equals(short.class)) {
+        } else if (possiblyPrimitive.equals(short.class)) {
             return Short.class;
         } else {
-            return unboxed;
+            return possiblyPrimitive;
         }
     }
 }

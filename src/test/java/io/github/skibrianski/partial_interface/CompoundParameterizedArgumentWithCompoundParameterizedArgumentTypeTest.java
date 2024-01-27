@@ -8,7 +8,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeTest {
 
-    @RequiresTypeParameter({"T", "U"})
+    @RequiresTypeParameter("T")
+    @RequiresTypeParameter("U")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T<U>")},

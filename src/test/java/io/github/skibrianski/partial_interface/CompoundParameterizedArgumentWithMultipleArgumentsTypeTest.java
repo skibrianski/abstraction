@@ -7,7 +7,8 @@ import java.util.Map;
 
 public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
 
-    @RequiresTypeParameter({"T", "U"})
+    @RequiresTypeParameter("T")
+    @RequiresTypeParameter("U")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("Map<T, U>")},

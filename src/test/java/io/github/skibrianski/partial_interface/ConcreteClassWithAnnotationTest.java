@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 public class ConcreteClassWithAnnotationTest {
 
-
     @ManualValidation
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),

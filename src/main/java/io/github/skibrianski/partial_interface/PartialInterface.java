@@ -60,11 +60,12 @@ public final class PartialInterface {
                     .map(AnnotationInfo::loadClassAndInstantiate)
                     .map(RequiresChildMethod.class::cast)
                     .collect(Collectors.toList());
-            AnnotationInfo requiresTypeParameterAnnotationInfo = annotationClassInfo
-                    .getAnnotationInfo(RequiresTypeParameter.class);
-            RequiresTypeParameter requiresTypeParameterAnnotation = requiresTypeParameterAnnotationInfo == null
-                    ? null
-                    : (RequiresTypeParameter) requiresTypeParameterAnnotationInfo.loadClassAndInstantiate();
+            List<RequiresTypeParameter> requiresTypeParameterAnnotations = annotationClassInfo
+                    .getAnnotationInfoRepeatable(RequiresTypeParameter.class)
+                    .stream()
+                    .map(AnnotationInfo::loadClassAndInstantiate)
+                    .map(RequiresTypeParameter.class::cast)
+                    .collect(Collectors.toList());
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
                 boolean classShouldBeAutoValidated =
@@ -72,7 +73,7 @@ public final class PartialInterface {
                 if (classShouldBeAutoValidated || isManualRun) {
                     validateImplementation(
                             implementationClassInfo.loadClass(),
-                            requiresTypeParameterAnnotation,
+                            requiresTypeParameterAnnotations,
                             requiresChildMethodAnnotations
                     );
 
@@ -111,13 +112,13 @@ public final class PartialInterface {
 
     private static void validateImplementation(
             Class<?> implementation,
-            RequiresTypeParameter requiresTypeParameterAnnotation,
+            List<RequiresTypeParameter> requiresTypeParameterAnnotations,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
         // TODO: should throw error on duplicate @HasTypeParameter annotation for same type
-        Set<String> requiredTypeParameters = requiresTypeParameterAnnotation == null
-                ? Set.of()
-                : Arrays.stream(requiresTypeParameterAnnotation.value()).collect(Collectors.toSet());
+        Set<String> requiredTypeParameters = requiresTypeParameterAnnotations.stream()
+                .map(RequiresTypeParameter::value)
+                .collect(Collectors.toSet());
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         Map<String, Class<?>> scalarTypeParameterMap = Arrays.stream(hasTypeParameters)
                 .collect(Collectors.toMap(HasTypeParameter::name, HasTypeParameter::ofClass));
