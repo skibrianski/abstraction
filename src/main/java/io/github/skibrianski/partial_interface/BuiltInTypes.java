@@ -19,7 +19,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Comparator;
@@ -58,7 +57,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-public class BuiltInTypeNameResolver extends TypeNameResolver {
+public class BuiltInTypes extends TypeNameResolver {
 
     private static Stream<Class<?>> builtInClasses() {
         return Stream.of(

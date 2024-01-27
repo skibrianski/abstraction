@@ -4,7 +4,6 @@ import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class TypeNameResolver {
@@ -13,14 +12,8 @@ public class TypeNameResolver {
     private final Map<String, java.lang.reflect.Type> typeParameterMap;
 
     public TypeNameResolver() {
-        this.builtinTypeMap = BuiltInTypeNameResolver.builtInClassMap();
+        this.builtinTypeMap = BuiltInTypes.builtInClassMap();
         this.typeParameterMap = new HashMap<>();
-    }
-
-    @Deprecated
-    public TypeNameResolver addAll(Map<String, java.lang.reflect.Type> typeParameterMap) {
-        builtinTypeMap.putAll(typeParameterMap);
-        return this;
     }
 
     public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
