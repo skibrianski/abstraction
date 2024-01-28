@@ -42,9 +42,7 @@ public final class PartialInterface {
     private static void check(ScanResult scanResult, boolean isManualRun) {
         // TODO: also look for classes with RequiresTypeParameter that have no RequiresChildMethod, throw appropriately
         for (ClassInfo partialInterfaceClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
-            boolean interfaceShouldBeAutoValidated =
-                    partialInterfaceClassInfo.getAnnotationInfo(ManualValidation.class) == null;
-            if (interfaceShouldBeAutoValidated || isManualRun) {
+            if (shouldBeAutoValidated(partialInterfaceClassInfo) || isManualRun) {
                 if (!partialInterfaceClassInfo.isAbstract()) {
                     throw new PartialInterfaceException.UsageException(
                             "attempt to use @PartialInterface on non-abstract class: " + partialInterfaceClassInfo.getName()
@@ -61,10 +59,7 @@ public final class PartialInterface {
             List<RequiresTypeParameter> requiresTypeParameterAnnotations =
                     loadAndReturnRepeatableAnnotationClasses(partialInterfaceClassInfo, RequiresTypeParameter.class);
             for (ClassInfo implementationClassInfo : implementations) {
-                // if we're doing an automatic pass, skip implementations tagged for manual validation
-                boolean classShouldBeAutoValidated =
-                        implementationClassInfo.getAnnotationInfo(ManualValidation.class) == null;
-                if (classShouldBeAutoValidated || isManualRun) {
+                if (shouldBeAutoValidated(implementationClassInfo) || isManualRun) {
                     validateImplementation(
                             implementationClassInfo.loadClass(),
                             requiresTypeParameterAnnotations,
@@ -74,6 +69,11 @@ public final class PartialInterface {
                 }
             }
         }
+    }
+
+    // if we're doing an automatic pass, skip implementations and abstract classes tagged for manual validation
+    private static boolean shouldBeAutoValidated(ClassInfo classInfo) {
+        return classInfo.getAnnotationInfo(ManualValidation.class) == null;
     }
 
     private static <A extends Annotation> List<A> loadAndReturnRepeatableAnnotationClasses(
