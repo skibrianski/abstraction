@@ -1,7 +1,9 @@
 - allow for a "partial" interface. a partial interface is one which requires more than
   what is defined in the contract. this can be useful for a number of reasons:
   - ✅ primitive-friendly parameterization
-    - when T = int.class, implementing `T sum(List<T> list)` requires `int sum(List<Integer> list)`
+    - when T = int.class, implementing `T sum(List<T> list)` can be fullfilled by either of the following:
+      - int sum(List<Integer> list)
+      - Integer sum(List<Integer> list)
   - interfaces that require static methods
   - non-public methods in interface (bad idea?)
   - constructor constraints?
