@@ -8,7 +8,7 @@
 
 todo:
   - support @HasTypeParameter(name = "T", ofString = "List<Integer>") or so
-  - TypeParameterParser - support eg AtomicReference<String>[]
+  - TypeParameterParser - support & add tests for eg AtomicReference<String>[]
   - support type parameters with constraints, eg class Foo<T extends Number>
     - buh, this interacts with boxing. support only objects first.
   - support type constraints that reference other types, eg Foo<T extends Number, U extends T>
