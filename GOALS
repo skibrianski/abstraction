@@ -11,8 +11,8 @@ todo:
   - support type parameters with constraints, eg class Foo<T extends Number>
     - buh, this interacts with boxing. support only objects first.
   - support type constraints that reference other types, eg Foo<T extends Number, U extends T>
-  - think: we accept a boxed type when it is not necessary. is this desirable? i guess it gives power to the user,
-      but it could also lead to unecessary boxing.
+  - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement
+     `T sum(List<T> list)` with `Integer sum(List<T> list)` ? what is our current behavior?
 
 questions:
 - alternative to boxing support of eg Stream<T>
