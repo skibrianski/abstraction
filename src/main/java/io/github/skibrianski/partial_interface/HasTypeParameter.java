@@ -14,23 +14,5 @@ public @interface HasTypeParameter {
     Class<?> ofClass() default None.class;
     String ofString() default "";
     class None { }
-
-    class Util {
-        // TODO: move
-        public static java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter, TypeNameResolver typeNameResolver) {
-            boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
-            boolean hasString = !hasTypeParameter.ofString().isEmpty();
-            if (hasClass && hasString) {
-                throw new PartialInterfaceException.UsageException(
-                        "cannot specify both ofClass and ofString for: " + hasTypeParameter
-                );
-            }
-            if (hasClass) {
-                return hasTypeParameter.ofClass();
-            } else {
-                return typeNameResolver.getTypeParameterParser().parse(hasTypeParameter.ofString());
-            }
-        }
-    }
 }
 

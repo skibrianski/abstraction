@@ -134,6 +134,21 @@ public final class PartialInterface {
         }
     }
 
+    public static java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter, TypeNameResolver typeNameResolver) {
+        boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
+        boolean hasString = !hasTypeParameter.ofString().isEmpty();
+        if (hasClass && hasString) {
+            throw new PartialInterfaceException.UsageException(
+                    "cannot specify both ofClass and ofString for: " + hasTypeParameter
+            );
+        }
+        if (hasClass) {
+            return hasTypeParameter.ofClass();
+        } else {
+            return typeNameResolver.getTypeParameterParser().parse(hasTypeParameter.ofString());
+        }
+    }
+
     private static void validateImplementation(
             Class<?> implementation,
             List<RequiresTypeParameter> requiresTypeParameterAnnotations,
@@ -150,10 +165,7 @@ public final class PartialInterface {
 
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
-            typeNameResolver.addTypeParameter(
-                    hasTypeParameter.name(),
-                    HasTypeParameter.Util.lookup(hasTypeParameter, typeNameResolver)
-            );
+            typeNameResolver.addTypeParameter(hasTypeParameter.name(), lookup(hasTypeParameter, typeNameResolver));
         }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
 
@@ -173,9 +185,7 @@ public final class PartialInterface {
                         "internal error: i didn't think this was possible. " + methodsMatchingNameAndArguments
                 );
             }
-            int modifiers = implementation.getModifiers();
-            boolean isConcrete = !(Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers));
-            if (isConcrete) {
+            if (isConcrete(implementation)) {
                 if (methodsMatchingNameAndArguments.isEmpty()) {
                     throw new PartialInterfaceException.NotCompletedException(
                             "implementation " + implementation.getName()
@@ -202,6 +212,11 @@ public final class PartialInterface {
                 }
             }
         }
+    }
+
+    private static boolean isConcrete(Class<?> implementation) {
+        int modifiers = implementation.getModifiers();
+        return !(Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers));
     }
 
     private static List<Method> methodsMatchingNameAndArguments(
