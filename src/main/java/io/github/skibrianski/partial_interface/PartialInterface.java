@@ -9,6 +9,8 @@ import io.github.classgraph.ScanResult;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -90,17 +92,18 @@ public final class PartialInterface {
 
     private static void validateHasAllTypeParameters(
             Class<?> implementation,
-            String[] implementedTypeParameters,
-            String[] requiredTypeParameters
+            HasTypeParameter[] implementedTypeParameters,
+            List<RequiresTypeParameter> requiredTypeParameters
     ) {
-        if (Arrays.equals(implementedTypeParameters, requiredTypeParameters)) {
-            return;
-        }
 
-        Set<String> implementedTypeParameterSet = Arrays.stream(implementedTypeParameters)
+        // TODO: requiresTypeParameter can have bounds
+
+        Set<String> implementedTypeParameterNames = Arrays.stream(implementedTypeParameters)
+                .map(HasTypeParameter::name)
                 .collect(Collectors.toSet());
-        if (implementedTypeParameterSet.size() != implementedTypeParameters.length) {
+        if (implementedTypeParameterNames.size() != implementedTypeParameters.length) {
             Map<String, Long> counts = Arrays.stream(implementedTypeParameters)
+                    .map(HasTypeParameter::name)
                     .collect(Collectors.groupingBy(x -> x, Collectors.counting()));
             Set<String> duplicates = counts.keySet().stream()
                     .filter(x -> counts.get(x) > 1)
@@ -110,10 +113,12 @@ public final class PartialInterface {
                             + " has duplicate type parameters: " + duplicates
             );
         }
-        Set<String> requiredTypeParameterSet = Arrays.stream(requiredTypeParameters)
+        Set<String> requiredTypeParameterNames = requiredTypeParameters.stream()
+                .map(RequiresTypeParameter::value)
                 .collect(Collectors.toSet());
-        List<String> missingTypeParameters = Arrays.stream(requiredTypeParameters)
-                .filter(requiredTypeParameter -> !implementedTypeParameterSet.contains(requiredTypeParameter))
+        List<String> missingTypeParameters = requiredTypeParameters.stream()
+                .map(RequiresTypeParameter::value)
+                .filter(requiredTypeParameter -> !implementedTypeParameterNames.contains(requiredTypeParameter))
                 .collect(Collectors.toList());
         if (!missingTypeParameters.isEmpty()) {
             throw new PartialInterfaceException.MissingTypeParameterException(
@@ -123,7 +128,8 @@ public final class PartialInterface {
             );
         }
         List<String> extraneousTypeParameters = Arrays.stream(implementedTypeParameters)
-                .filter(implementedTypeParameter -> !requiredTypeParameterSet.contains(implementedTypeParameter))
+                .map(HasTypeParameter::name)
+                .filter(implementedTypeParameter -> !requiredTypeParameterNames.contains(implementedTypeParameter))
                 .collect(Collectors.toList());
         if (!extraneousTypeParameters.isEmpty()) {
             throw new PartialInterfaceException.ExtraneousTypeParameterException(
@@ -133,20 +139,13 @@ public final class PartialInterface {
             );
         }
     }
-
     private static void validateImplementation(
             Class<?> implementation,
             List<RequiresTypeParameter> requiresTypeParameterAnnotations,
             List<RequiresChildMethod> requiresChildMethodAnnotations
     ) {
-        String[] requiredTypeParameters = requiresTypeParameterAnnotations.stream()
-                .map(RequiresTypeParameter::value)
-                .toArray(String[]::new);
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
-        String[] implementedTypeParameters = Arrays.stream(hasTypeParameters)
-                .map(HasTypeParameter::name)
-                .toArray(String[]::new);
-        validateHasAllTypeParameters(implementation, implementedTypeParameters, requiredTypeParameters);
+        validateHasAllTypeParameters(implementation, hasTypeParameters, requiresTypeParameterAnnotations);
 
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
