@@ -38,10 +38,8 @@ public class TypeValidator {
     }
 
     public boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
-        // note: options are Class, GenericArrayType, ParameterizedType, TypeVariable<D>, WildcardType
+        // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // because we expect concrete types here, we know it cannot be TypeVariable here.
-        // it can however be a WildcardType eg `? extends Number` or ParameterizedType eg `List<Integer>`
-        // not sure about GenericArrayType
         if (implementedType instanceof Class) {
             return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
         } else if (implementedType instanceof ParameterizedType) {
@@ -64,14 +62,19 @@ public class TypeValidator {
         }
         ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
 
-        Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
-        Class<?> baseRequiredClass = (Class<?>) requiredParameterizedType.getRawType();
-        if (!baseRequiredClass.isAssignableFrom(baseImplementedClass)) {
+        if (!parameterizedTypeHasAssignableRawType(implementedType, requiredParameterizedType)) {
             return false;
         }
 
+        return parameterizedTypeHasAssignableArgumentTypes(implementedType, requiredParameterizedType);
+    }
+
+    public boolean parameterizedTypeHasAssignableArgumentTypes(
+            ParameterizedType implementedType,
+            ParameterizedType requiredType
+    ) {
         java.lang.reflect.Type[] implementedTypeParameters = implementedType.getActualTypeArguments();
-        java.lang.reflect.Type[] requiredTypeParameters = requiredParameterizedType.getActualTypeArguments();
+        java.lang.reflect.Type[] requiredTypeParameters = requiredType.getActualTypeArguments();
         if (implementedTypeParameters.length != requiredTypeParameters.length) {
             return false;
         }
@@ -82,6 +85,15 @@ public class TypeValidator {
             }
         }
         return true;
+    }
+
+    public boolean parameterizedTypeHasAssignableRawType(
+            ParameterizedType implementedType,
+            ParameterizedType requiredType
+    ) {
+        Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
+        Class<?> baseRequiredClass = (Class<?>) requiredType.getRawType();
+        return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
     public boolean isAssignableArray(GenericArrayType implementedType, java.lang.reflect.Type requiredType) {
