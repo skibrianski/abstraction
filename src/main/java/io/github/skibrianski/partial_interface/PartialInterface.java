@@ -6,6 +6,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -39,33 +40,26 @@ public final class PartialInterface {
     }
 
     private static void check(ScanResult scanResult, boolean isManualRun) {
-        for (ClassInfo annotationClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
+        // TODO: also look for classes with RequiresTypeParameter that have no RequiresChildMethod, throw appropriately
+        for (ClassInfo partialInterfaceClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
             boolean interfaceShouldBeAutoValidated =
-                    annotationClassInfo.getAnnotationInfo(ManualValidation.class) == null;
+                    partialInterfaceClassInfo.getAnnotationInfo(ManualValidation.class) == null;
             if (interfaceShouldBeAutoValidated || isManualRun) {
-                if (!annotationClassInfo.isAbstract()) {
+                if (!partialInterfaceClassInfo.isAbstract()) {
                     throw new PartialInterfaceException.UsageException(
-                            "attempt to use @PartialInterface on non-abstract class: " + annotationClassInfo.getName()
+                            "attempt to use @PartialInterface on non-abstract class: " + partialInterfaceClassInfo.getName()
                     );
                 }
             }
             // note: for interfaces, getClassesImplementing() includes interfaces, abstract classes, and concrete
             // classes, but getSubClasses() is required for abstract classes.
-            ClassInfoList implementations = annotationClassInfo.isInterface()
-                    ? annotationClassInfo.getClassesImplementing()
-                    : annotationClassInfo.getSubclasses();
-            List<RequiresChildMethod> requiresChildMethodAnnotations = annotationClassInfo
-                    .getAnnotationInfoRepeatable(RequiresChildMethod.class)
-                    .stream()
-                    .map(AnnotationInfo::loadClassAndInstantiate)
-                    .map(RequiresChildMethod.class::cast)
-                    .collect(Collectors.toList());
-            List<RequiresTypeParameter> requiresTypeParameterAnnotations = annotationClassInfo
-                    .getAnnotationInfoRepeatable(RequiresTypeParameter.class)
-                    .stream()
-                    .map(AnnotationInfo::loadClassAndInstantiate)
-                    .map(RequiresTypeParameter.class::cast)
-                    .collect(Collectors.toList());
+            ClassInfoList implementations = partialInterfaceClassInfo.isInterface()
+                    ? partialInterfaceClassInfo.getClassesImplementing()
+                    : partialInterfaceClassInfo.getSubclasses();
+            List<RequiresChildMethod> requiresChildMethodAnnotations =
+                    loadAndReturnRepeatableAnnotationClasses(partialInterfaceClassInfo, RequiresChildMethod.class);
+            List<RequiresTypeParameter> requiresTypeParameterAnnotations =
+                    loadAndReturnRepeatableAnnotationClasses(partialInterfaceClassInfo, RequiresTypeParameter.class);
             for (ClassInfo implementationClassInfo : implementations) {
                 // if we're doing an automatic pass, skip implementations tagged for manual validation
                 boolean classShouldBeAutoValidated =
@@ -80,6 +74,18 @@ public final class PartialInterface {
                 }
             }
         }
+    }
+
+    private static <A extends Annotation> List<A> loadAndReturnRepeatableAnnotationClasses(
+            ClassInfo partialInterfaceClassInfo,
+            Class<A> annotationClass
+    ) {
+        return partialInterfaceClassInfo
+                .getAnnotationInfoRepeatable(annotationClass)
+                .stream()
+                .map(AnnotationInfo::loadClassAndInstantiate)
+                .map(annotationClass::cast)
+                .collect(Collectors.toList());
     }
 
     private static void validateHasAllTypeParameters(
@@ -99,7 +105,10 @@ public final class PartialInterface {
             Set<String> duplicates = counts.keySet().stream()
                     .filter(x -> counts.get(x) > 1)
                     .collect(Collectors.toSet());
-            throw new PartialInterfaceException.UsageException("duplicate type parameters: " + duplicates);
+            throw new PartialInterfaceException.UsageException(
+                    "implementation: " + implementation
+                            + " has duplicate type parameters: " + duplicates
+            );
         }
         Set<String> requiredTypeParameterSet = Arrays.stream(requiredTypeParameters)
                 .collect(Collectors.toSet());
