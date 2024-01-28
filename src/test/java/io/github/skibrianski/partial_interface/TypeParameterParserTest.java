@@ -104,7 +104,7 @@ public class TypeParameterParserTest {
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
 
-        Type doubleArrayType = typeParameterParser.parse("List<String>[]...");
+        Type doubleArrayType = typeParameterParser.parse("Map<String, UUID>[]...");
         Assertions.assertInstanceOf(GenericArrayType.class, doubleArrayType);
         Type singleArrayType = ((GenericArrayType) doubleArrayType).getGenericComponentType();
         Assertions.assertInstanceOf(GenericArrayType.class, singleArrayType);
@@ -112,10 +112,11 @@ public class TypeParameterParserTest {
         Assertions.assertInstanceOf(ParameterizedType.class, scalarType);
         ParameterizedType parameterizedScalarType = (ParameterizedType) scalarType;
         Type listType = parameterizedScalarType.getRawType();
-        Assertions.assertEquals(List.class, listType);
+        Assertions.assertEquals(Map.class, listType);
         Type[] typeArguments = parameterizedScalarType.getActualTypeArguments();
-        Assertions.assertEquals(1, typeArguments.length);
+        Assertions.assertEquals(2, typeArguments.length);
         Assertions.assertEquals(String.class, typeArguments[0]);
+        Assertions.assertEquals(UUID.class, typeArguments[1]);
     }
 
     @Test
