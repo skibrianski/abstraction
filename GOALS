@@ -7,6 +7,7 @@
   - constructor constraints?
 
 todo:
+  - rename. maybe @Trait (what rust calls it) or just @Abstraction ?
   - root of the below problem is i need ClassGraph to tell me what classes are imported/used in a given file.
   - wildcard types: there are problems with specification of types. need to fix and write more complex tests.
     - one annoying problem is that when we reference by name, we have to specify full java class paths, eg
