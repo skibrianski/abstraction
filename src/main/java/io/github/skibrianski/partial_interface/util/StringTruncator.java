@@ -15,7 +15,7 @@ public class StringTruncator {
         return this;
     }
     public StringTruncator truncateAll(String suffix) {
-        while (removeTrailing(suffix)); // note: despite intellij's highlight, the empty body is intentional
+        while (removeTrailing(suffix)); // note: the empty body is intentional, removeTrailing() has a side effect
         return this;
     }
 
