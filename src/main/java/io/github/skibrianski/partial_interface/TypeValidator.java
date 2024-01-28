@@ -3,6 +3,7 @@ package io.github.skibrianski.partial_interface;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 
 public class TypeValidator {
 
@@ -13,21 +14,15 @@ public class TypeValidator {
     }
 
     public boolean hasAssignableArgumentTypes(Method implementedMethod, Type[] requiredParameterTypes) {
-        java.lang.reflect.Type[] parameterTypes = implementedMethod.getGenericParameterTypes();
-        if (requiredParameterTypes.length != parameterTypes.length) {
-            return false;
-        }
-        for (int pos = 0; pos < requiredParameterTypes.length; pos++) {
-            if (!isAssignableType(parameterTypes[pos], requiredParameterTypes[pos])) {
-                return false;
-            }
-        }
-        return true;
+        java.lang.reflect.Type[] implementedParameterTypes = implementedMethod.getGenericParameterTypes();
+        java.lang.reflect.Type[] requiredParameterTypesConv = Arrays.stream(requiredParameterTypes)
+                .map(this::convertFromAnnotation)
+                .toArray(java.lang.reflect.Type[]::new);
+        return hasAssignableArgumentTypes(implementedParameterTypes, requiredParameterTypesConv);
     }
 
     public boolean isAssignableType(java.lang.reflect.Type implementedType, Type type) {
         return isAssignableType(implementedType, convertFromAnnotation(type));
-
     }
 
     public java.lang.reflect.Type convertFromAnnotation(Type type) {
@@ -66,21 +61,24 @@ public class TypeValidator {
             return false;
         }
 
-        return parameterizedTypeHasAssignableArgumentTypes(implementedType, requiredParameterizedType);
+        return hasAssignableArgumentTypes(
+                implementedType.getActualTypeArguments(),
+                Arrays.stream(requiredParameterizedType.getActualTypeArguments())
+                        .map(TypeValidator::possiblyBox)
+                        .toArray(java.lang.reflect.Type[]::new)
+        );
     }
 
-    public boolean parameterizedTypeHasAssignableArgumentTypes(
-            ParameterizedType implementedType,
-            ParameterizedType requiredType
+    public boolean hasAssignableArgumentTypes(
+            java.lang.reflect.Type[] implementedTypeParameters,
+            java.lang.reflect.Type[] requiredTypeParameters
     ) {
-        java.lang.reflect.Type[] implementedTypeParameters = implementedType.getActualTypeArguments();
-        java.lang.reflect.Type[] requiredTypeParameters = requiredType.getActualTypeArguments();
         if (implementedTypeParameters.length != requiredTypeParameters.length) {
             return false;
         }
 
         for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
-            if (!isAssignableType(implementedTypeParameters[pos], possiblyBox(requiredTypeParameters[pos]))) {
+            if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameters[pos])) {
                 return false;
             }
         }
