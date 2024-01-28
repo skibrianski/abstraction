@@ -122,9 +122,8 @@ public class TypeValidator {
             return Long.class;
         } else if (possiblyPrimitive.equals(short.class)) {
             return Short.class;
-        } else {
-            return possiblyPrimitive;
         }
+        return possiblyPrimitive;
     }
 }
 
