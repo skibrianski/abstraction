@@ -36,16 +36,16 @@ public class TypeNameResolver {
     }
 
     // returns null on failure to lookup
-    public Class<?> resolve(String typeString) {
+    public java.lang.reflect.Type resolve(String typeString) {
         return resolve(typeString, false);
     }
 
     // throws Exception on failure to lookup
-    public Class<?> mustResolve(String typeString) {
+    public java.lang.reflect.Type mustResolve(String typeString) {
         return resolve(typeString, true);
     }
 
-    private Class<?> resolve(String typeString, boolean shouldThrow) {
+    private java.lang.reflect.Type resolve(String typeString, boolean shouldThrow) {
         StringTruncator parameterNameTruncator = new StringTruncator(typeString)
                 .truncateOnce("...")
                 .truncateAll("[]");
@@ -81,7 +81,10 @@ public class TypeNameResolver {
         }
 
         if (baseType instanceof ParameterizedType) {
-            throw new RuntimeException("unimplemented - parameterized type");
+            if (arrayLevels > 0) {
+                throw new RuntimeException("unimplemented");
+            }
+            return baseType;
         }
 
         throw new RuntimeException("unimplemented");
