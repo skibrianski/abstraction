@@ -45,47 +45,54 @@ public class TypeValidator {
         if (implementedType instanceof Class) {
             return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
         } else if (implementedType instanceof ParameterizedType) {
-            ParameterizedType implementedParameterizedType = (ParameterizedType) implementedType;
-            if (!(requiredType instanceof ParameterizedType)) {
-                throw new RuntimeException("unimplemented"); // TODO: possible?
-            }
-            ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
-            Class<?> baseImplementedClass = (Class<?>) implementedParameterizedType.getRawType();
-            Class<?> baseRequiredClass = (Class<?>) requiredParameterizedType.getRawType();
-
-            if (!baseRequiredClass.isAssignableFrom(baseImplementedClass)) {
-                return false;
-            }
-
-            java.lang.reflect.Type[] implementedTypeParameters = implementedParameterizedType.getActualTypeArguments();
-            java.lang.reflect.Type[] requiredTypeParameters = requiredParameterizedType.getActualTypeArguments();
-            if (implementedTypeParameters.length != requiredTypeParameters.length) {
-                return false;
-            }
-
-            for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
-                java.lang.reflect.Type requiredTypeParameter = possiblyBox(requiredTypeParameters[pos]);
-                if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameter)) {
-                    return false;
-                }
-            }
-            return true;
-
+            return isAssignableParameterizedType((ParameterizedType) implementedType, requiredType);
         } else if (implementedType instanceof GenericArrayType) {
-            if (!(requiredType instanceof GenericArrayType)) {
-                throw new RuntimeException("well that won't work"); // TODO: words
-            }
-            GenericArrayType implementedArrayType = (GenericArrayType) implementedType;
-            GenericArrayType requiredArrayType = (GenericArrayType) requiredType;
-            return isAssignableType(
-                    implementedArrayType.getGenericComponentType(),
-                    requiredArrayType.getGenericComponentType()
-            );
+            return isAssignableArray((GenericArrayType) implementedType, requiredType);
         }
 
         // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
         //  but Map<? extends Number, String> CAN
         throw new RuntimeException("unimplemented");
+    }
+
+    public boolean isAssignableParameterizedType(
+            ParameterizedType implementedType,
+            java.lang.reflect.Type requiredType
+    ) {
+        if (!(requiredType instanceof ParameterizedType)) {
+            throw new RuntimeException("unimplemented"); // TODO: possible?
+        }
+        ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
+
+        Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
+        Class<?> baseRequiredClass = (Class<?>) requiredParameterizedType.getRawType();
+        if (!baseRequiredClass.isAssignableFrom(baseImplementedClass)) {
+            return false;
+        }
+
+        java.lang.reflect.Type[] implementedTypeParameters = implementedType.getActualTypeArguments();
+        java.lang.reflect.Type[] requiredTypeParameters = requiredParameterizedType.getActualTypeArguments();
+        if (implementedTypeParameters.length != requiredTypeParameters.length) {
+            return false;
+        }
+
+        for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
+            if (!isAssignableType(implementedTypeParameters[pos], possiblyBox(requiredTypeParameters[pos]))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isAssignableArray(GenericArrayType implementedType, java.lang.reflect.Type requiredType) {
+        if (!(requiredType instanceof GenericArrayType)) {
+            throw new RuntimeException("well that won't work"); // TODO: words
+        }
+        GenericArrayType requiredArrayType = (GenericArrayType) requiredType;
+        return isAssignableType(
+                implementedType.getGenericComponentType(),
+                requiredArrayType.getGenericComponentType()
+        );
     }
 
     private static java.lang.reflect.Type possiblyBox(java.lang.reflect.Type possiblyPrimitive) {
