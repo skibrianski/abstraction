@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public final class PartialInterface {
 
-    // TODD: do we need enableAllInfo()?
+    // TODD: should we tweak enableAllInfo() to be more precise & only include what we need?
 
     static {
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().scan()) {
@@ -170,15 +170,13 @@ public final class PartialInterface {
                         "internal error: i didn't think this was possible. " + methodsMatchingNameAndArguments
                 );
             }
-            if (isConcrete(implementation)) {
-                if (methodsMatchingNameAndArguments.isEmpty()) {
-                    throw new PartialInterfaceException.NotCompletedException(
-                            "implementation " + implementation.getName()
-                                    + " does not implement partial interface method: "
-                                    + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                                    + " with type parameters: " + typeNameResolver
-                    );
-                }
+            if (isConcrete(implementation) && methodsMatchingNameAndArguments.isEmpty()) {
+                throw new PartialInterfaceException.NotCompletedException(
+                        "implementation " + implementation.getName()
+                                + " does not implement partial interface method: "
+                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                                + " with type parameters: " + typeNameResolver
+                );
             }
 
             if (methodsMatchingNameAndArguments.size() == 1) {
@@ -214,6 +212,5 @@ public final class PartialInterface {
                 .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
                 .collect(Collectors.toList());
     }
-
 }
 
