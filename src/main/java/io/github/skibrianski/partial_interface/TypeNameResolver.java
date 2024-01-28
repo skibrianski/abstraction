@@ -80,7 +80,7 @@ public class TypeNameResolver {
 
             if (baseParameterName.equals(typeString)) {
                 throw new PartialInterfaceException.NotCompletedException(
-                        "cannot find type parameter: " + typeString // TODO: more detail
+                        "cannot find type parameter: " + baseParameterName // TODO: more detail
                 );
             } else {
                  // TODO: test coverage
