@@ -134,21 +134,6 @@ public final class PartialInterface {
         }
     }
 
-    public static java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter, TypeNameResolver typeNameResolver) {
-        boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
-        boolean hasString = !hasTypeParameter.ofString().isEmpty();
-        if (hasClass && hasString) {
-            throw new PartialInterfaceException.UsageException(
-                    "cannot specify both ofClass and ofString for: " + hasTypeParameter
-            );
-        }
-        if (hasClass) {
-            return hasTypeParameter.ofClass();
-        } else {
-            return typeNameResolver.getTypeParameterParser().parse(hasTypeParameter.ofString());
-        }
-    }
-
     private static void validateImplementation(
             Class<?> implementation,
             List<RequiresTypeParameter> requiresTypeParameterAnnotations,
@@ -165,7 +150,7 @@ public final class PartialInterface {
 
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
-            typeNameResolver.addTypeParameter(hasTypeParameter.name(), lookup(hasTypeParameter, typeNameResolver));
+            typeNameResolver.addTypeParameter(hasTypeParameter);
         }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
 

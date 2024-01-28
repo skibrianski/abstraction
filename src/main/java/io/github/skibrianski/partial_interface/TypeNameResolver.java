@@ -22,10 +22,29 @@ public class TypeNameResolver {
         this.typeParameterParser = new TypeParameterParser(this);
     }
 
+    public TypeNameResolver addTypeParameter(HasTypeParameter hasTypeParameter) {
+        return addTypeParameter(hasTypeParameter.name(), lookup(hasTypeParameter));
+    }
+
     public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
         typeMap.put(name, type);
         typeParameterNames.add(name);
         return this;
+    }
+
+    private java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter) {
+        boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
+        boolean hasString = !hasTypeParameter.ofString().isEmpty();
+        if (hasClass && hasString) {
+            throw new PartialInterfaceException.UsageException(
+                    "cannot specify both ofClass and ofString for: " + hasTypeParameter
+            );
+        }
+        if (hasClass) {
+            return hasTypeParameter.ofClass();
+        } else {
+            return getTypeParameterParser().parse(hasTypeParameter.ofString());
+        }
     }
 
     public TypeParameterParser getTypeParameterParser() {
