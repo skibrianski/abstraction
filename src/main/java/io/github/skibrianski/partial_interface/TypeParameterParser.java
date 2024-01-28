@@ -39,7 +39,7 @@ public class TypeParameterParser {
                 typeString.lastIndexOf('>')
         );
         // if input was: `Map<R, X<String>>`, typeVariableName = `Map` and typeParameterArgumentsString = `R, X<String>`
-        Type baseType = resolveParameterOrBuiltIn(typeVariableName, typeNameResolver);
+        Type baseType = typeNameResolver.resolve(typeVariableName);
         if (!(baseType instanceof Class)) {
             throw new RuntimeException("unimplemented"); // TODO: possible?
         }
@@ -61,10 +61,6 @@ public class TypeParameterParser {
                 return null;
             }
         };
-    }
-
-    private static java.lang.reflect.Type resolveParameterOrBuiltIn(String typeVariableName, TypeNameResolver typeNameResolver) {
-        return typeNameResolver.resolve(typeVariableName);
     }
 
     private Type[] parseList(String typeParameterArgumentsString) {
