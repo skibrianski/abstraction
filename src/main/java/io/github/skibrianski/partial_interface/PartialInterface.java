@@ -94,7 +94,7 @@ public final class PartialInterface {
     // i guess we can't use TypeValidator and such b/c we're checking the implementation class's type params,
     // not the implemented method's types.
     private static void validateTypeParameterBounds(
-            Class<?> implementation,
+            String implementationName,
             java.lang.reflect.Type[] implementedTypeParameters,
             List<RequiresTypeParameter> requiredTypeParameters,
             TypeNameResolver typeNameResolver
@@ -103,21 +103,23 @@ public final class PartialInterface {
             java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters[pos];
             RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
 
-            for (int upperBoundNum = 0; upperBoundNum < requiredTypeParameter.upperBound().length; upperBoundNum++) {
-                Type upperBound = typeNameResolver.resolve(requiredTypeParameter.upperBound()[upperBoundNum]);
+            for (String upperBoundString : requiredTypeParameter.upperBound()) {
+                Type upperBound = typeNameResolver.resolve(upperBoundString);
                 if (!TypeValidator.isAssignableType(upperBound, implementedTypeParameter)) {
                     throw new PartialInterfaceException.TypeParameterViolatesBounds(
-                            "implementation does not fulfill upper bound: " + upperBound
+                            "implementation " + implementationName
+                                    + " does not fulfill upper bound: " + upperBound
                                     + " with implemented type; " + implementedTypeParameter
                     );
                 }
             }
 
-            for (int lowerBoundNum = 0; lowerBoundNum < requiredTypeParameter.lowerBound().length; lowerBoundNum++) {
-                Type lowerBound = typeNameResolver.resolve(requiredTypeParameter.lowerBound()[lowerBoundNum]);
+            for (String lowerBoundString : requiredTypeParameter.lowerBound()) {
+                Type lowerBound = typeNameResolver.resolve(lowerBoundString);
                 if (!TypeValidator.isAssignableType(implementedTypeParameter, lowerBound)) {
                     throw new PartialInterfaceException.TypeParameterViolatesBounds(
-                            "implementation does not fulfill lower bound: " + lowerBound
+                            "implementation " + implementationName
+                                    + " does not fulfill lower bound: " + lowerBound
                                     + " with implemented type; " + implementedTypeParameter
                     );
                 }
@@ -130,9 +132,6 @@ public final class PartialInterface {
             HasTypeParameter[] implementedTypeParameters,
             List<RequiresTypeParameter> requiredTypeParameters
     ) {
-
-        // TODO: requiresTypeParameter can have bounds
-
         Set<String> implementedTypeParameterNames = Arrays.stream(implementedTypeParameters)
                 .map(HasTypeParameter::name)
                 .collect(Collectors.toSet());
@@ -190,7 +189,12 @@ public final class PartialInterface {
             typeNameResolver.addTypeParameter(hasTypeParameters[pos].name(), implementedTypes[pos]);
         }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
-        validateTypeParameterBounds(implementation, implementedTypes, requiresTypeParameterAnnotations, typeNameResolver);
+        validateTypeParameterBounds(
+                implementation.getName(),
+                implementedTypes,
+                requiresTypeParameterAnnotations,
+                typeNameResolver
+        );
 
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
