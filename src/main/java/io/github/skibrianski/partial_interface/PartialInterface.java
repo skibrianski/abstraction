@@ -90,6 +90,41 @@ public final class PartialInterface {
                 .collect(Collectors.toList());
     }
 
+    // note: assumption: is only run after validateHasAllTypeParameters()
+    // i guess we can't use TypeValidator and such b/c we're checking the implementation class's type params,
+    // not the implemented method's types.
+    private static void validateTypeParameterBounds(
+            Class<?> implementation,
+            java.lang.reflect.Type[] implementedTypeParameters,
+            List<RequiresTypeParameter> requiredTypeParameters,
+            TypeNameResolver typeNameResolver
+    ) {
+        for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
+            java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters[pos];
+            RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
+
+            for (int upperBoundNum = 0; upperBoundNum < requiredTypeParameter.upperBound().length; upperBoundNum++) {
+                Type upperBound = typeNameResolver.resolve(requiredTypeParameter.upperBound()[upperBoundNum]);
+                if (!TypeValidator.isAssignableType(upperBound, implementedTypeParameter)) {
+                    throw new PartialInterfaceException.TypeParameterViolatesBounds(
+                            "implementation does not fulfill upper bound: " + upperBound
+                                    + " with implemented type; " + implementedTypeParameter
+                    );
+                }
+            }
+
+            for (int lowerBoundNum = 0; lowerBoundNum < requiredTypeParameter.lowerBound().length; lowerBoundNum++) {
+                Type lowerBound = typeNameResolver.resolve(requiredTypeParameter.lowerBound()[lowerBoundNum]);
+                if (!TypeValidator.isAssignableType(implementedTypeParameter, lowerBound)) {
+                    throw new PartialInterfaceException.TypeParameterViolatesBounds(
+                            "implementation does not fulfill lower bound: " + lowerBound
+                                    + " with implemented type; " + implementedTypeParameter
+                    );
+                }
+            }
+        }
+    }
+
     private static void validateHasAllTypeParameters(
             Class<?> implementation,
             HasTypeParameter[] implementedTypeParameters,
@@ -148,10 +183,14 @@ public final class PartialInterface {
         validateHasAllTypeParameters(implementation, hasTypeParameters, requiresTypeParameterAnnotations);
 
         TypeNameResolver typeNameResolver = new TypeNameResolver();
-        for (HasTypeParameter hasTypeParameter : hasTypeParameters) {
-            typeNameResolver.addTypeParameter(hasTypeParameter);
+        java.lang.reflect.Type[] implementedTypes = Arrays.stream(hasTypeParameters)
+                .map(typeNameResolver::lookup)
+                .toArray(java.lang.reflect.Type[]::new);
+        for (int pos = 0; pos < implementedTypes.length; pos++) {
+            typeNameResolver.addTypeParameter(hasTypeParameters[pos].name(), implementedTypes[pos]);
         }
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
+        validateTypeParameterBounds(implementation, implementedTypes, requiresTypeParameterAnnotations, typeNameResolver);
 
         Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {

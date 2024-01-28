@@ -41,6 +41,12 @@ public class PartialInterfaceException extends RuntimeException {
         }
     }
 
+    public static class TypeParameterViolatesBounds extends PartialInterfaceException {
+        public TypeParameterViolatesBounds(String s) {
+            super(s);
+        }
+    }
+
 
 }
 

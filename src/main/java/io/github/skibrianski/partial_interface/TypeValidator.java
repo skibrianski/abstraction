@@ -32,7 +32,7 @@ public class TypeValidator {
         return typeNameResolver.getTypeParameterParser().parse(type.value());
     }
 
-    public boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
+    public static boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // because we expect concrete types here, we know it cannot be TypeVariable here.
         if (implementedType instanceof Class) {
@@ -48,7 +48,7 @@ public class TypeValidator {
         throw new RuntimeException("unimplemented");
     }
 
-    public boolean isAssignableParameterizedType(
+    public static boolean isAssignableParameterizedType(
             ParameterizedType implementedType,
             java.lang.reflect.Type requiredType
     ) {
@@ -69,7 +69,7 @@ public class TypeValidator {
         );
     }
 
-    public boolean hasAssignableArgumentTypes(
+    public static boolean hasAssignableArgumentTypes(
             java.lang.reflect.Type[] implementedTypeParameters,
             java.lang.reflect.Type[] requiredTypeParameters
     ) {
@@ -85,7 +85,7 @@ public class TypeValidator {
         return true;
     }
 
-    public boolean parameterizedTypeHasAssignableRawType(
+    public static boolean parameterizedTypeHasAssignableRawType(
             ParameterizedType implementedType,
             ParameterizedType requiredType
     ) {
@@ -94,7 +94,7 @@ public class TypeValidator {
         return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
-    public boolean isAssignableArray(GenericArrayType implementedType, java.lang.reflect.Type requiredType) {
+    public static boolean isAssignableArray(GenericArrayType implementedType, java.lang.reflect.Type requiredType) {
         if (!(requiredType instanceof GenericArrayType)) {
             throw new RuntimeException("well that won't work"); // TODO: words
         }

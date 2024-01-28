@@ -32,7 +32,7 @@ public class TypeNameResolver {
         return this;
     }
 
-    private java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter) {
+    public java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter) {
         boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
         boolean hasString = !hasTypeParameter.ofString().isEmpty();
         if (hasClass && hasString) {

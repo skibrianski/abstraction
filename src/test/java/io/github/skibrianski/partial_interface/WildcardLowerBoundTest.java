@@ -3,9 +3,9 @@ package io.github.skibrianski.partial_interface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class WildcardTypeTest {
+public class WildcardLowerBoundTest {
 
-    @RequiresTypeParameter(value = "T", lowerBound = {"Number", "Object"})
+    @RequiresTypeParameter(value = "T", lowerBound = {"Number"})
     @RequiresChildMethod(
             returnType = @Type("T"),
             argumentTypes = {@Type("T"), @Type("T")},
@@ -15,14 +15,26 @@ public class WildcardTypeTest {
 
     @ManualValidation
     @HasTypeParameter(name = "T", ofClass = Integer.class)
-    static class Valid implements WithSum {
+    static class ValidSubClass implements WithSum {
         public Integer sum(Integer foo, Integer bar) {
             return -1;
         }
     }
     @Test
     void test_valid_happyPath() {
-        Assertions.assertDoesNotThrow(() -> PartialInterface.check(Valid.class));
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidSubClass.class));
+    }
+
+    @ManualValidation
+    @HasTypeParameter(name = "T", ofClass = Number.class)
+    static class ValidExactMatch implements WithSum {
+        public Number sum(Number foo, Number bar) {
+            return -1;
+        }
+    }
+    @Test
+    void test_valid_exactMatch() {
+        Assertions.assertDoesNotThrow(() -> PartialInterface.check(ValidExactMatch.class));
     }
 
     @ManualValidation
@@ -35,7 +47,7 @@ public class WildcardTypeTest {
     @Test
     void test_invalid_violatedTypeConstraint() {
         Assertions.assertThrows(
-                PartialInterfaceException.NotCompletedException.class,
+                PartialInterfaceException.TypeParameterViolatesBounds.class,
                 () -> PartialInterface.check(Invalid.class)
         );
     }
