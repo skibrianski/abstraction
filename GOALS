@@ -8,6 +8,9 @@
   - constructor constraints?
 
 todo:
+  - wildcard types: there are problems with specification of types. need to fix and write more complex tests.
+    - one annoying problem is that when we reference by name, we have to specify full java class paths, eg
+      io.github.skibrianski.partial_interface.WildcardComplexTest$AParent .............
   - how do wildcard types and boxing interact?
   - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
   - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement

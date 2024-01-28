@@ -104,7 +104,7 @@ public final class PartialInterface {
             RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
 
             for (String upperBoundString : requiredTypeParameter.upperBound()) {
-                Type upperBound = typeNameResolver.resolve(upperBoundString);
+                Type upperBound = typeNameResolver.getTypeParameterParser().parse(upperBoundString);
                 if (!TypeValidator.isAssignableType(upperBound, implementedTypeParameter)) {
                     throw new PartialInterfaceException.TypeParameterViolatesBounds(
                             "implementation " + implementationName
@@ -115,7 +115,7 @@ public final class PartialInterface {
             }
 
             for (String lowerBoundString : requiredTypeParameter.lowerBound()) {
-                Type lowerBound = typeNameResolver.resolve(lowerBoundString);
+                Type lowerBound = typeNameResolver.getTypeParameterParser().parse(lowerBoundString);
                 if (!TypeValidator.isAssignableType(implementedTypeParameter, lowerBound)) {
                     throw new PartialInterfaceException.TypeParameterViolatesBounds(
                             "implementation " + implementationName

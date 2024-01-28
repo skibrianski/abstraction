@@ -22,10 +22,6 @@ public class TypeNameResolver {
         this.typeParameterParser = new TypeParameterParser(this);
     }
 
-    public TypeNameResolver addTypeParameter(HasTypeParameter hasTypeParameter) {
-        return addTypeParameter(hasTypeParameter.name(), lookup(hasTypeParameter));
-    }
-
     public TypeNameResolver addTypeParameter(String name, java.lang.reflect.Type type) {
         typeMap.put(name, type);
         typeParameterNames.add(name);
