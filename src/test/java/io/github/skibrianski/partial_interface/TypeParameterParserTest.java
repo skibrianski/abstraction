@@ -3,6 +3,7 @@ package io.github.skibrianski.partial_interface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -96,6 +97,25 @@ public class TypeParameterParserTest {
 
         Assertions.assertEquals(int[].class, typeParameterParser.parse("R..."));
         Assertions.assertEquals(int[].class, typeParameterParser.parse("R[]"));
+    }
+
+    @Test
+    void test_parameterizedWithParameters_array() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver();
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type doubleArrayType = typeParameterParser.parse("List<String>[]...");
+        Assertions.assertInstanceOf(GenericArrayType.class, doubleArrayType);
+        Type singleArrayType = ((GenericArrayType) doubleArrayType).getGenericComponentType();
+        Assertions.assertInstanceOf(GenericArrayType.class, singleArrayType);
+        Type scalarType = ((GenericArrayType) singleArrayType).getGenericComponentType();
+        Assertions.assertInstanceOf(ParameterizedType.class, scalarType);
+        ParameterizedType parameterizedScalarType = (ParameterizedType) scalarType;
+        Type listType = parameterizedScalarType.getRawType();
+        Assertions.assertEquals(List.class, listType);
+        Type[] typeArguments = parameterizedScalarType.getActualTypeArguments();
+        Assertions.assertEquals(1, typeArguments.length);
+        Assertions.assertEquals(String.class, typeArguments[0]);
     }
 
     @Test

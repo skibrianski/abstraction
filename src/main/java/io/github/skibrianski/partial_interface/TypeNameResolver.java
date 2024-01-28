@@ -3,6 +3,7 @@ package io.github.skibrianski.partial_interface;
 import io.github.skibrianski.partial_interface.util.StringTruncator;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashSet;
 import java.util.Map;
@@ -81,6 +82,13 @@ public class TypeNameResolver {
         }
 
         if (baseType instanceof ParameterizedType) {
+            if (arrayLevels > 0) {
+                throw new RuntimeException("unimplemented");
+            }
+            return baseType;
+        }
+
+        if (baseType instanceof GenericArrayType) {
             if (arrayLevels > 0) {
                 throw new RuntimeException("unimplemented");
             }

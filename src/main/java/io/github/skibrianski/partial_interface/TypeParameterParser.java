@@ -1,5 +1,8 @@
 package io.github.skibrianski.partial_interface;
 
+import io.github.skibrianski.partial_interface.util.StringTruncator;
+
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,11 +36,25 @@ public class TypeParameterParser {
             }
         }
 
-        String typeVariableName = typeString.substring(0, nextOpen);
-        String typeParameterArgumentsString = typeString.substring(
+        StringTruncator parameterNameTruncator = new StringTruncator(typeString)
+                .truncateOnce("...")
+                .truncateAll("[]");
+        String baseParameterName = parameterNameTruncator.value();
+        int arrayLevels = parameterNameTruncator.truncationCount();
+
+        int parameterClosePos = typeString.lastIndexOf('>');
+        if (parameterClosePos + 1 != baseParameterName.length()) {
+            throw new PartialInterfaceException.UsageException(
+                    "unsupported characters between type parameters and array indicators in: " + typeString
+            );
+        }
+
+        String typeVariableName = baseParameterName.substring(0, nextOpen);
+        String typeParameterArgumentsString = baseParameterName.substring(
                 nextOpen + 1,
-                typeString.lastIndexOf('>')
+                parameterClosePos
         );
+
         // if input was: `Map<R, X<String>>`, typeVariableName = `Map` and typeParameterArgumentsString = `R, X<String>`
         Type baseType = typeNameResolver.resolve(typeVariableName);
         if (!(baseType instanceof Class)) {
@@ -45,22 +62,12 @@ public class TypeParameterParser {
         }
         Class<?> baseClass = (Class<?>) baseType;
         Type[] typeArguments = parseList(typeParameterArgumentsString);
-        return new ParameterizedType() {
-            @Override
-            public Type[] getActualTypeArguments() {
-                return typeArguments;
-            }
-
-            @Override
-            public Type getRawType() {
-                return baseClass;
-            }
-
-            @Override
-            public Type getOwnerType() {
-                return null;
-            }
-        };
+        Type returnType = new ParameterizedTypeImpl(baseClass, typeArguments);
+        while (arrayLevels > 0) {
+            returnType = new GenericArrayTypeImpl(returnType);
+            arrayLevels--;
+        }
+        return returnType;
     }
 
     private Type[] parseList(String typeParameterArgumentsString) {
@@ -98,6 +105,43 @@ public class TypeParameterParser {
             pos++;
         }
         return pos;
+    }
+
+    public static class ParameterizedTypeImpl implements ParameterizedType {
+        private final Type rawType;
+        private final Type[] actualTypeArguments;
+        public ParameterizedTypeImpl(Type rawType, Type[] actualTypeArguments) {
+            this.rawType = rawType;
+            this.actualTypeArguments = actualTypeArguments;
+        }
+
+        @Override
+        public Type[] getActualTypeArguments() {
+            return actualTypeArguments;
+        }
+
+        @Override
+        public Type getRawType() {
+            return rawType;
+        }
+
+        @Override
+        public Type getOwnerType() {
+            return null;
+        }
+    }
+
+    public static class GenericArrayTypeImpl implements GenericArrayType {
+
+        private final Type genericComponentType;
+        public GenericArrayTypeImpl(Type genericComponentType) {
+            this.genericComponentType = genericComponentType;
+        }
+
+        @Override
+        public Type getGenericComponentType() {
+            return genericComponentType;
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 
@@ -70,9 +71,21 @@ public class TypeValidator {
             }
             return true;
 
-        } // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
+        } else if (implementedType instanceof GenericArrayType) {
+            if (!(requiredType instanceof GenericArrayType)) {
+                throw new RuntimeException("well that won't work"); // TODO: words
+            }
+            GenericArrayType implementedArrayType = (GenericArrayType) implementedType;
+            GenericArrayType requiredArrayType = (GenericArrayType) requiredType;
+            return isAssignableType(
+                    implementedArrayType.getGenericComponentType(),
+                    requiredArrayType.getGenericComponentType()
+            );
+        }
+
+        // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
         //  but Map<? extends Number, String> CAN
-        throw new RuntimeException("unimplemented: parameterized type");
+        throw new RuntimeException("unimplemented");
     }
 
     private static java.lang.reflect.Type possiblyBox(java.lang.reflect.Type possiblyPrimitive) {

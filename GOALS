@@ -10,7 +10,6 @@ todo:
   - support type parameters with constraints, eg class Foo<T extends Number>
     - buh, this interacts with boxing. support only objects first.
   - support type constraints that reference other types, eg Foo<T extends Number, U extends T>
-  - TypeParameterParser - support & add tests for eg AtomicReference<String>[]
   - think: we accept a boxed type when it is not necessary. is this desirable? i guess it gives power to the user,
       but it could also lead to unecessary boxing.
 
