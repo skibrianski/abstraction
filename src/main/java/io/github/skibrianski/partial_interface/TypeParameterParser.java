@@ -20,8 +20,9 @@ public class TypeParameterParser {
     public Type parse(String typeString) {
         int nextOpen = typeString.indexOf('<');
         if (nextOpen == -1) {
-            if (typeNameResolver.canResolve(typeString)) {
-                return typeNameResolver.mustResolve(typeString);
+            Type resolvedType = typeNameResolver.resolve(typeString);
+            if (resolvedType != null) {
+                return resolvedType;
             } else {
                 try {
                     return classForName(typeString);
