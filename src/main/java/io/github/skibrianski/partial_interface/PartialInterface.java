@@ -10,7 +10,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,23 +21,27 @@ public final class PartialInterface {
     // TODD: should we tweak enableAllInfo() to be more precise & only include what we need?
 
     static {
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().scan()) {
+        try (ScanResult scanResult = getConfiguredClassGraph().scan()) {
             check(scanResult, false);
         }
     }
 
     public static void check(Class... classes) {
         String[] classNames = Arrays.stream(classes).map(Class::getName).toArray(String[]::new);
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptClasses(classNames).scan()) {
+        try (ScanResult scanResult = getConfiguredClassGraph().acceptClasses(classNames).scan()) {
             check(scanResult, true);
         }
     }
 
     public static void check(Package... packages) {
         String[] packageNames = Arrays.stream(packages).map(Package::getName).toArray(String[]::new);
-        try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageNames).scan()) {
+        try (ScanResult scanResult = getConfiguredClassGraph().acceptPackages(packageNames).scan()) {
             check(scanResult, true);
         }
+    }
+
+    public static ClassGraph getConfiguredClassGraph() {
+        return new ClassGraph().enableAllInfo().enableInterClassDependencies().enableExternalClasses();
     }
 
     private static void check(ScanResult scanResult, boolean isManualRun) {
@@ -65,7 +68,8 @@ public final class PartialInterface {
                     validateImplementation(
                             implementationClassInfo.loadClass(),
                             requiresTypeParameterAnnotations,
-                            requiresChildMethodAnnotations
+                            requiresChildMethodAnnotations,
+                            implementationClassInfo.getClassDependencies()
                     );
 
                 }
@@ -176,11 +180,13 @@ public final class PartialInterface {
     private static void validateImplementation(
             Class<?> implementation,
             List<RequiresTypeParameter> requiresTypeParameterAnnotations,
-            List<RequiresChildMethod> requiresChildMethodAnnotations
+            List<RequiresChildMethod> requiresChildMethodAnnotations,
+            ClassInfoList implementationDependencies
     ) {
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         validateHasAllTypeParameters(implementation, hasTypeParameters, requiresTypeParameterAnnotations);
 
+        // TODO: load implementationDependencies in to typeNameResolver
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         java.lang.reflect.Type[] implementedTypes = Arrays.stream(hasTypeParameters)
                 .map(typeNameResolver::lookup)
