@@ -8,8 +8,7 @@ public class WildcardComplexTest {
     public interface AParent { }
     public interface AChild extends AParent { }
 
-    // TODO: holy yuck.
-    @RequiresTypeParameter(value = "T", lowerBound = {"io.github.skibrianski.partial_interface.WildcardComplexTest$AParent"})
+    @RequiresTypeParameter(value = "T", lowerBound = {"AParent"})
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},

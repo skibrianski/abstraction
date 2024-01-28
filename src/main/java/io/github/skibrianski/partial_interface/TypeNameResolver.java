@@ -28,6 +28,13 @@ public class TypeNameResolver {
         return this;
     }
 
+    public TypeNameResolver addClass(Class<?> klazz) {
+        // TODO: load long names, too (not just here)
+        // TODO: handle conflict of simpleName
+        typeMap.put(klazz.getSimpleName(), klazz);
+        return this;
+    }
+
     public java.lang.reflect.Type lookup(HasTypeParameter hasTypeParameter) {
         boolean hasClass = !hasTypeParameter.ofClass().equals(HasTypeParameter.None.class);
         boolean hasString = !hasTypeParameter.ofString().isEmpty();

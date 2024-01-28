@@ -10,7 +10,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -186,7 +188,6 @@ public final class PartialInterface {
         HasTypeParameter[] hasTypeParameters = implementation.getAnnotationsByType(HasTypeParameter.class);
         validateHasAllTypeParameters(implementation, hasTypeParameters, requiresTypeParameterAnnotations);
 
-        // TODO: load implementationDependencies in to typeNameResolver
         TypeNameResolver typeNameResolver = new TypeNameResolver();
         java.lang.reflect.Type[] implementedTypes = Arrays.stream(hasTypeParameters)
                 .map(typeNameResolver::lookup)
@@ -194,6 +195,12 @@ public final class PartialInterface {
         for (int pos = 0; pos < implementedTypes.length; pos++) {
             typeNameResolver.addTypeParameter(hasTypeParameters[pos].name(), implementedTypes[pos]);
         }
+        // load all super classes and interface parents of classes used in class to typeNameResolver
+        // so user doesn't need to specify full paths.
+        for (Class<?> superClass : loadAllSuperClassesAndInterfaces(implementationDependencies)) {
+            typeNameResolver.addClass(superClass);
+        }
+
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
         validateTypeParameterBounds(
                 implementation.getName(),
@@ -243,6 +250,19 @@ public final class PartialInterface {
                 }
             }
         }
+    }
+
+    private static Set<Class<?>> loadAllSuperClassesAndInterfaces(ClassInfoList classInfoList) {
+        Set<Class<?>> classes = new HashSet<>();
+        for (ClassInfo classInfo : classInfoList) {
+            for (ClassInfo superClassInfo : classInfo.getSuperclasses()) {
+                classes.add(superClassInfo.loadClass());
+            }
+            for (ClassInfo interfaceClassInfo : classInfo.getInterfaces()) {
+                classes.add(interfaceClassInfo.loadClass());
+            }
+        }
+        return classes;
     }
 
     private static boolean isConcrete(Class<?> implementation) {
