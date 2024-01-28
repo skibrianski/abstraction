@@ -119,7 +119,7 @@ public final class PartialInterface {
             throw new PartialInterfaceException.MissingTypeParameterException(
                     "implementation: " + implementation
                             + " is missing type parameter(s): "
-                            + String.join(", ", missingTypeParameters)
+                            + missingTypeParameters
             );
         }
         List<String> extraneousTypeParameters = Arrays.stream(implementedTypeParameters)
@@ -129,7 +129,7 @@ public final class PartialInterface {
             throw new PartialInterfaceException.ExtraneousTypeParameterException(
                     "implementation: " + implementation
                             + " has extraneous type parameter(s): "
-                            + String.join(", ", extraneousTypeParameters)
+                            + extraneousTypeParameters
             );
         }
     }
