@@ -7,7 +7,6 @@
   - constructor constraints?
 
 todo:
-  - support @HasTypeParameter(name = "T", ofString = "List<Integer>") or so
   - TypeParameterParser - support & add tests for eg AtomicReference<String>[]
   - support type parameters with constraints, eg class Foo<T extends Number>
     - buh, this interacts with boxing. support only objects first.
