@@ -1,9 +1,13 @@
 package io.github.skibrianski.abstraction;
 
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TypeValidator {
 
@@ -34,18 +38,54 @@ public class TypeValidator {
 
     public static boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
-        // because we expect concrete types here, we know it cannot be TypeVariable here.
+        // we expect concrete types here so no need to worry about TypeVariable
         if (implementedType instanceof Class) {
-            return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
+            if (requiredType instanceof ParameterizedType) {
+                return isAssignableFromParameterizedTypeToClass(
+                        (Class<?>) implementedType,
+                        (ParameterizedType) requiredType
+                );
+            } else if (requiredType instanceof Class<?>) {
+                return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
+            } else {
+                throw new RuntimeException("unimplemented");
+            }
         } else if (implementedType instanceof ParameterizedType) {
             return isAssignableParameterizedType((ParameterizedType) implementedType, requiredType);
         } else if (implementedType instanceof GenericArrayType) {
             return isAssignableArray((GenericArrayType) implementedType, requiredType);
         }
-
-        // TODO: wildcard types with bounds, eg Map<Number, String> cannot be fulfilled by HashMap<Integer, String>
-        //  but Map<? extends Number, String> CAN
         throw new RuntimeException("unimplemented");
+    }
+
+    // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
+    public static boolean isAssignableFromParameterizedTypeToClass(
+            Class<?> implementedType,
+            ParameterizedType requiredType
+    ) {
+        AnnotatedType superClassAnnotatedType = implementedType.getAnnotatedSuperclass();
+        Set<AnnotatedType> superAnnotatedTypeSet = Stream.concat(
+                Arrays.stream(implementedType.getAnnotatedInterfaces()),
+                superClassAnnotatedType == null ? Stream.of() : Stream.of(superClassAnnotatedType)
+        ).collect(Collectors.toSet());
+        for (AnnotatedType superAnnotatedType : superAnnotatedTypeSet) {
+            java.lang.reflect.Type superClassType = superAnnotatedType == null
+                    ? null
+                    : superAnnotatedType.getType();
+
+            if (superClassType instanceof ParameterizedType) {
+                ParameterizedType superClassParameterizedType = (ParameterizedType) superClassType;
+                if (!superClassParameterizedType.getRawType().equals(requiredType.getRawType())) {
+                    return false;
+                }
+                return Arrays.equals(
+                        superClassParameterizedType.getActualTypeArguments(),
+                        requiredType.getActualTypeArguments()
+                );
+            }
+        }
+
+        return false;
     }
 
     public static boolean isAssignableParameterizedType(

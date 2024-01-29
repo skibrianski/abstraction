@@ -20,7 +20,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- seems like ClassGraph won't treat an enum inside a class as an inner class and load it?
+- seems like ClassGraph won't treat an enum inside a class as an inner class and load it? workaround: ofClass.
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
 - do wildcard types and boxing interact negatively? are there other edge cases with boxing?
 - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
