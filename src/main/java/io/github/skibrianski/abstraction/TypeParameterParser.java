@@ -59,6 +59,12 @@ public class TypeParameterParser {
 
         // if input was: `Map<R, X<String>>`, typeVariableName = `Map` and typeParameterArgumentsString = `R, X<String>`
         Type baseType = typeNameResolver.resolve(typeVariableName);
+        if (baseType == null) {
+            throw new AbstractionException.UsageException(
+                    "cannot load base type for variable: " + typeVariableName
+                            + ". try including the package path?"
+            );
+        }
         if (!(baseType instanceof Class)) {
             throw new RuntimeException("unimplemented"); // TODO: possible?
         }
