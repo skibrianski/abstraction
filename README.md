@@ -11,9 +11,10 @@ but additionally allows for some tricks that interfaces cannot provide:
 ## caveats
 
 - the parent class gives java no indication that these child classes have the methods specified. this means the
-  common practice of storing variables to an abstract type will cause problems - in the above example, you would
-  not be able to call sum() without interrogating the type and casting it. generally, the best practice here is to
-  store generated types with the most concrete type possible to avoid this issue. often, this is not ideal.
+  common practice of storing variables to an abstract type will cause problems (eg List<String> l = new ArrayList<>();)
+  in the above example, you would not be able to call sum() without interrogating the type and casting it. generally,
+  the best practice here is to store generated types with the most concrete type possible to avoid this issue. often,
+  this is not ideal.
 - refactoring cannot be done automatically in an IDE
 - if classes are not found, use full class paths to load. there are limitations to what short class names
   can be loaded automatically.
