@@ -75,13 +75,11 @@ public class TypeValidator {
 
             if (superClassType instanceof ParameterizedType) {
                 ParameterizedType superClassParameterizedType = (ParameterizedType) superClassType;
-                if (!superClassParameterizedType.getRawType().equals(requiredType.getRawType())) {
-                    return false;
-                }
-                return Arrays.equals(
-                        superClassParameterizedType.getActualTypeArguments(),
-                        requiredType.getActualTypeArguments()
-                );
+                return superClassParameterizedType.getRawType().equals(requiredType.getRawType())
+                        && Arrays.equals(
+                                superClassParameterizedType.getActualTypeArguments(),
+                                requiredType.getActualTypeArguments()
+                        );
             }
         }
 
