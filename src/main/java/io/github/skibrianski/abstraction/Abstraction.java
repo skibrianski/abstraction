@@ -255,6 +255,7 @@ public final class Abstraction {
     private static Set<Class<?>> loadAllUserSubAndSuperClassesAndInterfaces(ClassInfoList classInfoList) {
         Set<Class<?>> classes = new HashSet<>();
         for (ClassInfo classInfo : classInfoList) {
+            classes.add(classInfo.loadClass());
             for (ClassInfo superClassInfo : classInfo.getSuperclasses()) {
                 classes.add(superClassInfo.loadClass());
             }
