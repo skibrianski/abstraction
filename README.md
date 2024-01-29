@@ -22,7 +22,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 - rename. maybe @Trait (what rust calls it) or just @Abstraction ?
 - do we need a solution for loading all child classes of the classes *used* by the partialInterface?
-- how do wildcard types and boxing interact?
+- do wildcard types and boxing interact? are there other edge cases with boxing?
 - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
 - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement
    `T sum(List<T> list)` with `Integer sum(List<T> list)` ? what is our current behavior?
