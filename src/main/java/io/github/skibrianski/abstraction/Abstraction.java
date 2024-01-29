@@ -47,23 +47,23 @@ public final class Abstraction {
 
     private static void check(ScanResult scanResult, boolean isManualRun) {
         // TODO: also look for classes with RequiresTypeParameter that have no RequiresChildMethod, throw appropriately
-        for (ClassInfo partialInterfaceClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
-            if (shouldBeAutoValidated(partialInterfaceClassInfo) || isManualRun) {
-                if (!partialInterfaceClassInfo.isAbstract()) {
+        for (ClassInfo abstractionClassInfo : scanResult.getClassesWithAnnotation(RequiresChildMethod.class)) {
+            if (shouldBeAutoValidated(abstractionClassInfo) || isManualRun) {
+                if (!abstractionClassInfo.isAbstract()) {
                     throw new AbstractionException.UsageException(
-                            "attempt to use @PartialInterface on non-abstract class: " + partialInterfaceClassInfo.getName()
+                            "attempt to use abstraction on non-abstract class: " + abstractionClassInfo.getName()
                     );
                 }
             }
             // note: for interfaces, getClassesImplementing() includes interfaces, abstract classes, and concrete
             // classes, but getSubClasses() is required for abstract classes.
-            ClassInfoList implementations = partialInterfaceClassInfo.isInterface()
-                    ? partialInterfaceClassInfo.getClassesImplementing()
-                    : partialInterfaceClassInfo.getSubclasses();
+            ClassInfoList implementations = abstractionClassInfo.isInterface()
+                    ? abstractionClassInfo.getClassesImplementing()
+                    : abstractionClassInfo.getSubclasses();
             List<RequiresChildMethod> requiresChildMethodAnnotations =
-                    loadAndReturnRepeatableAnnotationClasses(partialInterfaceClassInfo, RequiresChildMethod.class);
+                    loadAndReturnRepeatableAnnotationClasses(abstractionClassInfo, RequiresChildMethod.class);
             List<RequiresTypeParameter> requiresTypeParameterAnnotations =
-                    loadAndReturnRepeatableAnnotationClasses(partialInterfaceClassInfo, RequiresTypeParameter.class);
+                    loadAndReturnRepeatableAnnotationClasses(abstractionClassInfo, RequiresTypeParameter.class);
             for (ClassInfo implementationClassInfo : implementations) {
                 if (shouldBeAutoValidated(implementationClassInfo) || isManualRun) {
                     validateImplementation(
@@ -84,10 +84,10 @@ public final class Abstraction {
     }
 
     private static <A extends Annotation> List<A> loadAndReturnRepeatableAnnotationClasses(
-            ClassInfo partialInterfaceClassInfo,
+            ClassInfo abstractionClassInfo,
             Class<A> annotationClass
     ) {
-        return partialInterfaceClassInfo
+        return abstractionClassInfo
                 .getAnnotationInfoRepeatable(annotationClass)
                 .stream()
                 .map(AnnotationInfo::loadClassAndInstantiate)

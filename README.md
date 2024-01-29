@@ -21,7 +21,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 ## todo
 
 - rename. maybe @Trait (what rust calls it) or just @Abstraction ?
-- do we need a solution for loading all child classes of the classes *used* by the partialInterface?
+- do we need a solution for loading all child classes of the classes *used* by the abstraction?
 - do wildcard types and boxing interact negatively? are there other edge cases with boxing?
 - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
 - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement
