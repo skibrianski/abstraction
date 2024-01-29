@@ -18,7 +18,7 @@ public class EnumTest {
     interface WithMethod { }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = Alpha.class)
+    @HasTypeParameter(name = "T", ofString = "Alpha")
     public static class Valid implements WithMethod {
         public void method(Alpha input) { }
     }

@@ -188,16 +188,16 @@ public final class Abstraction {
         validateHasAllTypeParameters(implementation, hasTypeParameters, requiresTypeParameterAnnotations);
 
         TypeNameResolver typeNameResolver = new TypeNameResolver();
+        // load all super classes and interface parents of classes used in class to typeNameResolver
+        // so user doesn't need to specify full paths.
+        for (Class<?> superClass : loadAllUserSubAndSuperClassesAndInterfaces(implementationDependencies)) {
+            typeNameResolver.addClass(superClass);
+        }
         java.lang.reflect.Type[] implementedTypes = Arrays.stream(hasTypeParameters)
                 .map(typeNameResolver::lookup)
                 .toArray(java.lang.reflect.Type[]::new);
         for (int pos = 0; pos < implementedTypes.length; pos++) {
             typeNameResolver.addTypeParameter(hasTypeParameters[pos].name(), implementedTypes[pos]);
-        }
-        // load all super classes and interface parents of classes used in class to typeNameResolver
-        // so user doesn't need to specify full paths.
-        for (Class<?> superClass : loadAllUserSubAndSuperClassesAndInterfaces(implementationDependencies)) {
-            typeNameResolver.addClass(superClass);
         }
 
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
