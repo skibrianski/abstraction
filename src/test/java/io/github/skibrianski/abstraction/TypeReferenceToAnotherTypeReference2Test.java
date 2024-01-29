@@ -3,10 +3,13 @@ package io.github.skibrianski.abstraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TypeReferenceToAnotherTypeReferenceTest {
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class TypeReferenceToAnotherTypeReference2Test {
 
     @RequiresTypeParameter("T")
-    @RequiresTypeParameter(value = "U", lowerBound = "T")
+    @RequiresTypeParameter(value = "U", lowerBound = "Collection<T>")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("U")},
@@ -15,10 +18,10 @@ public class TypeReferenceToAnotherTypeReferenceTest {
     interface WithMethod { }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = Number.class)
-    @HasTypeParameter(name = "U", ofClass = Integer.class)
+    @HasTypeParameter(name = "T", ofClass = String.class)
+    @HasTypeParameter(name = "U", ofString = "List<String>")
     static class ValidSubclass implements WithMethod {
-        public void method(Number t, Integer u) { }
+        public void method(String t, List<String> u) { }
     }
     @Test
     void test_valid_happyPath() {
@@ -26,27 +29,30 @@ public class TypeReferenceToAnotherTypeReferenceTest {
     }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = Number.class)
-    @HasTypeParameter(name = "U", ofClass = Number.class)
-    static class ValidExactMatch implements WithMethod {
-        public void method(Number t, Number u) { }
+    @HasTypeParameter(name = "T", ofClass = String.class)
+    @HasTypeParameter(name = "U", ofString = "List<Integer>")
+    static class InvalidWrongTypeParameter implements WithMethod {
+        public void method(String t, List<Integer> u) { }
     }
     @Test
-    void test_valid_exactMatch() {
-        Assertions.assertDoesNotThrow(() -> Abstraction.check(ValidExactMatch.class));
+    void test_invalid_wrongScalarType() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBounds.class,
+                () -> Abstraction.check(InvalidWrongTypeParameter.class)
+        );
     }
 
     @ManualValidation
-    @HasTypeParameter(name = "T", ofClass = Number.class)
-    @HasTypeParameter(name = "U", ofClass = String.class)
-    static class InvalidWrongU implements WithMethod {
-        public void method(Number t, String u) { }
+    @HasTypeParameter(name = "T", ofClass = String.class)
+    @HasTypeParameter(name = "U", ofString = "AtomicReference<String>")
+    static class InvalidWrongRawType implements WithMethod {
+        public void method(String t, AtomicReference<String> u) { }
     }
     @Test
-    void test_invalid_doesNotExtend() {
+    void test_invalid_wrongRawType() {
         Assertions.assertThrows(
                 AbstractionException.TypeParameterViolatesBounds.class,
-                () -> Abstraction.check(InvalidWrongU.class)
+                () -> Abstraction.check(InvalidWrongRawType.class)
         );
     }
 
