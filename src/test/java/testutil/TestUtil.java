@@ -1,7 +1,7 @@
 package testutil;
 
-import io.github.skibrianski.partial_interface.RequiresChildMethod;
-import io.github.skibrianski.partial_interface.Type;
+import io.github.skibrianski.abstraction.RequiresChildMethod;
+import io.github.skibrianski.abstraction.Type;
 
 import java.lang.annotation.Annotation;
 
