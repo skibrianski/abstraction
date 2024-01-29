@@ -20,8 +20,8 @@ but additionally allows for some tricks that interfaces cannot provide:
   the best practice here is to store generated types with the most concrete type possible to avoid this issue. often,
   this is not ideal.
 - refactoring cannot be done automatically in an IDE
-- if classes are not found, use full class paths to load. there are limitations to what short class names
-  can be loaded automatically.
+- if classes are not found, use full class paths to load. while inner and outer classes some parent and child classes
+  of what is used in the module are loaded automatically, there are some limitations.
 
 ## todo
 
