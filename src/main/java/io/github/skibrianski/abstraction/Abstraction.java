@@ -227,7 +227,7 @@ public final class Abstraction {
             if (isConcrete(implementation) && methodsMatchingNameAndArguments.isEmpty()) {
                 throw new AbstractionException.NotCompletedException(
                         "implementation " + implementation.getName()
-                                + " does not implement partial interface method: "
+                                + " does not implement abstraction method: "
                                 + RequiresChildMethod.Util.stringify(requiresChildMethod)
                                 + " with type parameters: " + typeNameResolver
                 );

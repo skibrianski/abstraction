@@ -29,9 +29,16 @@ public class TypeNameResolver {
     }
 
     public TypeNameResolver addClass(Class<?> klazz) {
-        // TODO: load long names, too (not just here)
-        // TODO: handle conflict of simpleName
-        typeMap.put(klazz.getSimpleName(), klazz);
+        typeMap.put(klazz.getName(), klazz); // full name is always unique
+        // note: types are loaded in the order: primitives and builtins, type variables, then classes used in
+        // the concrete class. if common naming conventions are used and type variables are T or TV or TYPE_VARIABLE
+        // whereas other classes are SomeClass, there will be no overlap, but we want type variables to trump concrete
+        // classes if for some reason the same naming conventions are used.
+        String simpleName = klazz.getSimpleName();
+        // if it wouldn't overwrite a type variable, the last class added always wins
+        if (!(typeMap.containsKey(simpleName) && typeParameterNames.contains(simpleName))) {
+            typeMap.put(simpleName, klazz);
+        }
         return this;
     }
 
