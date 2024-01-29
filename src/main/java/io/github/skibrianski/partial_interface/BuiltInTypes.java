@@ -1,5 +1,6 @@
 package io.github.skibrianski.partial_interface;
 
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Clock;
@@ -82,6 +83,7 @@ public class BuiltInTypes extends TypeNameResolver {
                 Short.class,
 
                 // java.lang
+                Annotation.class,
                 Comparable.class,
                 Enum.class,
                 Error.class,

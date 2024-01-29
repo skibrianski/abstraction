@@ -10,13 +10,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class PartialInterface {
 
@@ -197,7 +197,7 @@ public final class PartialInterface {
         }
         // load all super classes and interface parents of classes used in class to typeNameResolver
         // so user doesn't need to specify full paths.
-        for (Class<?> superClass : loadAllSuperClassesAndInterfaces(implementationDependencies)) {
+        for (Class<?> superClass : loadAllUserSubAndSuperClassesAndInterfaces(implementationDependencies)) {
             typeNameResolver.addClass(superClass);
         }
 
@@ -252,7 +252,8 @@ public final class PartialInterface {
         }
     }
 
-    private static Set<Class<?>> loadAllSuperClassesAndInterfaces(ClassInfoList classInfoList) {
+    // note: the context of this operation is limited to the scan result, so the scope of spamming is limited.
+    private static Set<Class<?>> loadAllUserSubAndSuperClassesAndInterfaces(ClassInfoList classInfoList) {
         Set<Class<?>> classes = new HashSet<>();
         for (ClassInfo classInfo : classInfoList) {
             for (ClassInfo superClassInfo : classInfo.getSuperclasses()) {
@@ -261,6 +262,27 @@ public final class PartialInterface {
             for (ClassInfo interfaceClassInfo : classInfo.getInterfaces()) {
                 classes.add(interfaceClassInfo.loadClass());
             }
+            for (ClassInfo subClassInfo : classInfo.getSubclasses()) {
+                classes.add(subClassInfo.loadClass());
+            }
+            for (ClassInfo implementorClassInfo : classInfo.getClassesImplementing()) {
+                classes.add(implementorClassInfo.loadClass());
+            }
+            if (classInfo.isInnerClass()) {
+                for (ClassInfo outerClassInfo : classInfo.getOuterClasses()) {
+                    classes.add(outerClassInfo.loadClass());
+                    // include sibling classes, eg A$B gets A (the outer class) and any A$C and A$D as well.
+                    for (ClassInfo innerClassInfo : outerClassInfo.getInnerClasses()) {
+                        classes.add(innerClassInfo.loadClass());
+                    }
+                }
+            }
+            if (classInfo.isOuterClass()) {
+                for (ClassInfo innerClassInfo : classInfo.getInnerClasses()) {
+                    classes.add(innerClassInfo.loadClass());
+                }
+            }
+            // TODO: interfaces that use this interface?
         }
         return classes;
     }

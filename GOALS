@@ -8,9 +8,7 @@
 
 todo:
   - rename. maybe @Trait (what rust calls it) or just @Abstraction ?
-  - auto-loading of parent classes is justifiable. but auto-loading of subclasses seems fraught.
-    maybe only support full paths for subclasses? or only go one level deep? definitely need a limit, hmm.
-  - wildcard types: there are problems with specification of types. need to fix and write more complex tests.
+  - do we need a solution for loading all child classes of the classes *used* by the partialInterface?
   - how do wildcard types and boxing interact?
   - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
   - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement
