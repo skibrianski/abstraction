@@ -6,6 +6,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TypeParameterParser {
@@ -130,6 +131,11 @@ public class TypeParameterParser {
         public Type getOwnerType() {
             return null;
         }
+
+        @Override
+        public String toString() {
+            return "ParameterizedTypeImpl{rawType=" + rawType + ", actualTypeArguments=" + Arrays.toString(actualTypeArguments) + "}";
+        }
     }
 
     public static class GenericArrayTypeImpl implements GenericArrayType {
@@ -142,6 +148,11 @@ public class TypeParameterParser {
         @Override
         public Type getGenericComponentType() {
             return genericComponentType;
+        }
+
+        @Override
+        public String toString() {
+            return "GenericArrayTypeImpl{genericComponentType=" + genericComponentType + "}";
         }
     }
 }
