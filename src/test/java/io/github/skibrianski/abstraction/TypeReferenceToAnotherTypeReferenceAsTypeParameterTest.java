@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TypeReferenceToAnotherTypeReference2Test {
+public class TypeReferenceToAnotherTypeReferenceAsTypeParameterTest {
 
     @RequiresTypeParameter("T")
     @RequiresTypeParameter(value = "U", lowerBound = "Collection<T>")
