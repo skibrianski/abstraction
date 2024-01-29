@@ -4,6 +4,7 @@ import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +46,11 @@ public class TypeValidator {
                         (Class<?>) implementedType,
                         (ParameterizedType) requiredType
                 );
+            } else if (requiredType instanceof WildcardType) {
+                return isAssignableFromWildcardTypeToClass(
+                        (Class<?>) implementedType,
+                        (WildcardType) requiredType
+                );
             } else if (requiredType instanceof Class<?>) {
                 return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
             } else {
@@ -56,6 +62,23 @@ public class TypeValidator {
             return isAssignableArray((GenericArrayType) implementedType, requiredType);
         }
         throw new RuntimeException("unimplemented");
+    }
+
+    public static boolean isAssignableFromWildcardTypeToClass(
+            Class<?> implementedType,
+            WildcardType requiredWildcardType
+    ) {
+        for (java.lang.reflect.Type lowerBound : requiredWildcardType.getLowerBounds()) {
+            if (!isAssignableType(implementedType, lowerBound)) {
+                return false;
+            }
+        }
+        for (java.lang.reflect.Type upperBound : requiredWildcardType.getUpperBounds()) {
+            if (!isAssignableType(upperBound, implementedType)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>

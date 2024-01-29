@@ -5,6 +5,7 @@ import io.github.skibrianski.abstraction.util.StringTruncator;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,14 +20,47 @@ public class TypeParameterParser {
     }
 
     public Type parse(String typeString) {
-        int nextOpen = typeString.indexOf('<');
+        String trimmedTypeString = typeString.trim();
+        // TODO: support multiple extends / supers
+        boolean isExtends = false;
+        boolean isSuper = false;
+        if (trimmedTypeString.startsWith("?")) {
+            int pos = 1;
+            while (trimmedTypeString.charAt(pos) == ' ') {
+                pos++;
+            }
+            isExtends = trimmedTypeString.substring(pos).startsWith("extends");
+            if (isExtends) {
+                trimmedTypeString = trimmedTypeString.substring(pos + "extends".length()).trim();
+            } else {
+                isSuper = trimmedTypeString.substring(pos).startsWith("super");
+                if (isSuper) {
+                    trimmedTypeString = trimmedTypeString.substring(pos + "super".length()).trim();
+                }
+            }
+
+            if (!isExtends && !isSuper) {
+                // TODO: write a TypeParameterParserTest test for this
+                throw new AbstractionException.UsageException("unsupported wildcard syntax: " + typeString);
+            }
+        }
+
+        int nextOpen = trimmedTypeString.indexOf('<');
         if (nextOpen == -1) {
-            Type resolvedType = typeNameResolver.resolve(typeString);
+            Type resolvedType = typeNameResolver.resolve(trimmedTypeString);
             if (resolvedType != null) {
+                if (isExtends) {
+                    // TODO: write a TypeParameterParserTest test for this
+                    return new WildcardTypeImpl(new Type[]{resolvedType}, new Type[]{});
+                }
+                if (isSuper) {
+                    // TODO: write a TypeParameterParserTest test for this
+                    return new WildcardTypeImpl(new Type[]{}, new Type[]{resolvedType});
+                }
                 return resolvedType;
             } else {
                 try {
-                    return classForName(typeString);
+                    return classForName(trimmedTypeString);
                 } catch (ClassNotFoundException e) {
                     throw new AbstractionException.UsageException(
                             "cannot find class: " + typeString + "."
@@ -38,13 +72,13 @@ public class TypeParameterParser {
             }
         }
 
-        StringTruncator parameterNameTruncator = new StringTruncator(typeString)
+        StringTruncator parameterNameTruncator = new StringTruncator(trimmedTypeString)
                 .truncateOnce("...")
                 .truncateAll("[]");
         String baseParameterName = parameterNameTruncator.value();
         int arrayLevels = parameterNameTruncator.truncationCount();
 
-        int parameterClosePos = typeString.lastIndexOf('>');
+        int parameterClosePos = trimmedTypeString.lastIndexOf('>');
         if (parameterClosePos + 1 != baseParameterName.length()) {
             throw new AbstractionException.UsageException(
                     "unsupported characters between type parameters and array indicators in: " + typeString
@@ -74,6 +108,14 @@ public class TypeParameterParser {
         while (arrayLevels > 0) {
             returnType = new GenericArrayTypeImpl(returnType);
             arrayLevels--;
+        }
+        if (isExtends) {
+            // TODO: write a TypeParameterParserTest test for this
+            return new WildcardTypeImpl(new Type[]{returnType}, new Type[]{});
+        }
+        if (isSuper) {
+            // TODO: write a TypeParameterParserTest test for this
+            return new WildcardTypeImpl(new Type[]{}, new Type[]{returnType});
         }
         return returnType;
     }
@@ -159,6 +201,36 @@ public class TypeParameterParser {
         @Override
         public String toString() {
             return "GenericArrayTypeImpl{genericComponentType=" + genericComponentType + "}";
+        }
+    }
+
+    public static class WildcardTypeImpl implements WildcardType {
+
+        private final Type[] lowerBounds;
+        private final Type[] upperBounds;
+
+        public WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
+            this.lowerBounds = lowerBounds;
+            this.upperBounds = upperBounds;
+        }
+
+        @Override
+        public Type[] getLowerBounds() {
+            return lowerBounds;
+        }
+
+        @Override
+        public Type[] getUpperBounds() {
+            return upperBounds;
+        }
+
+        @Override
+        public String toString() {
+            return "WildcardTypeImpl{lowerBounds=" +
+                    Arrays.toString(lowerBounds) +
+                    ", upperBounds=" +
+                    Arrays.toString(upperBounds) +
+                    "}";
         }
     }
 }

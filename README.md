@@ -25,9 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- test for / support type constraints that extend other types:
-    eg     @RequiresTypeParameter(value = "U", lowerBound = "Collection<? extends T>")
-    cf     Foo<T extends Number, U extends Collection<? extends T>>
+- test for / support type constraints that extend/super multiple other types
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
 - do wildcard types and boxing interact negatively? are there other edge cases with boxing?
