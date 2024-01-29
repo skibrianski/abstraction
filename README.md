@@ -10,8 +10,10 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## caveats
 
-- the parent class has no indication that these child classes exist. in the above example, you will not
-  be able to call sum() without interrogating the type and casting it.
+- the parent class has no indication that these child classes exist. this means the usual best-practice of
+  storing variables to an abstract type will cause problems - in the above example, you would not be able to
+  call sum() without interrogating the type and casting it. generally, the best practice here is to store
+  generated types with the most concrete type possible to avoid this issue. often, this is not ideal.
 - refactoring cannot be done automatically in an IDE
 - if classes are not found, use full class paths to load. there are limitations to what short class names
   can be loaded automatically.
