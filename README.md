@@ -25,7 +25,8 @@ but additionally allows for some tricks that interfaces cannot provide:
 - do wildcard types and boxing interact? are there other edge cases with boxing?
 - test for / support type constraints that reference other types, eg Foo<T extends Number, U extends T>
 - think: how precise do we want to be about boxing? when T = int.class, should you be able to implement
-   `T sum(List<T> list)` with `Integer sum(List<T> list)` ? what is our current behavior?
+  `T sum(List<T> list)` with `Integer sum(List<T> list)` ? or only with return type `int`? what is the
+  current behavior?
 
 ## questions
 
