@@ -10,6 +10,10 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## caveats
 
+- order matters when declaring @RequiresTypeParameter. in other words,
+    @HasTypeParameter("T")
+  has to appear before:
+    @RequiresTypeParameter(value = "U", lowerBound = "Collection<T>")
 - the parent class gives java no indication that these child classes have the methods specified. this means the
   common practice of storing variables to an abstract type will cause problems (eg List<String> l = new ArrayList<>();)
   in the above example, you would not be able to call sum() without interrogating the type and casting it. generally,
