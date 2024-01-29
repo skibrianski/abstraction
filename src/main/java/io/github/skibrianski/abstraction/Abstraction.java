@@ -271,7 +271,7 @@ public final class Abstraction {
             if (classInfo.isInnerClass()) {
                 for (ClassInfo outerClassInfo : classInfo.getOuterClasses()) {
                     classes.add(outerClassInfo.loadClass());
-                    // include sibling classes, eg A$B gets A (the outer class) and any A$C and A$D as well.
+                    // include sibling classes, e.g. A$B gets A (the outer class) and any A$C and A$D as well.
                     for (ClassInfo innerClassInfo : outerClassInfo.getInnerClasses()) {
                         classes.add(innerClassInfo.loadClass());
                     }
