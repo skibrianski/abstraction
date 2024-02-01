@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class WildcardLowerBoundTest {
 
-    @RequiresTypeParameter(value = "T", lowerBound = {"Number"})
+    @RequiresTypeParameter(value = "T", extending = {"Number"})
     @RequiresChildMethod(
             returnType = @Type("T"),
             argumentTypes = {@Type("T"), @Type("T")},

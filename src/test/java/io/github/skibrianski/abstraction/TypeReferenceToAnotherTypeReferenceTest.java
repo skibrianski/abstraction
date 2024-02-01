@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class TypeReferenceToAnotherTypeReferenceTest {
 
     @RequiresTypeParameter("T")
-    @RequiresTypeParameter(value = "U", lowerBound = "T")
+    @RequiresTypeParameter(value = "U", extending = "T")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("U")},

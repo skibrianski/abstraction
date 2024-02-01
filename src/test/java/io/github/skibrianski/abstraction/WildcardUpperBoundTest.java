@@ -8,7 +8,7 @@ import java.time.temporal.Temporal;
 
 public class WildcardUpperBoundTest {
 
-    @RequiresTypeParameter(value = "T", upperBound = {"LocalTime"})
+    @RequiresTypeParameter(value = "T", superOf = {"LocalTime"})
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},

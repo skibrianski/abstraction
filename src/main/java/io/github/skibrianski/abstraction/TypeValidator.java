@@ -68,6 +68,7 @@ public class TypeValidator {
             Class<?> implementedType,
             WildcardType requiredWildcardType
     ) {
+        // TODO: are these names correct?
         for (java.lang.reflect.Type lowerBound : requiredWildcardType.getLowerBounds()) {
             if (!isAssignableType(implementedType, lowerBound)) {
                 return false;

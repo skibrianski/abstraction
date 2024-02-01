@@ -13,7 +13,7 @@ public class ComparableTest {
     }
 
 
-    @RequiresTypeParameter(value = "T", lowerBound = "Comparable<T>")
+    @RequiresTypeParameter(value = "T", extending = "Comparable<T>")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},

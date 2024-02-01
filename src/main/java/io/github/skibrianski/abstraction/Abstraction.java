@@ -108,23 +108,23 @@ public final class Abstraction {
             java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters[pos];
             RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
 
-            for (String upperBoundString : requiredTypeParameter.upperBound()) {
-                Type upperBound = typeNameResolver.getTypeParameterParser().parse(upperBoundString);
-                if (!TypeValidator.isAssignableType(upperBound, implementedTypeParameter)) {
+            for (String superTypeString : requiredTypeParameter.superOf()) {
+                Type superTypeBound = typeNameResolver.getTypeParameterParser().parse(superTypeString);
+                if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
                     throw new AbstractionException.TypeParameterViolatesBounds(
                             "implementation " + implementationName
-                                    + " does not fulfill upper bound: " + upperBound
+                                    + " does not fulfill super constraint: " + superTypeBound
                                     + " with implemented type; " + implementedTypeParameter
                     );
                 }
             }
 
-            for (String lowerBoundString : requiredTypeParameter.lowerBound()) {
-                Type lowerBound = typeNameResolver.getTypeParameterParser().parse(lowerBoundString);
-                if (!TypeValidator.isAssignableType(implementedTypeParameter, lowerBound)) {
+            for (String extendingTypeString : requiredTypeParameter.extending()) {
+                Type extendingTypeBound = typeNameResolver.getTypeParameterParser().parse(extendingTypeString);
+                if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
                     throw new AbstractionException.TypeParameterViolatesBounds(
                             "implementation " + implementationName
-                                    + " does not fulfill lower bound: " + lowerBound
+                                    + " does not extend: " + extendingTypeBound
                                     + " with implemented type; " + implementedTypeParameter
                     );
                 }

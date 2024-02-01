@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TypeReferenceToAnotherTypeReferenceAsArrayTypeParameterTest {
     @RequiresTypeParameter("T")
-    @RequiresTypeParameter(value = "U", lowerBound = "Collection<T[]>")
+    @RequiresTypeParameter(value = "U", extending = "Collection<T[]>")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("U")},

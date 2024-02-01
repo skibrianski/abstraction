@@ -15,8 +15,8 @@ public class WildcardComplexTest {
 
     @RequiresTypeParameter(
             value = "T",
-            lowerBound = {"AGrandParent", "BParent"},
-            upperBound = {"AChild"}
+            extending = {"AGrandParent", "BParent"},
+            superOf = {"AChild"}
     )
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),

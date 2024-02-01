@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTest {
 
     @RequiresTypeParameter("T")
-    @RequiresTypeParameter(value = "U", lowerBound = "Collection<? extends T>")
+    @RequiresTypeParameter(value = "U", extending = "Collection<? extends T>")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("U")},

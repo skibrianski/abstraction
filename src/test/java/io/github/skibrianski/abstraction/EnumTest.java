@@ -9,7 +9,7 @@ public class EnumTest {
         A, B, C;
     }
 
-    @RequiresTypeParameter(value = "T", lowerBound = "Enum<T>")
+    @RequiresTypeParameter(value = "T", extending = "Enum<T>")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T")},

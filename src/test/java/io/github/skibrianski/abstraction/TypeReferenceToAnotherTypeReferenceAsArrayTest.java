@@ -3,13 +3,10 @@ package io.github.skibrianski.abstraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 public class TypeReferenceToAnotherTypeReferenceAsArrayTest {
 
     @RequiresTypeParameter("T")
-    @RequiresTypeParameter(value = "U", lowerBound = "T[][]")
+    @RequiresTypeParameter(value = "U", extending = "T[][]")
     @RequiresChildMethod(
             returnType = @Type(ofClass = void.class),
             argumentTypes = {@Type("T"), @Type("U")},
