@@ -68,14 +68,13 @@ public class TypeValidator {
             Class<?> implementedType,
             WildcardType requiredWildcardType
     ) {
-        // TODO: are these names correct?
-        for (java.lang.reflect.Type lowerBound : requiredWildcardType.getLowerBounds()) {
-            if (!isAssignableType(implementedType, lowerBound)) {
+        for (java.lang.reflect.Type upperBound : requiredWildcardType.getUpperBounds()) {
+            if (!isAssignableType(implementedType, upperBound)) {
                 return false;
             }
         }
-        for (java.lang.reflect.Type upperBound : requiredWildcardType.getUpperBounds()) {
-            if (!isAssignableType(upperBound, implementedType)) {
+        for (java.lang.reflect.Type lowerBound : requiredWildcardType.getLowerBounds()) {
+            if (!isAssignableType(lowerBound, implementedType)) {
                 return false;
             }
         }

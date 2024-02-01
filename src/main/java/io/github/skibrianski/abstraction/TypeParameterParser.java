@@ -51,11 +51,11 @@ public class TypeParameterParser {
             if (resolvedType != null) {
                 if (isExtends) {
                     // TODO: write a TypeParameterParserTest test for this
-                    return new WildcardTypeImpl(new Type[]{resolvedType}, new Type[]{});
+                    return new WildcardTypeImpl(new Type[]{}, new Type[]{resolvedType});
                 }
                 if (isSuper) {
                     // TODO: write a TypeParameterParserTest test for this
-                    return new WildcardTypeImpl(new Type[]{}, new Type[]{resolvedType});
+                    return new WildcardTypeImpl(new Type[]{resolvedType}, new Type[]{});
                 }
                 return resolvedType;
             } else {
@@ -111,11 +111,11 @@ public class TypeParameterParser {
         }
         if (isExtends) {
             // TODO: write a TypeParameterParserTest test for this
-            return new WildcardTypeImpl(new Type[]{returnType}, new Type[]{});
+            return new WildcardTypeImpl(new Type[]{}, new Type[]{returnType});
         }
         if (isSuper) {
             // TODO: write a TypeParameterParserTest test for this
-            return new WildcardTypeImpl(new Type[]{}, new Type[]{returnType});
+            return new WildcardTypeImpl(new Type[]{returnType}, new Type[]{});
         }
         return returnType;
     }
