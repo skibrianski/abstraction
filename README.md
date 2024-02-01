@@ -25,8 +25,6 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- seems like i have lower and upper bound inverted in code using RequiresTypeParameter, super = lower, extends = upper
-    see https://docs.oracle.com/javase/tutorial/java/generics/lowerBounded.html
 - test for / support type constraints that extend/super multiple other types
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
