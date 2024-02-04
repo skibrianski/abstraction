@@ -5,6 +5,7 @@ import io.github.skibrianski.abstraction.util.StringTruncator;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.WildcardType;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -113,6 +114,13 @@ public class TypeNameResolver {
         }
 
         if (baseType instanceof GenericArrayType) {
+            if (arrayLevels > 0) {
+                throw new RuntimeException("unimplemented");
+            }
+            return baseType;
+        }
+
+        if (baseType instanceof WildcardType) {
             if (arrayLevels > 0) {
                 throw new RuntimeException("unimplemented");
             }
