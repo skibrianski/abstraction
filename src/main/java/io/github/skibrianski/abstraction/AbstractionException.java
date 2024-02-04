@@ -35,6 +35,16 @@ public class AbstractionException extends RuntimeException {
         }
     }
 
+    public static class UsageException extends AbstractionException {
+        public UsageException(String s) {
+            super(s);
+        }
+        public UsageException(String s, Exception cause) {
+            super(s, cause);
+        }
+    }
+
+    // TODO: define abstract TypeParameterException here
     public static class ExtraneousTypeParameterException extends AbstractionException {
         public ExtraneousTypeParameterException(String s) {
             super(s);
@@ -44,15 +54,6 @@ public class AbstractionException extends RuntimeException {
     public static class MissingTypeParameterException extends AbstractionException {
         public MissingTypeParameterException(String s) {
             super(s);
-        }
-    }
-
-    public static class UsageException extends AbstractionException {
-        public UsageException(String s) {
-            super(s);
-        }
-        public UsageException(String s, Exception cause) {
-            super(s, cause);
         }
     }
 
