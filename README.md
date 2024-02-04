@@ -25,8 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- do we need a new exception type or two to distinguish between type param violating bound and
-  argument/return type violating bound? no, that's TypeParameterViolatesBounds...
+- define abstract TypeParameterException & redefine the 3 related exceptions to extend it
 - test for / support type constraints that extend/super multiple other types
     (interfaces are limited to only one super, but probably no reason for us to be so constrained)
     not done: TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTest / TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest
