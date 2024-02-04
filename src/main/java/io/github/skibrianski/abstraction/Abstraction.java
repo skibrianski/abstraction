@@ -297,6 +297,7 @@ public final class Abstraction {
             RequiresChildMethod requiresChildMethod,
             TypeValidator typeValidator
     ) {
+        // TODO: provide a specific exception here when no name matches for convenience.
         return Arrays.stream(methods)
                 .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
                 .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))

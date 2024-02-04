@@ -1,8 +1,22 @@
 package io.github.skibrianski.abstraction;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.CharArrayReader;
+import java.io.CharArrayWriter;
+import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -96,6 +110,15 @@ public class BuiltInTypes extends TypeNameResolver {
                 StringBuilder.class,
                 Void.class,
                 void.class,
+
+                // java.io
+                Closeable.class,
+                File.class,
+                Serializable.class,
+
+                // java.nio.file
+                FileSystem.class,
+                Path.class,
 
                 // java.math
                 BigDecimal.class,
