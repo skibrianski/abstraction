@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalTime;
 import java.time.temporal.Temporal;
 
-public class WildcardUpperBoundTest {
+public class WildcardSuperTest {
 
     @RequiresTypeParameter(value = "T", superOf = {"LocalTime"})
     @RequiresChildMethod(

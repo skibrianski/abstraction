@@ -3,7 +3,7 @@ package io.github.skibrianski.abstraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class WildcardLowerBoundTest {
+public class WildcardExtendsTest {
 
     @RequiresTypeParameter(value = "T", extending = {"Number"})
     @RequiresChildMethod(
