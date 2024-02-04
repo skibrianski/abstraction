@@ -48,7 +48,7 @@ public class MultipleTypeVariableUseTest {
     @Test
     void test_invalid_badFirstArgumentType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(BadArgument1Type.class)
         );
     }
@@ -63,7 +63,7 @@ public class MultipleTypeVariableUseTest {
     @Test
     void test_invalid_badSecondArgumentType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(BadArgument2Type.class)
         );
     }

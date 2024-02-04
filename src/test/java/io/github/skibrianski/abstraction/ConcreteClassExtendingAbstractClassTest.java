@@ -29,7 +29,7 @@ public class ConcreteClassExtendingAbstractClassTest {
     @Test
     void test_invalid() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

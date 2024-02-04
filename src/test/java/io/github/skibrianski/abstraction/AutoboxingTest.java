@@ -37,7 +37,7 @@ public class AutoboxingTest {
     @Test
     void test_invalid_wrongTypes() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

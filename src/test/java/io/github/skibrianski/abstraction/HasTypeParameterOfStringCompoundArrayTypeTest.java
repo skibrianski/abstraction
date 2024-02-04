@@ -38,7 +38,7 @@ public class HasTypeParameterOfStringCompoundArrayTypeTest {
     @Test
     void test_invalid_wrongTypeParameter() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(InvalidWrongTypeParameter.class)
         );
     }
@@ -53,7 +53,7 @@ public class HasTypeParameterOfStringCompoundArrayTypeTest {
     @Test
     void test_invalid_wrongBaseType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(InvalidWrongBaseType.class)
         );
     }

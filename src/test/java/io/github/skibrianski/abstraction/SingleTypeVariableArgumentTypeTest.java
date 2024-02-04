@@ -54,7 +54,7 @@ public class SingleTypeVariableArgumentTypeTest {
     @Test
     void test_invalid_doesNotMatchTypeParameter() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongArgumentType.class)
         );
     }

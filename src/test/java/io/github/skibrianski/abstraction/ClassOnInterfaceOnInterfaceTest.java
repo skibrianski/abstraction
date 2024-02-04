@@ -34,7 +34,7 @@ public class ClassOnInterfaceOnInterfaceTest {
     void test_invalid_withEmptyIntermediateAndEmptyChild() {
         Assertions.assertDoesNotThrow(() -> Abstraction.check(EmptyIntermediate.class));
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(EmptyChildOfEmptyIntermediate.class)
         );
     }
@@ -88,7 +88,7 @@ public class ClassOnInterfaceOnInterfaceTest {
     void test_invalid_missingFirstOfTwoRequirements() {
         Assertions.assertDoesNotThrow(() -> Abstraction.check(IntermediateWithRequirements.class));
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(InvalidMissingFirstOfTwoRequirements.class)
         );
     }
@@ -103,7 +103,7 @@ public class ClassOnInterfaceOnInterfaceTest {
     void test_invalid_missingSecondOfTwoRequirements() {
         Assertions.assertDoesNotThrow(() -> Abstraction.check(IntermediateWithRequirements.class));
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(InvalidMissingSecondOfTwoRequirements.class)
         );
     }

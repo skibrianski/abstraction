@@ -53,7 +53,7 @@ public class ObjectTest {
     @Test
     void test_invalid_noMethod() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(NoMethodClass.class)
         );
     }
@@ -81,7 +81,7 @@ public class ObjectTest {
     @Test
     void test_invalid_missingArgument() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(MissingArgumentClass.class)
         );
     }
@@ -95,7 +95,7 @@ public class ObjectTest {
     @Test
     void test_invalid_extraArgument() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(ExtraArgumentClass.class)
         );
     }
@@ -109,7 +109,7 @@ public class ObjectTest {
     @Test
     void test_invalid_wrongArgumentType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongArgumentTypeClass.class)
         );
     }

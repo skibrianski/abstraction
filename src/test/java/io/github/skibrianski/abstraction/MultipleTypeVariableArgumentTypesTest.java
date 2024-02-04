@@ -50,7 +50,7 @@ public class MultipleTypeVariableArgumentTypesTest {
     @Test
     void test_invalid_firstParameterIsIncorrect() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(FirstParameterIsIncorrect.class)
         );
     }
@@ -64,7 +64,7 @@ public class MultipleTypeVariableArgumentTypesTest {
     @Test
     void test_invalid_secondParameterIsIncorrect() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(SecondParameterIsIncorrect.class)
         );
     }
@@ -78,7 +78,7 @@ public class MultipleTypeVariableArgumentTypesTest {
     @Test
     void test_invalid_extraParameter() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(ExtraParameter.class)
         );
     }

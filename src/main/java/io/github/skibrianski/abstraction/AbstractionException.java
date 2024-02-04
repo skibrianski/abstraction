@@ -8,12 +8,33 @@ public class AbstractionException extends RuntimeException {
         super(s, cause);
     }
 
-    public static class ClashingReturnTypeException extends AbstractionException {
+
+    public abstract static class NotCompletedException extends AbstractionException {
+        public NotCompletedException(String s) {
+            super(s);
+        }
+    }
+    public static class MissingRequiredTypeParameter extends NotCompletedException {
+        public MissingRequiredTypeParameter(String s) {
+            super(s);
+        }
+    }
+    public static class NoMethodWithMatchingName extends NotCompletedException {
+        public NoMethodWithMatchingName(String s) {
+            super(s);
+        }
+    }
+    public static class ClashingArgumentTypeException extends NotCompletedException {
+        public ClashingArgumentTypeException(String s) {
+            super(s);
+        }
+    }
+    public static class ClashingReturnTypeException extends NotCompletedException {
         public ClashingReturnTypeException(String s) {
             super(s);
         }
-
     }
+
     public static class ExtraneousTypeParameterException extends AbstractionException {
         public ExtraneousTypeParameterException(String s) {
             super(s);
@@ -22,12 +43,6 @@ public class AbstractionException extends RuntimeException {
 
     public static class MissingTypeParameterException extends AbstractionException {
         public MissingTypeParameterException(String s) {
-            super(s);
-        }
-    }
-
-    public static class NotCompletedException extends AbstractionException {
-        public NotCompletedException(String s) {
             super(s);
         }
     }

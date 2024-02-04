@@ -32,7 +32,7 @@ public class LongClassNameTest {
     @Test
     void test_invalid_wrongPackage() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

@@ -61,7 +61,7 @@ public class ParameterizedArrayTypeTest {
     @Test
     void test_invalid_notArray() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(NotArray.class)
         );
     }
@@ -76,7 +76,7 @@ public class ParameterizedArrayTypeTest {
     @Test
     void test_invalid_wrongArrayType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongArrayType.class)
         );
     }

@@ -29,7 +29,7 @@ public class ClassOnInterfaceTest {
     @Test
     void test_invalid_unfulfilled() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(Empty.class)
         );
     }

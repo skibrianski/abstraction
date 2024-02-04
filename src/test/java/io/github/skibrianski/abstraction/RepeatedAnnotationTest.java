@@ -41,7 +41,7 @@ public class RepeatedAnnotationTest {
     @Test
     void test_invalid_noIntSupplier() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(ClassWithoutIntSupplier.class)
         );
     }
@@ -55,7 +55,7 @@ public class RepeatedAnnotationTest {
     @Test
     void test_invalid_noStringSupplier() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(ClassWithoutStringSupplier.class)
         );
     }

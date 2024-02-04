@@ -28,7 +28,7 @@ public class VarArgsTest {
     @Test
     void test_invalid() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(InvalidClass.class)
         );
     }

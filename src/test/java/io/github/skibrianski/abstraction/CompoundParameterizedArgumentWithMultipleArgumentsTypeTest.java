@@ -37,7 +37,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongBaseType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongBaseType.class)
         );
     }
@@ -51,7 +51,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongFirstParameterType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongFirstParameterType.class)
         );
     }
@@ -65,7 +65,7 @@ public class CompoundParameterizedArgumentWithMultipleArgumentsTypeTest {
     @Test
     void test_invalid_wrongSecondParameterType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongSecondParameterType.class)
         );
     }

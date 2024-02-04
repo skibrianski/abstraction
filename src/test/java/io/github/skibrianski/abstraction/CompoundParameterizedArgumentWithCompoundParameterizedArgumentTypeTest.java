@@ -37,7 +37,7 @@ public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeT
     @Test
     void test_invalid_wrongBaseType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongBaseType.class)
         );
     }
@@ -51,7 +51,7 @@ public class CompoundParameterizedArgumentWithCompoundParameterizedArgumentTypeT
     @Test
     void test_invalid_wrongArgumentType() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.ClashingArgumentTypeException.class,
                 () -> Abstraction.check(WrongParameterType.class)
         );
     }

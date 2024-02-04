@@ -42,7 +42,7 @@ public class PrimitiveTest {
     @Test
     void test_invalid_missingMethod() {
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.NoMethodWithMatchingName.class,
                 () -> Abstraction.check(InvalidEmpty.class)
         );
     }

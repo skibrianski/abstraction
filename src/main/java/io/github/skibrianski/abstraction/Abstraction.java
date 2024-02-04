@@ -208,24 +208,33 @@ public final class Abstraction {
                 typeNameResolver
         );
 
-        Method[] methods = implementation.getMethods();
         for (RequiresChildMethod requiresChildMethod : requiresChildMethodAnnotations) {
             // for both abstract and concrete, if arguments & name match, return type must as well
             // or else "attempting to use incompatible return type"
-            List<Method> methodsMatchingNameAndArguments = methodsMatchingNameAndArguments(
-                    methods,
-                    requiresChildMethod,
-                    typeValidator
-            );
+            boolean isConcrete = isConcrete(implementation);
 
-            if (methodsMatchingNameAndArguments.size() > 1) {
-                // TODO: think: is this actually possible?
-                throw new RuntimeException(
-                        "internal error: i didn't think this was possible. " + methodsMatchingNameAndArguments
+            List<Method> methodsWithMatchingName = Arrays.stream(implementation.getMethods())
+                    .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
+                    .collect(Collectors.toList());
+            if (methodsWithMatchingName.isEmpty() && isConcrete) {
+                throw new AbstractionException.NoMethodWithMatchingName(
+                        "no method matching name " + requiresChildMethod.methodName()
+                                + " available in implementation " + implementation.getName()
                 );
             }
-            if (isConcrete(implementation) && methodsMatchingNameAndArguments.isEmpty()) {
-                throw new AbstractionException.NotCompletedException(
+            List<Method> methodsWithMatchingNameAndArguments = methodsWithMatchingName.stream()
+                    .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
+                    .collect(Collectors.toList());
+
+            if (methodsWithMatchingNameAndArguments.size() > 1) {
+                // TODO: think: is this actually possible?
+                throw new RuntimeException(
+                        "internal error: i didn't think this was possible. " + methodsWithMatchingNameAndArguments
+                );
+            }
+            if (isConcrete && methodsWithMatchingNameAndArguments.isEmpty()) {
+                // TODO: provide more detail
+                throw new AbstractionException.ClashingArgumentTypeException(
                         "implementation " + implementation.getName()
                                 + " does not implement abstraction method: "
                                 + RequiresChildMethod.Util.stringify(requiresChildMethod)
@@ -233,10 +242,10 @@ public final class Abstraction {
                 );
             }
 
-            if (methodsMatchingNameAndArguments.size() == 1) {
+            if (methodsWithMatchingNameAndArguments.size() == 1) {
                 if (
                         !typeValidator.isAssignableType(
-                                methodsMatchingNameAndArguments.get(0).getGenericReturnType(),
+                                methodsWithMatchingNameAndArguments.get(0).getGenericReturnType(),
                                 requiresChildMethod.returnType()
                         )
                 ) {
@@ -290,18 +299,6 @@ public final class Abstraction {
     private static boolean isConcrete(Class<?> implementation) {
         int modifiers = implementation.getModifiers();
         return !(Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers));
-    }
-
-    private static List<Method> methodsMatchingNameAndArguments(
-            Method[] methods,
-            RequiresChildMethod requiresChildMethod,
-            TypeValidator typeValidator
-    ) {
-        // TODO: provide a specific exception here when no name matches for convenience.
-        return Arrays.stream(methods)
-                .filter(m -> m.getName().equals(requiresChildMethod.methodName()))
-                .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
-                .collect(Collectors.toList());
     }
 }
 

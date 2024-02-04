@@ -17,7 +17,7 @@ public class TypeNameResolverTest {
         Assertions.assertNull(typeNameResolver.resolve(somethingElse));
         Assertions.assertEquals(int.class, typeNameResolver.resolve(typeName));
         Assertions.assertThrows(
-                AbstractionException.NotCompletedException.class,
+                AbstractionException.MissingRequiredTypeParameter.class,
                 () -> typeNameResolver.mustResolve(somethingElse)
         );
         Assertions.assertEquals(int.class, typeNameResolver.mustResolve(typeName));

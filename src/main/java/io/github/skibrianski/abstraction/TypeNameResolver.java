@@ -84,12 +84,12 @@ public class TypeNameResolver {
             }
 
             if (baseParameterName.equals(typeString)) {
-                throw new AbstractionException.NotCompletedException(
+                throw new AbstractionException.MissingRequiredTypeParameter(
                         "cannot find type parameter: " + baseParameterName // TODO: more detail
                 );
             } else {
                  // TODO: test coverage
-                throw new AbstractionException.NotCompletedException(
+                throw new AbstractionException.MissingRequiredTypeParameter(
                         "cannot find base type parameter: " + baseParameterName // TODO: more detail
                                 + " for parameter: " + typeString
                 );

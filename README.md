@@ -25,6 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
+- fix HasTypeParameterOfStringCompoundTypeTest
 - test for / support type constraints that extend/super multiple other types
     (interfaces are limited to only one super, but probably no reason for us to be so constrained)
     not done: TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTest / TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest
