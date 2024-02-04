@@ -111,7 +111,7 @@ public final class Abstraction {
             for (String superTypeString : requiredTypeParameter.superOf()) {
                 Type superTypeBound = typeNameResolver.getTypeParameterParser().parse(superTypeString);
                 if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
-                    throw new AbstractionException.TypeParameterViolatesBounds(
+                    throw new AbstractionException.TypeParameterViolatesBoundsException(
                             "implementation " + implementationName
                                     + " does not fulfill super constraint: " + superTypeBound
                                     + " with implemented type; " + implementedTypeParameter
@@ -122,7 +122,7 @@ public final class Abstraction {
             for (String extendingTypeString : requiredTypeParameter.extending()) {
                 Type extendingTypeBound = typeNameResolver.getTypeParameterParser().parse(extendingTypeString);
                 if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
-                    throw new AbstractionException.TypeParameterViolatesBounds(
+                    throw new AbstractionException.TypeParameterViolatesBoundsException(
                             "implementation " + implementationName
                                     + " does not extend: " + extendingTypeBound
                                     + " with implemented type; " + implementedTypeParameter

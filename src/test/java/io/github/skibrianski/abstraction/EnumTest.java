@@ -35,7 +35,7 @@ public class EnumTest {
     @Test
     void test_invalid_wrongArgumentType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

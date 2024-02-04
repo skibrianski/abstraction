@@ -45,7 +45,7 @@ public class TypeReferenceToAnotherTypeReferenceTest {
     @Test
     void test_invalid_doesNotExtend() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongU.class)
         );
     }

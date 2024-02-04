@@ -43,7 +43,7 @@ public class WildcardComplexTest {
     @Test
     void test_invalid_failsLowerBound() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidFailsLowerBound.class)
         );
     }
@@ -56,7 +56,7 @@ public class WildcardComplexTest {
     @Test
     void test_invalid_failsUpperBound() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidFailsUpperBound.class)
         );
     }

@@ -36,7 +36,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTypeParameterTest {
     @Test
     void test_invalid_notArray() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidNotArray.class)
         );
     }
@@ -50,7 +50,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTypeParameterTest {
     @Test
     void test_invalid_wrongArrayDimension() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongArrayDimension.class)
         );
     }
@@ -64,7 +64,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTypeParameterTest {
     @Test
     void test_invalid_wrongScalarType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongTypeParameter.class)
         );
     }
@@ -78,7 +78,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTypeParameterTest {
     @Test
     void test_invalid_wrongRawType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongRawType.class)
         );
     }

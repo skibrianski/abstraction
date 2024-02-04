@@ -57,8 +57,8 @@ public class AbstractionException extends RuntimeException {
         }
     }
 
-    public static class TypeParameterViolatesBounds extends AbstractionException {
-        public TypeParameterViolatesBounds(String s) {
+    public static class TypeParameterViolatesBoundsException extends AbstractionException {
+        public TypeParameterViolatesBoundsException(String s) {
             super(s);
         }
     }

@@ -47,7 +47,7 @@ public class WildcardExtendsTest {
     @Test
     void test_invalid_violatedTypeConstraint() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

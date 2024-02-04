@@ -34,7 +34,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTest {
     @Test
     void test_invalid_tooManyDimension() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidTooManyDimensions.class)
         );
     }
@@ -48,7 +48,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTest {
     @Test
     void test_invalid_tooFewDimension() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidTooFewDimensions.class)
         );
     }
@@ -62,7 +62,7 @@ public class TypeReferenceToAnotherTypeReferenceAsArrayTest {
     @Test
     void test_invalid_wrongScalarType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongScalarType.class)
         );
     }

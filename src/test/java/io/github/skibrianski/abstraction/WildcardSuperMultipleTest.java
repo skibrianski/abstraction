@@ -37,7 +37,7 @@ public class WildcardSuperMultipleTest {
     @Test
     void test_valid_exactMatch() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(Invalid.class)
         );
     }

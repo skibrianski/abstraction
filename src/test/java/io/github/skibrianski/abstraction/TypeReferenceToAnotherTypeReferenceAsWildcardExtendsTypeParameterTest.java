@@ -37,7 +37,7 @@ public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTe
     @Test
     void test_invalid_wrongScalarType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongTypeParameter.class)
         );
     }
@@ -51,7 +51,7 @@ public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTe
     @Test
     void test_invalid_wrongRawType() {
         Assertions.assertThrows(
-                AbstractionException.TypeParameterViolatesBounds.class,
+                AbstractionException.TypeParameterViolatesBoundsException.class,
                 () -> Abstraction.check(InvalidWrongRawType.class)
         );
     }
