@@ -8,6 +8,14 @@ public class AbstractionException extends RuntimeException {
         super(s, cause);
     }
 
+    public static class UsageException extends AbstractionException {
+        public UsageException(String s) {
+            super(s);
+        }
+        public UsageException(String s, Exception cause) {
+            super(s, cause);
+        }
+    }
 
     public abstract static class NotCompletedException extends AbstractionException {
         public NotCompletedException(String s) {
@@ -35,29 +43,24 @@ public class AbstractionException extends RuntimeException {
         }
     }
 
-    public static class UsageException extends AbstractionException {
-        public UsageException(String s) {
+    public abstract static class TypeParameterException extends AbstractionException {
+        public TypeParameterException(String s) {
             super(s);
         }
-        public UsageException(String s, Exception cause) {
-            super(s, cause);
-        }
     }
-
-    // TODO: define abstract TypeParameterException here
-    public static class ExtraneousTypeParameterException extends AbstractionException {
+    public static class ExtraneousTypeParameterException extends TypeParameterException {
         public ExtraneousTypeParameterException(String s) {
             super(s);
         }
     }
 
-    public static class MissingTypeParameterException extends AbstractionException {
+    public static class MissingTypeParameterException extends TypeParameterException {
         public MissingTypeParameterException(String s) {
             super(s);
         }
     }
 
-    public static class TypeParameterViolatesBoundsException extends AbstractionException {
+    public static class TypeParameterViolatesBoundsException extends TypeParameterException {
         public TypeParameterViolatesBoundsException(String s) {
             super(s);
         }
