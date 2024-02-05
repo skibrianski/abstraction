@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -236,37 +237,46 @@ public final class Abstraction {
                 );
             }
 
-            if (methodsWithMatchingNameAndArguments.size() > 1) {
-                // TODO: this is possible:
-                //   interface Foo<T> { void method(T value); }
-                //   public static class FooImpl<T extends Number> implements Foo<T> {
-                //        @Override public void method(T value) { }
-                //    }
-                // in other words:
-                // @RequiresTypeParameter("T")
-                // @RequiresChildMethod(
-                //   returnType = @Type(ofClass = void.class),
-                //   argumentTypes = {@Type("T")},
-                //   methodName = "method"
-                // )
-                // @HasTypeParameter(name = "T", ofString = "? extends Number")
-                // public static class Valid implements WithMethod {
-                //   public void method(Integer input) { }
-                //   public void method(Double input) { }
-                // }
-                throw new RuntimeException(
-                        "internal error: i didn't think this was possible. " + methodsWithMatchingNameAndArguments
-                );
-            }
+//            if (methodsWithMatchingNameAndArguments.size() > 1) {
+//                // TODO: this is possible:
+//                //   interface Foo<T> { void method(T value); }
+//                //   public static class FooImpl<T extends Number> implements Foo<T> {
+//                //        @Override public void method(T value) { }
+//                //    }
+//                // in other words:
+//                // @RequiresTypeParameter("T")
+//                // @RequiresChildMethod(
+//                //   returnType = @Type(ofClass = void.class),
+//                //   argumentTypes = {@Type("T")},
+//                //   methodName = "method"
+//                // )
+//                // @HasTypeParameter(name = "T", ofString = "? extends Number")
+//                // public static class Valid implements WithMethod {
+//                //   public void method(Integer input) { }
+//                //   public void method(Double input) { }
+//                // }
+//                throw new RuntimeException(
+//                        "internal error: i didn't think this was possible. " + methodsWithMatchingNameAndArguments
+//                );
+//            }
 
-            // TODO: for loop instead
-            if (methodsWithMatchingNameAndArguments.size() == 1) {
-                if (
-                        !typeValidator.isAssignableType(
-                                methodsWithMatchingNameAndArguments.get(0).getGenericReturnType(),
-                                requiresChildMethod.returnType()
-                        )
-                ) {
+            Boolean hasMatchingReturnType = hasMatchingReturnType(
+                    methodsWithMatchingNameAndArguments,
+                    requiresChildMethod,
+                    typeValidator
+            );
+            if (isConcrete) {
+                if (!Objects.equals(Boolean.TRUE, hasMatchingReturnType)) {
+                    // TODO: distinguish message from that in the else block below
+                    throw new AbstractionException.ClashingReturnTypeException(
+                            "implementation " + implementation.getName()
+                                    + " has clashing return type for method: "
+                                    + RequiresChildMethod.Util.stringify(requiresChildMethod)
+                                    + " with type parameters: " + typeNameResolver
+                    );
+                }
+            } else {
+                if (Objects.equals(Boolean.FALSE, hasMatchingReturnType)) {
                     throw new AbstractionException.ClashingReturnTypeException(
                             "implementation " + implementation.getName()
                                     + " has clashing return type for method: "
@@ -275,7 +285,27 @@ public final class Abstraction {
                     );
                 }
             }
+
         }
+    }
+
+    // returns:
+    //   true = one or more positive match
+    //   null =
+    //   false = one or more clashing type
+    private static Boolean hasMatchingReturnType(
+            List<Method> methodsWithMatchingNameAndArguments,
+            RequiresChildMethod requiresChildMethod,
+            TypeValidator typeValidator
+    ) {
+        for (Method method : methodsWithMatchingNameAndArguments) {
+            if (typeValidator.isAssignableType(method.getGenericReturnType(), requiresChildMethod.returnType())) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return null;
     }
 
     // note: the context of this operation is limited to the scan result, so the scope of spamming is limited.
