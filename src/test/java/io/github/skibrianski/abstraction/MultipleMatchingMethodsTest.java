@@ -7,7 +7,7 @@ public class MultipleMatchingMethodsTest {
 
     @RequiresTypeParameter(value = "T")
     @RequiresChildMethod(
-            returnType = @Type(ofClass = void.class),
+            returnType = @Type("T"),
             argumentTypes = {@Type("T")},
             methodName = "method"
     )
@@ -16,35 +16,23 @@ public class MultipleMatchingMethodsTest {
     @HasTypeParameter(name = "T", ofString = "? extends Number")
     @ManualValidation
     public static class Valid implements WithMethod {
-        public void method(Integer input) { }
-        public void method(Double input) { }
+        public Integer method(Integer input) { return 3; }
+        public Double method(Double input) { return 3.; }
     }
     @Test
     void test_valid() {
         Assertions.assertDoesNotThrow(() -> Abstraction.check(Valid.class));
     }
 
-//    @ManualValidation
-//    public static class InvalidWrongReturnType implements WithTriple {
-//        public String triple(int input) {
-//            return "bob";
-//        }
-//    }
-//    @Test
-//    void test_invalid_wrongReturnType() {
-//        Assertions.assertThrows(
-//                AbstractionException.ClashingReturnTypeException.class,
-//                () -> Abstraction.check(InvalidWrongReturnType.class)
-//        );
-//    }
-//
-//    @ManualValidation
-//    public static class InvalidEmpty implements WithTriple { }
-//    @Test
-//    void test_invalid_missingMethod() {
-//        Assertions.assertThrows(
-//                AbstractionException.NoMethodWithMatchingName.class,
-//                () -> Abstraction.check(InvalidEmpty.class)
-//        );
-//    }
+    @HasTypeParameter(name = "T", ofString = "? extends Number")
+    @ManualValidation
+    public static class ValidWithNearMatch implements WithMethod {
+        public String method(String input) { return "three"; } // does not fulfill contract, but should not cause error
+        public Double method(Double input) { return 3.; } // fulfills contract
+    }
+    @Test
+    void test_valid_skipsNearMatch() {
+        Assertions.assertDoesNotThrow(() -> Abstraction.check(ValidWithNearMatch.class));
+    }
+
 }

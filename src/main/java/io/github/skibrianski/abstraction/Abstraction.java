@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -227,33 +226,24 @@ public final class Abstraction {
                     .filter(m -> typeValidator.hasAssignableArgumentTypes(m, requiresChildMethod.argumentTypes()))
                     .collect(Collectors.toList());
 
-            if (isConcrete && methodsWithMatchingNameAndArguments.isEmpty()) {
-                // TODO: provide more detail
-                throw new AbstractionException.ClashingArgumentTypeException(
-                        "implementation " + implementation.getName()
-                                + " does not implement abstraction method: "
-                                + RequiresChildMethod.Util.stringify(requiresChildMethod)
-                                + " with type parameters: " + typeNameResolver
-                );
-            }
-
-            Boolean hasMatchingReturnType = hasMatchingReturnType(
-                    methodsWithMatchingNameAndArguments,
-                    requiresChildMethod,
-                    typeValidator
-            );
-            if (isConcrete) {
-                if (!Objects.equals(Boolean.TRUE, hasMatchingReturnType)) {
-                    // TODO: distinguish message from that in the else block below
-                    throw new AbstractionException.ClashingReturnTypeException(
+            if (methodsWithMatchingNameAndArguments.isEmpty()) {
+                if (isConcrete) {
+                    // TODO: provide more detail
+                    throw new AbstractionException.ClashingArgumentTypeException(
                             "implementation " + implementation.getName()
-                                    + " has clashing return type for method: "
+                                    + " does not implement abstraction method: "
                                     + RequiresChildMethod.Util.stringify(requiresChildMethod)
                                     + " with type parameters: " + typeNameResolver
                     );
                 }
             } else {
-                if (Objects.equals(Boolean.FALSE, hasMatchingReturnType)) {
+                if (
+                        !hasMatchingReturnType(
+                                methodsWithMatchingNameAndArguments,
+                                requiresChildMethod,
+                                typeValidator
+                        )
+                ) {
                     throw new AbstractionException.ClashingReturnTypeException(
                             "implementation " + implementation.getName()
                                     + " has clashing return type for method: "
@@ -262,15 +252,11 @@ public final class Abstraction {
                     );
                 }
             }
-
         }
     }
 
-    // returns:
-    //   true = one or more positive match
-    //   null =
-    //   false = one or more clashing type
-    private static Boolean hasMatchingReturnType(
+    // TODO: write test where we have 2 methods, of which one has clashing return but one is correct
+    private static boolean hasMatchingReturnType(
             List<Method> methodsWithMatchingNameAndArguments,
             RequiresChildMethod requiresChildMethod,
             TypeValidator typeValidator
@@ -278,11 +264,9 @@ public final class Abstraction {
         for (Method method : methodsWithMatchingNameAndArguments) {
             if (typeValidator.isAssignableType(method.getGenericReturnType(), requiresChildMethod.returnType())) {
                 return true;
-            } else {
-                return false;
             }
         }
-        return null;
+        return false;
     }
 
     // note: the context of this operation is limited to the scan result, so the scope of spamming is limited.
