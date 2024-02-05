@@ -237,29 +237,6 @@ public final class Abstraction {
                 );
             }
 
-//            if (methodsWithMatchingNameAndArguments.size() > 1) {
-//                // TODO: this is possible:
-//                //   interface Foo<T> { void method(T value); }
-//                //   public static class FooImpl<T extends Number> implements Foo<T> {
-//                //        @Override public void method(T value) { }
-//                //    }
-//                // in other words:
-//                // @RequiresTypeParameter("T")
-//                // @RequiresChildMethod(
-//                //   returnType = @Type(ofClass = void.class),
-//                //   argumentTypes = {@Type("T")},
-//                //   methodName = "method"
-//                // )
-//                // @HasTypeParameter(name = "T", ofString = "? extends Number")
-//                // public static class Valid implements WithMethod {
-//                //   public void method(Integer input) { }
-//                //   public void method(Double input) { }
-//                // }
-//                throw new RuntimeException(
-//                        "internal error: i didn't think this was possible. " + methodsWithMatchingNameAndArguments
-//                );
-//            }
-
             Boolean hasMatchingReturnType = hasMatchingReturnType(
                     methodsWithMatchingNameAndArguments,
                     requiresChildMethod,
