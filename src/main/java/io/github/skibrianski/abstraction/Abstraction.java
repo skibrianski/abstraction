@@ -300,7 +300,8 @@ public final class Abstraction {
                     classes.add(innerClassInfo.loadClass());
                 }
             }
-            // TODO: interfaces that use this interface?
+            // if ClassGraph ever adds a method to search for interfaces using this interface, add it here.
+            // it does not presently have this feature
         }
         return classes;
     }
