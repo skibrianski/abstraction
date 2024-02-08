@@ -5,8 +5,6 @@ public interface TypeParameterToken {
 
     String asString();
 
-    boolean isVariable();
-
     static TypeParameterToken of(String string) {
         for (StaticToken staticToken : StaticToken.values()) {
             if (string.equals(staticToken.asString())) {
@@ -37,11 +35,6 @@ public interface TypeParameterToken {
         public String asString() {
             return string;
         }
-
-        @Override
-        public boolean isVariable() {
-            return false;
-        }
     }
 
     class Variable implements TypeParameterToken {
@@ -53,11 +46,6 @@ public interface TypeParameterToken {
         @Override
         public String asString() {
             return name;
-        }
-
-        @Override
-        public boolean isVariable() {
-            return true;
         }
 
         @Override
