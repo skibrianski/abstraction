@@ -53,8 +53,6 @@ public class TypeParameterParser2 {
     }
 
     public Type processWildcard() {
-        tokenStream.discard(1); // TypeParameterToken.StaticToken.WILDCARD("?")
-
         List<Type> extensions;
         List<Type> supers;
         if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.EXTENDS)) {
