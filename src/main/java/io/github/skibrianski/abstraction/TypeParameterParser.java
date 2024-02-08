@@ -39,7 +39,6 @@ public class TypeParameterParser {
             }
 
             if (!isExtends && !isSuper) {
-                // TODO: write a TypeParameterParserTest test for this
                 throw new AbstractionException.UsageException("unsupported wildcard syntax: " + typeString);
             }
         }

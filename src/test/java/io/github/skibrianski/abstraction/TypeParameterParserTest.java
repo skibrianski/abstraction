@@ -229,4 +229,15 @@ public class TypeParameterParserTest {
         Assertions.assertArrayEquals(new Type[]{}, wildcardType.getUpperBounds());
         Assertions.assertArrayEquals(new Type[]{Number.class}, wildcardType.getLowerBounds());
     }
+
+    @Test
+    void test_neitherSuperNorExtendsKeyword() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver();
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Assertions.assertThrows(
+                AbstractionException.UsageException.class,
+                () -> typeParameterParser.parse("? greepondah Number")
+        );
+    }
 }
