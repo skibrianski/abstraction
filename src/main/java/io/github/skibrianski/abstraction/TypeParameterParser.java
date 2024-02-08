@@ -54,7 +54,7 @@ public class TypeParameterParser {
         } else if (token.equals(TypeParameterToken.StaticToken.WILDCARD)) {
             return processWildcard();
         } else {
-            throw new RuntimeException("assertion failed - parse() with token that was neither Variable nor Wildcard");
+            throw new RuntimeException("internal error - assertion failed - parse(non-Variable, non-Wildcard token)");
         }
     }
 
