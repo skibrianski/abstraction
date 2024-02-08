@@ -47,7 +47,7 @@ public class TypeNameResolver {
         if (hasClass) {
             return hasTypeParameter.ofClass();
         } else {
-            return new TypeParameterParser2(hasTypeParameter.ofString(), this).parse();
+            return new TypeParameterParser(hasTypeParameter.ofString(), this).parse();
         }
     }
     public boolean canResolve(String typeString) {
