@@ -12,7 +12,6 @@ import java.util.List;
 
 public class TypeParameterParser {
 
-
     private final TypeNameResolver typeNameResolver;
 
     public TypeParameterParser(TypeNameResolver typeNameResolver) {
@@ -50,11 +49,9 @@ public class TypeParameterParser {
             Type resolvedType = typeNameResolver.resolve(trimmedTypeString);
             if (resolvedType != null) {
                 if (isExtends) {
-                    // TODO: write a TypeParameterParserTest test for this
                     return new WildcardTypeImpl(new Type[]{}, new Type[]{resolvedType});
                 }
                 if (isSuper) {
-                    // TODO: write a TypeParameterParserTest test for this
                     return new WildcardTypeImpl(new Type[]{resolvedType}, new Type[]{});
                 }
                 return resolvedType;

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -203,5 +204,29 @@ public class TypeParameterParserTest {
         Type firstParameterInternalType = firstParameterTypeArgs[0];
         Assertions.assertInstanceOf(Class.class, firstParameterInternalType);
         Assertions.assertEquals(String.class, firstParameterInternalType);
+    }
+
+    @Test
+    void test_singleWildcardExtends() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver();
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("? extends Number");
+        Assertions.assertInstanceOf(WildcardType.class, baseInternalType);
+        WildcardType wildcardType = (WildcardType) baseInternalType;
+        Assertions.assertArrayEquals(new Type[]{Number.class}, wildcardType.getUpperBounds());
+        Assertions.assertArrayEquals(new Type[]{}, wildcardType.getLowerBounds());
+    }
+
+    @Test
+    void test_singleWildcardSuper() {
+        TypeNameResolver typeNameResolver = new TypeNameResolver();
+        TypeParameterParser typeParameterParser = new TypeParameterParser(typeNameResolver);
+
+        Type baseInternalType = typeParameterParser.parse("? super Number");
+        Assertions.assertInstanceOf(WildcardType.class, baseInternalType);
+        WildcardType wildcardType = (WildcardType) baseInternalType;
+        Assertions.assertArrayEquals(new Type[]{}, wildcardType.getUpperBounds());
+        Assertions.assertArrayEquals(new Type[]{Number.class}, wildcardType.getLowerBounds());
     }
 }
