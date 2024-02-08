@@ -24,7 +24,8 @@ public interface TypeParameterToken {
         LIST_SEPARATOR(","),
         EXTENDS("extends"),
         SUPER("super"),
-        WILDCARD("?");
+        WILDCARD("?"),
+        VARARGS("...");
 
         private final String string;
 

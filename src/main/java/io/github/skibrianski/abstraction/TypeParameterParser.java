@@ -17,14 +17,18 @@ public class TypeParameterParser {
     private final TypeNameResolver typeNameResolver;
 
     private final TokenStream tokenStream;
+    private final String inputStringForErrorDisplay;
 
     public TypeParameterParser(String typeString, TypeNameResolver typeNameResolver) {
+        this.inputStringForErrorDisplay = typeString;
+
         final String[] withWhitespaceAroundTokens = typeString
                 .replaceAll("<", " < ")
                 .replaceAll(">", " > ")
                 .replaceAll("\\[", " [ ")
                 .replaceAll("]", " ] ")
                 .replaceAll(",", " , ")
+                .replaceAll("\\.\\.\\.", " ... ")
                 .trim()
                 .split("\\s+");
         this.tokenStream = new TokenStream(
@@ -37,9 +41,9 @@ public class TypeParameterParser {
 
     public Type parse() {
         Type type = parseInternal();
-//        if (!tokenStream.isDone()) {
-//            throw new RuntimeException("that's not so good"); // TODO: words, exception type
-//        }
+        if (!tokenStream.isDone()) {
+            throw new AbstractionException.UsageException("unsupported wildcard syntax: " + inputStringForErrorDisplay);
+        }
         return type;
     }
 
@@ -132,14 +136,20 @@ public class TypeParameterParser {
                         TypeParameterToken.StaticToken.CLOSE_ARRAY
                 )
         ) {
-            if (currentType instanceof Class) {
-                currentType = Array.newInstance((Class<?>) currentType, 0).getClass();
-            } else {
-                currentType = new GenericArrayTypeImpl(currentType);
-            }
+            currentType = arrayType(currentType);
             tokenStream.discard(2);
         }
+        if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.VARARGS)) {
+            currentType = arrayType(currentType);
+            tokenStream.discard(1);
+        }
         return currentType;
+    }
+
+    private static Type arrayType(Type type) {
+        return type instanceof Class
+                ? Array.newInstance((Class<?>) type, 0).getClass()
+                : new GenericArrayTypeImpl(type);
     }
 
     public static class ParameterizedTypeImpl implements ParameterizedType {
