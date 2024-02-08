@@ -28,15 +28,18 @@ public class TypeParameterParser {
             while (trimmedTypeString.charAt(pos) == ' ') {
                 pos++;
             }
-            isExtends = trimmedTypeString.substring(pos).startsWith("extends");
-            if (isExtends) {
-                trimmedTypeString = trimmedTypeString.substring(pos + "extends".length()).trim();
-            } else {
-                isSuper = trimmedTypeString.substring(pos).startsWith("super");
-                if (isSuper) {
-                    trimmedTypeString = trimmedTypeString.substring(pos + "super".length()).trim();
-                }
+            String[] words = trimmedTypeString.substring(pos).split("\\s+", 2);
+            if (words[0].equals("extends")) {
+                isExtends = true;
+                trimmedTypeString = words[1];
+                // TODO: Foo, Bar case
             }
+            if (words[0].equals("super")) {
+                isSuper = true;
+                trimmedTypeString = words[1];
+                // TODO: Foo, Bar case
+            }
+            // TODO: both extends and super? eg ? extends Comparable, Serializable super Whatever, WhateverElse
 
             if (!isExtends && !isSuper) {
                 throw new AbstractionException.UsageException("unsupported wildcard syntax: " + typeString);
