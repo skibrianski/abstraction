@@ -1,7 +1,9 @@
 package io.github.skibrianski.abstraction;
 
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TokenStream {
 
@@ -9,6 +11,23 @@ public class TokenStream {
     private int pos = 0;
     public TokenStream(List<TypeParameterToken> tokens) {
         this.tokens = tokens;
+    }
+
+    public TokenStream(String typeString) {
+        this(tokenize(typeString));
+    }
+
+    private static List<TypeParameterToken> tokenize(String typeString) {
+        // surround each punctuation-based token with spaces to aid tokenization
+        for (TypeParameterToken.StaticToken token : TypeParameterToken.StaticToken.values()) {
+            typeString = typeString.replaceAll(
+                    "\\Q" + token.asString() + "\\E",
+                    " " + token.asString() + " "
+            );
+        }
+        return Arrays.stream(typeString.trim().split("\\s+"))
+                .map(TypeParameterToken::of)
+                .collect(Collectors.toList());
     }
 
     public TypeParameterToken consume() {

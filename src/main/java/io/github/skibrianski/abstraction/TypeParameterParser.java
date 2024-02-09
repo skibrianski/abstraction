@@ -21,19 +21,7 @@ public class TypeParameterParser {
 
     public TypeParameterParser(String typeString, TypeNameResolver typeNameResolver) {
         this.inputStringForErrorDisplay = typeString;
-
-        // surround each punctuation-based token with spaces to aid tokenization
-        for (TypeParameterToken.StaticToken token : TypeParameterToken.StaticToken.values()) {
-            typeString = typeString.replaceAll(
-                    "\\Q" + token.asString() + "\\E",
-                    " " + token.asString() + " "
-            );
-        }
-        this.tokenStream = new TokenStream(
-                Arrays.stream(typeString.trim().split("\\s+"))
-                        .map(TypeParameterToken::of)
-                        .collect(Collectors.toList())
-        );
+        this.tokenStream = new TokenStream(typeString);
         this.typeNameResolver = typeNameResolver;
     }
 
@@ -56,7 +44,7 @@ public class TypeParameterParser {
         }
     }
 
-    public Type processWildcard() {
+    private Type processWildcard() {
         List<Type> extensions = getTypeBoundList(TypeParameterToken.StaticToken.EXTENDS);
         List<Type> supers = getTypeBoundList(TypeParameterToken.StaticToken.SUPER);
         return new WildcardTypeImpl(supers.toArray(Type[]::new), extensions.toArray(Type[]::new));
@@ -70,7 +58,7 @@ public class TypeParameterParser {
         return readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
     }
 
-    public Type processVariable(TypeParameterToken.Variable token) {
+    private Type processVariable(TypeParameterToken.Variable token) {
         return processArrayDimensions(
                 processTypeParameterList(
                         processBaseType(token)
