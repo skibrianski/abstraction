@@ -25,12 +25,12 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- use (singular) `&` exclusively, and never `,` to separate super/extends
-    and write tests for same.
-- tests for type constraints that extend/super multiple other types
-    (interfaces are limited to only one super, but probably no reason for us to be so constrained)
-    not done: TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTest / TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest
-    done: WildcardExtendsMultipleTest / WildcardSuperMultipleTest
+- parsing of RequiresTypeParameter.{extending|superOf} should allow for lists, eg these should be equivalent:
+  - extending = {"T", "U"}
+  - extending = "T & U"
+- tests for use of multiple supers/extends separated by `&`
+  - TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypeParameterTest
+  - TypeReferenceToAnotherTypeReferenceAsWildcardSuperOfMultipleTypeParameterTest
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
 - do wildcard types and boxing interact negatively? are there other edge cases with boxing?
