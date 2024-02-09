@@ -241,9 +241,6 @@ public class TypeParameterParserTest {
         // @RequiresTypeParameter(value = "T", extending = "Number")
         // @RequiresTypeParameter(value = "U", extending = "Collection<? extends T>")
         // @RequiresTypeParameter(value = "V", extending = "Map<? extends T, ? extends U>")
-        // TODO: parser is reading Map<? extends T, ? extends U> wrong.
-        // it parses this as a single type argument to Map which extends both `T` and `? extends U` which is wrong.
-        // how can we solve this ambiguity?
         WildcardType extendingNumberWildcardType = new TypeParameterParser.WildcardTypeImpl(
                 new Type[]{},
                 new Type[]{Number.class}
@@ -265,11 +262,26 @@ public class TypeParameterParserTest {
         ParameterizedType parameterizedType = (ParameterizedType) baseInternalType;
         Assertions.assertEquals(Map.class, parameterizedType.getRawType());
         Assertions.assertEquals(2, parameterizedType.getActualTypeArguments().length);
-
-        var z = 123;
-//        WildcardType wildcardType = (WildcardType) baseInternalType;
-//        Assertions.assertArrayEquals(new Type[]{Number.class}, wildcardType.getUpperBounds());
-//        Assertions.assertArrayEquals(new Type[]{}, wildcardType.getLowerBounds());
+        Type firstTypeParameter = parameterizedType.getActualTypeArguments()[0];
+        Assertions.assertInstanceOf(WildcardType.class, firstTypeParameter);
+        WildcardType firstWildcardType = (WildcardType) firstTypeParameter;
+        Type secondTypeParameter = parameterizedType.getActualTypeArguments()[1];
+        Assertions.assertInstanceOf(WildcardType.class, secondTypeParameter);
+        Assertions.assertArrayEquals(new Type[]{}, firstWildcardType.getLowerBounds());
+        Assertions.assertArrayEquals(new Type[]{Number.class}, firstWildcardType.getUpperBounds());
+        WildcardType secondWildcardType = (WildcardType) secondTypeParameter;
+        Assertions.assertArrayEquals(new Type[]{}, secondWildcardType.getLowerBounds());
+        Assertions.assertEquals(1, secondWildcardType.getUpperBounds().length);
+        Type mapValueExtensionType = secondWildcardType.getUpperBounds()[0];
+        Assertions.assertInstanceOf(ParameterizedType.class, mapValueExtensionType);
+        ParameterizedType mapValueExtensionParameterizedType = (ParameterizedType) mapValueExtensionType;
+        Assertions.assertEquals(Collection.class, mapValueExtensionParameterizedType.getRawType());
+        Assertions.assertEquals(1, mapValueExtensionParameterizedType.getActualTypeArguments().length);
+        Type listElementType = mapValueExtensionParameterizedType.getActualTypeArguments()[0];
+        Assertions.assertInstanceOf(WildcardType.class, listElementType);
+        WildcardType listElementWildcardType = (WildcardType) listElementType;
+        Assertions.assertArrayEquals(new Type[]{}, listElementWildcardType.getLowerBounds());
+        Assertions.assertArrayEquals(new Type[]{Number.class}, listElementWildcardType.getUpperBounds());
     }
 
 }

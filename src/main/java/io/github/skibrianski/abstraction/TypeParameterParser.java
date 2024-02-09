@@ -1,6 +1,5 @@
 package io.github.skibrianski.abstraction;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
