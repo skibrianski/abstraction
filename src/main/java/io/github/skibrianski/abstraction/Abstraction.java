@@ -95,6 +95,11 @@ public final class Abstraction {
                 .collect(Collectors.toList());
     }
 
+    private enum TypeBoundOperation {
+        EXTENDS,
+        SUPEROF;
+    }
+
     // note: assumption: is only run after validateHasAllTypeParameters()
     // i guess we can't use TypeValidator and such b/c we're checking the implementation class's type params,
     // not the implemented method's types.
@@ -108,29 +113,42 @@ public final class Abstraction {
             java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters[pos];
             RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
 
-            for (String superTypeString : requiredTypeParameter.superOf()) {
-                TypeParameterParser parser = new TypeParameterParser(superTypeString, typeNameResolver);
-                for (Type superTypeBound : parser.parseTypeBoundList()) {
-                    if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
-                        throw new AbstractionException.TypeParameterViolatesBoundsException(
-                                "implementation " + implementationName
-                                        + " does not fulfill super constraint: " + superTypeBound
-                                        + " with implemented type; " + implementedTypeParameter
-                        );
-                    }
-                }
-            }
+            validateTypeBound(
+                    requiredTypeParameter.superOf(),
+                    implementedTypeParameter,
+                    implementationName,
+                    TypeBoundOperation.SUPEROF,
+                    typeNameResolver
+            );
 
-            for (String extendingTypeString : requiredTypeParameter.extending()) {
-                TypeParameterParser parser = new TypeParameterParser(extendingTypeString, typeNameResolver);
-                for (Type extendingTypeBound : parser.parseTypeBoundList()) {
-                    if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
-                        throw new AbstractionException.TypeParameterViolatesBoundsException(
-                                "implementation " + implementationName
-                                        + " does not extend: " + extendingTypeBound
-                                        + " with implemented type; " + implementedTypeParameter
-                        );
-                    }
+            validateTypeBound(
+                    requiredTypeParameter.extending(),
+                    implementedTypeParameter,
+                    implementationName,
+                    TypeBoundOperation.EXTENDS,
+                    typeNameResolver
+            );
+        }
+    }
+
+    private static void validateTypeBound(
+            String[] typeStrings,
+            java.lang.reflect.Type implementedType,
+            String implementationName,
+            TypeBoundOperation typeBoundOperation,
+            TypeNameResolver typeNameResolver
+    ) {
+        for (String typeString : typeStrings) {
+            for (Type typeBound : new TypeParameterParser(typeString, typeNameResolver).parseTypeBoundList()) {
+                boolean isAssignable = typeBoundOperation == TypeBoundOperation.EXTENDS
+                        ? TypeValidator.isAssignableType(implementedType, typeBound)
+                        : TypeValidator.isAssignableType(typeBound, implementedType);
+                if (!isAssignable) {
+                    throw new AbstractionException.TypeParameterViolatesBoundsException(
+                            "implementation " + implementationName
+                                    + " does not " + typeBoundOperation + ": " + typeBound
+                                    + " with implemented type; " + implementedType
+                    );
                 }
             }
         }
