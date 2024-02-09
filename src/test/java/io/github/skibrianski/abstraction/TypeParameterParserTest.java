@@ -7,6 +7,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -233,6 +234,42 @@ public class TypeParameterParserTest {
                 AbstractionException.UsageException.class,
                 () -> typeParameterParser.parse()
         );
+    }
+
+    @Test
+    void test_complex() {
+        // @RequiresTypeParameter(value = "T", extending = "Number")
+        // @RequiresTypeParameter(value = "U", extending = "Collection<? extends T>")
+        // @RequiresTypeParameter(value = "V", extending = "Map<? extends T, ? extends U>")
+        // TODO: parser is reading Map<? extends T, ? extends U> wrong.
+        // it parses this as a single type argument to Map which extends both `T` and `? extends U` which is wrong.
+        // how can we solve this ambiguity?
+        WildcardType extendingNumberWildcardType = new TypeParameterParser.WildcardTypeImpl(
+                new Type[]{},
+                new Type[]{Number.class}
+        );
+        ParameterizedType collectionOfExtendingNumberType = new TypeParameterParser.ParameterizedTypeImpl(
+                Collection.class,
+                new Type[]{extendingNumberWildcardType}
+        );
+        TypeNameResolver typeNameResolver = new TypeNameResolver()
+                .addTypeParameter("T", Number.class)
+                .addTypeParameter("U", collectionOfExtendingNumberType);
+        TypeParameterParser typeParameterParser = new TypeParameterParser(
+                "Map<? extends T, ? extends U>",
+                typeNameResolver
+        );
+
+        Type baseInternalType = typeParameterParser.parse();
+        Assertions.assertInstanceOf(ParameterizedType.class, baseInternalType);
+        ParameterizedType parameterizedType = (ParameterizedType) baseInternalType;
+        Assertions.assertEquals(Map.class, parameterizedType.getRawType());
+        Assertions.assertEquals(2, parameterizedType.getActualTypeArguments().length);
+
+        var z = 123;
+//        WildcardType wildcardType = (WildcardType) baseInternalType;
+//        Assertions.assertArrayEquals(new Type[]{Number.class}, wildcardType.getUpperBounds());
+//        Assertions.assertArrayEquals(new Type[]{}, wildcardType.getLowerBounds());
     }
 
 }
