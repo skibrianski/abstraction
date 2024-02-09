@@ -19,7 +19,7 @@ public interface TypeParameterToken {
         CLOSE_PARAMETER_LIST(">"),
         OPEN_ARRAY("["),
         CLOSE_ARRAY("]"),
-        WILDCARD_LIST_SEPARATOR("&"),
+        TYPE_BOUND_LIST_SEPARATOR("&"),
         PARAMETER_LIST_SEPARATOR(","),
         EXTENDS("extends"),
         SUPER("super"),

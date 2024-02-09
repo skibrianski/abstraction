@@ -23,19 +23,15 @@ public class TypeParameterParser {
     public TypeParameterParser(String typeString, TypeNameResolver typeNameResolver) {
         this.inputStringForErrorDisplay = typeString;
 
-        // TODO: this, programmatically
-        final String[] withWhitespaceAroundTokens = typeString
-                .replaceAll("<", " < ")
-                .replaceAll(">", " > ")
-                .replaceAll("\\[", " [ ")
-                .replaceAll("]", " ] ")
-                .replaceAll(",", " , ")
-                .replaceAll("&", " & ")
-                .replaceAll("\\.\\.\\.", " ... ")
-                .trim()
-                .split("\\s+");
+        // surround each punctuation-based token with spaces to aid tokenization
+        for (TypeParameterToken.StaticToken token : TypeParameterToken.StaticToken.values()) {
+            typeString = typeString.replaceAll(
+                    "\\Q" + token.asString() + "\\E",
+                    " " + token.asString() + " "
+            );
+        }
         this.tokenStream = new TokenStream(
-                Arrays.stream(withWhitespaceAroundTokens)
+                Arrays.stream(typeString.trim().split("\\s+"))
                         .map(TypeParameterToken::of)
                         .collect(Collectors.toList())
         );
@@ -61,22 +57,18 @@ public class TypeParameterParser {
         }
     }
 
-    interface Foo<T extends Serializable & Comparable<T>> {
-
-    }
-
     public Type processWildcard() {
         List<Type> extensions;
         List<Type> supers;
         if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.EXTENDS)) {
             tokenStream.discard(1);
-            extensions = readAndProcessList();
+            extensions = readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
         } else {
             extensions = List.of();
         }
         if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.SUPER)) {
             tokenStream.discard(1);
-            supers = readAndProcessList();
+            supers = readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
         } else {
             supers = List.of();
         }
@@ -113,7 +105,7 @@ public class TypeParameterParser {
         }
 
         tokenStream.discard(1); // consume open
-        List<Type> parameterListTypes = readAndProcessList();
+        List<Type> parameterListTypes = readAndProcessList(TypeParameterToken.StaticToken.PARAMETER_LIST_SEPARATOR);
         if (!tokenStream.nextTokenIs(TypeParameterToken.StaticToken.CLOSE_PARAMETER_LIST)) {
             // TODO: provide actionable detail here
             throw new AbstractionException.UsageException("illegal type parameter list");
@@ -123,11 +115,11 @@ public class TypeParameterParser {
         return new ParameterizedTypeImpl(currentType, parameterListTypes.toArray(Type[]::new));
     }
 
-    private List<Type> readAndProcessList() {
+    private List<Type> readAndProcessList(TypeParameterToken.StaticToken separatorToken) {
         List<Type> parameterListTypes = new ArrayList<>();
         while (!tokenStream.isDone()) {
             parameterListTypes.add(parseInternal());
-            if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.PARAMETER_LIST_SEPARATOR)) {
+            if (tokenStream.nextTokenIs(separatorToken)) {
                 tokenStream.discard(1);
             } else {
                 break;
