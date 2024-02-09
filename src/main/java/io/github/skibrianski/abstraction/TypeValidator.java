@@ -41,6 +41,7 @@ public class TypeValidator {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // we expect concrete types here so no need to worry about TypeVariable
         if (implementedType instanceof Class) {
+            // TODO: break out all these cases in to a separate helper
             if (requiredType instanceof ParameterizedType) {
                 return isAssignableFromParameterizedTypeToClass(
                         (Class<?>) implementedType,
