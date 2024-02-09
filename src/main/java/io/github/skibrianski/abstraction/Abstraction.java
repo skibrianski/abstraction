@@ -110,8 +110,7 @@ public final class Abstraction {
 
             for (String superTypeString : requiredTypeParameter.superOf()) {
                 TypeParameterParser parser = new TypeParameterParser(superTypeString, typeNameResolver);
-                List<Type> superTypeBounds = parser.parseTypeBoundList();
-                for (Type superTypeBound : superTypeBounds) {
+                for (Type superTypeBound : parser.parseTypeBoundList()) {
                     if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
                         throw new AbstractionException.TypeParameterViolatesBoundsException(
                                 "implementation " + implementationName
@@ -124,8 +123,7 @@ public final class Abstraction {
 
             for (String extendingTypeString : requiredTypeParameter.extending()) {
                 TypeParameterParser parser = new TypeParameterParser(extendingTypeString, typeNameResolver);
-                List<Type> extendingTypeBounds = parser.parseTypeBoundList();
-                for (Type extendingTypeBound : extendingTypeBounds) {
+                for (Type extendingTypeBound : parser.parseTypeBoundList()) {
                     if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
                         throw new AbstractionException.TypeParameterViolatesBoundsException(
                                 "implementation " + implementationName
