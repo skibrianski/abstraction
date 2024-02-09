@@ -57,21 +57,17 @@ public class TypeParameterParser {
     }
 
     public Type processWildcard() {
-        List<Type> extensions;
-        List<Type> supers;
-        if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.EXTENDS)) {
-            tokenStream.discard(1);
-            extensions = readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
-        } else {
-            extensions = List.of();
-        }
-        if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.SUPER)) {
-            tokenStream.discard(1);
-            supers = readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
-        } else {
-            supers = List.of();
-        }
+        List<Type> extensions = getTypeBoundList(TypeParameterToken.StaticToken.EXTENDS);
+        List<Type> supers = getTypeBoundList(TypeParameterToken.StaticToken.SUPER);
         return new WildcardTypeImpl(supers.toArray(Type[]::new), extensions.toArray(Type[]::new));
+    }
+
+    private List<Type> getTypeBoundList(TypeParameterToken.StaticToken token) {
+        if (!tokenStream.nextTokenIs(token)) {
+            return List.of();
+        }
+        tokenStream.discard(1);
+        return readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
     }
 
     public Type processVariable(TypeParameterToken.Variable token) {
