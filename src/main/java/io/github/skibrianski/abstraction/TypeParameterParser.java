@@ -50,12 +50,17 @@ public class TypeParameterParser {
         return new WildcardTypeImpl(supers.toArray(Type[]::new), extensions.toArray(Type[]::new));
     }
 
+    public List<Type> parseTypeBoundList() {
+        return readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
+    }
+
     private List<Type> getTypeBoundList(TypeParameterToken.StaticToken token) {
         if (!tokenStream.nextTokenIs(token)) {
             return List.of();
         }
         tokenStream.discard(1);
-        return readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
+        return parseTypeBoundList();
+//        return readAndProcessList(TypeParameterToken.StaticToken.TYPE_BOUND_LIST_SEPARATOR);
     }
 
     private Type processVariable(TypeParameterToken.Variable token) {

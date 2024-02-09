@@ -28,6 +28,7 @@ public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypePar
         Assertions.assertDoesNotThrow(() -> Abstraction.check(Valid.class));
     }
 
+    // TODO
 //    @ManualValidation
 //    @HasTypeParameter(name = "T", ofClass = Number.class)
 //    @HasTypeParameter(name = "U", ofString = "List<String>")

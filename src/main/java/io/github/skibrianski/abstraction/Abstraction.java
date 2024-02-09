@@ -109,24 +109,30 @@ public final class Abstraction {
             RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
 
             for (String superTypeString : requiredTypeParameter.superOf()) {
-                Type superTypeBound = new TypeParameterParser(superTypeString, typeNameResolver).parse();
-                if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
-                    throw new AbstractionException.TypeParameterViolatesBoundsException(
-                            "implementation " + implementationName
-                                    + " does not fulfill super constraint: " + superTypeBound
-                                    + " with implemented type; " + implementedTypeParameter
-                    );
+                TypeParameterParser parser = new TypeParameterParser(superTypeString, typeNameResolver);
+                List<Type> superTypeBounds = parser.parseTypeBoundList();
+                for (Type superTypeBound : superTypeBounds) {
+                    if (!TypeValidator.isAssignableType(superTypeBound, implementedTypeParameter)) {
+                        throw new AbstractionException.TypeParameterViolatesBoundsException(
+                                "implementation " + implementationName
+                                        + " does not fulfill super constraint: " + superTypeBound
+                                        + " with implemented type; " + implementedTypeParameter
+                        );
+                    }
                 }
             }
 
             for (String extendingTypeString : requiredTypeParameter.extending()) {
-                Type extendingTypeBound = new TypeParameterParser(extendingTypeString, typeNameResolver).parse();
-                if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
-                    throw new AbstractionException.TypeParameterViolatesBoundsException(
-                            "implementation " + implementationName
-                                    + " does not extend: " + extendingTypeBound
-                                    + " with implemented type; " + implementedTypeParameter
-                    );
+                TypeParameterParser parser = new TypeParameterParser(extendingTypeString, typeNameResolver);
+                List<Type> extendingTypeBounds = parser.parseTypeBoundList();
+                for (Type extendingTypeBound : extendingTypeBounds) {
+                    if (!TypeValidator.isAssignableType(implementedTypeParameter, extendingTypeBound)) {
+                        throw new AbstractionException.TypeParameterViolatesBoundsException(
+                                "implementation " + implementationName
+                                        + " does not extend: " + extendingTypeBound
+                                        + " with implemented type; " + implementedTypeParameter
+                        );
+                    }
                 }
             }
         }
