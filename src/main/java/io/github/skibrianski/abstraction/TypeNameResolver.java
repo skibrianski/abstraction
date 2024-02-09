@@ -64,6 +64,7 @@ public class TypeNameResolver {
         return resolve(typeString, true);
     }
 
+    // TODO: this mirrors TypeParameterParser::processVariable. is there a way to use that instead?
     private java.lang.reflect.Type resolve(String typeString, boolean shouldThrow) {
         StringTruncator parameterNameTruncator = new StringTruncator(typeString)
                 .truncateOnce("...")
