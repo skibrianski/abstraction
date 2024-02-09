@@ -1,5 +1,6 @@
 package io.github.skibrianski.abstraction;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -56,6 +57,10 @@ public class TypeParameterParser {
         } else {
             throw new RuntimeException("internal error - assertion failed - parse(non-Variable, non-Wildcard token)");
         }
+    }
+
+    interface Foo<T extends Serializable & Comparable<T>> {
+
     }
 
     public Type processWildcard() {
