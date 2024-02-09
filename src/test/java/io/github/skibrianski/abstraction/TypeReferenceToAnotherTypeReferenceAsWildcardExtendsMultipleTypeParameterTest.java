@@ -3,6 +3,7 @@ package io.github.skibrianski.abstraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -28,33 +29,40 @@ public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypePar
         Assertions.assertDoesNotThrow(() -> Abstraction.check(Valid.class));
     }
 
-    // TODO
-//    @ManualValidation
-//    @HasTypeParameter(name = "T", ofClass = Number.class)
-//    @HasTypeParameter(name = "U", ofString = "List<String>")
-//    static class InvalidWrongTypeParameter implements WithMethod {
-//        public void method(Number t, List<String> u) { }
-//    }
-//    @Test
-//    void test_invalid_wrongScalarType() {
-//        Assertions.assertThrows(
-//                AbstractionException.TypeParameterViolatesBoundsException.class,
-//                () -> Abstraction.check(InvalidWrongTypeParameter.class)
-//        );
-//    }
-//
-//    @ManualValidation
-//    @HasTypeParameter(name = "T", ofClass = Number.class)
-//    @HasTypeParameter(name = "U", ofString = "AtomicReference<Integer>")
-//    static class InvalidWrongRawType implements WithMethod {
-//        public void method(Number t, AtomicReference<Integer> u) { }
-//    }
-//    @Test
-//    void test_invalid_wrongRawType() {
-//        Assertions.assertThrows(
-//                AbstractionException.TypeParameterViolatesBoundsException.class,
-//                () -> Abstraction.check(InvalidWrongRawType.class)
-//        );
-//    }
+    public static class SerializableOnly implements Serializable {  }
+    @ManualValidation
+    @HasTypeParameter(name = "T", ofClass = SerializableOnly.class)
+    static class NotComparable implements WithMethod {
+        public void method(SerializableOnly value) { }
+    }
+    @Test
+    void test_invalid_notComparable() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBoundsException.class,
+                () -> Abstraction.check(NotComparable.class)
+        );
+    }
+
+    public static class ComparableOnly implements Comparable<ComparableOnly> {
+        @Override
+        public int compareTo(ComparableOnly o) {
+            return 0;
+        }
+    }
+    @ManualValidation
+    @HasTypeParameter(name = "T", ofClass = ComparableOnly.class)
+    static class NotSerializable implements WithMethod {
+        public void method(ComparableOnly value) { }
+    }
+    @Test
+    void test_invalid_notSerializable() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBoundsException.class,
+                () -> Abstraction.check(NotSerializable.class)
+        );
+    }
+
+
+
 
 }

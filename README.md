@@ -25,11 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- parsing of RequiresTypeParameter.{extending|superOf} should allow for lists, eg these should be equivalent:
-  - extending = {"T", "U"}
-  - extending = "T & U"
-- tests for use of multiple supers/extends separated by `&`
-  - TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypeParameterTest
+- tests for use of multiple superOf separated by `&`
   - TypeReferenceToAnotherTypeReferenceAsWildcardSuperOfMultipleTypeParameterTest
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
