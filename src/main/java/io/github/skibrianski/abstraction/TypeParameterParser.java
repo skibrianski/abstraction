@@ -76,10 +76,11 @@ public class TypeParameterParser {
     }
 
     public Type processVariable(TypeParameterToken.Variable token) {
-        Type currentType = processBaseType(token);
-        currentType = processTypeParameterList(currentType);
-        currentType = processArrayDimensions(currentType);
-        return currentType;
+        return processArrayDimensions(
+                processTypeParameterList(
+                        processBaseType(token)
+                )
+        );
     }
 
     private Type processBaseType(TypeParameterToken.Variable variableToken) {
