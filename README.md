@@ -25,7 +25,8 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- use `&` exclusively, and never `,` to separate super/extends
+- use (singular) `&` exclusively, and never `,` to separate super/extends
+    and write tests for same.
 - tests for type constraints that extend/super multiple other types
     (interfaces are limited to only one super, but probably no reason for us to be so constrained)
     not done: TypeReferenceToAnotherTypeReferenceAsWildcardExtendsTypeParameterTest / TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest

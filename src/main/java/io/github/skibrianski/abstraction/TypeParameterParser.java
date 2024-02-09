@@ -23,12 +23,14 @@ public class TypeParameterParser {
     public TypeParameterParser(String typeString, TypeNameResolver typeNameResolver) {
         this.inputStringForErrorDisplay = typeString;
 
+        // TODO: this, programmatically
         final String[] withWhitespaceAroundTokens = typeString
                 .replaceAll("<", " < ")
                 .replaceAll(">", " > ")
                 .replaceAll("\\[", " [ ")
                 .replaceAll("]", " ] ")
                 .replaceAll(",", " , ")
+                .replaceAll("&", " & ")
                 .replaceAll("\\.\\.\\.", " ... ")
                 .trim()
                 .split("\\s+");
@@ -125,7 +127,7 @@ public class TypeParameterParser {
         List<Type> parameterListTypes = new ArrayList<>();
         while (!tokenStream.isDone()) {
             parameterListTypes.add(parseInternal());
-            if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.LIST_SEPARATOR)) {
+            if (tokenStream.nextTokenIs(TypeParameterToken.StaticToken.PARAMETER_LIST_SEPARATOR)) {
                 tokenStream.discard(1);
             } else {
                 break;
