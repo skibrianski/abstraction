@@ -61,8 +61,4 @@ public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypePar
                 () -> Abstraction.check(NotSerializable.class)
         );
     }
-
-
-
-
 }
