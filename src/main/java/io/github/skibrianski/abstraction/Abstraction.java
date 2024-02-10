@@ -64,11 +64,14 @@ public final class Abstraction {
                     loadAndReturnRepeatableAnnotationClasses(abstractionClassInfo, RequiresChildMethod.class);
             List<RequiresTypeParameter> requiresTypeParameterAnnotations =
                     loadAndReturnRepeatableAnnotationClasses(abstractionClassInfo, RequiresTypeParameter.class);
+            Map<String, RequiresTypeParameter> requiredTypeParameterByName = requiresTypeParameterAnnotations.stream()
+                    .collect(Collectors.toMap(RequiresTypeParameter::value, r -> r));
+
             for (ClassInfo implementationClassInfo : implementations) {
                 if (shouldBeAutoValidated(implementationClassInfo) || isManualRun) {
                     validateImplementation(
                             implementationClassInfo.loadClass(),
-                            requiresTypeParameterAnnotations,
+                            requiredTypeParameterByName,
                             requiresChildMethodAnnotations,
                             implementationClassInfo.getClassDependencies()
                     );
@@ -106,19 +109,12 @@ public final class Abstraction {
     private static void validateTypeParameterBounds(
             String implementationName,
             Map<String, java.lang.reflect.Type> implementedTypeParameters,
-            List<RequiresTypeParameter> requiredTypeParameters,
+            Map<String, RequiresTypeParameter> requiredTypeParameters,
             TypeNameResolver typeNameResolver
     ) {
-        // TODO: ths feels like the wrong place for this
-        Map<String, RequiresTypeParameter> requiredTypeParameterByName = requiredTypeParameters.stream()
-                .collect(Collectors.toMap(RequiresTypeParameter::value, r -> r));
-
-        // TODO: have we already validated that the implemented and required type params are the same?
-        //  if not add it somewhere
-
         for (String typeVariable : implementedTypeParameters.keySet()) {
             java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters.get(typeVariable);
-            RequiresTypeParameter requiredTypeParameter = requiredTypeParameterByName.get(typeVariable);
+            RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(typeVariable);
 
             validateTypeBound(
                     requiredTypeParameter.superOf(),
@@ -164,7 +160,7 @@ public final class Abstraction {
     private static void validateHasAllTypeParameters(
             Class<?> implementation,
             HasTypeParameter[] implementedTypeParameters,
-            List<RequiresTypeParameter> requiredTypeParameters
+            Map<String, RequiresTypeParameter> requiredTypeParameters
     ) {
         Set<String> implementedTypeParameterNames = Arrays.stream(implementedTypeParameters)
                 .map(HasTypeParameter::name)
@@ -181,11 +177,8 @@ public final class Abstraction {
                             + " has duplicate type parameters: " + duplicates
             );
         }
-        Set<String> requiredTypeParameterNames = requiredTypeParameters.stream()
-                .map(RequiresTypeParameter::value)
-                .collect(Collectors.toSet());
-        List<String> missingTypeParameters = requiredTypeParameters.stream()
-                .map(RequiresTypeParameter::value)
+        Set<String> requiredTypeParameterNames = requiredTypeParameters.keySet();
+        List<String> missingTypeParameters = requiredTypeParameters.keySet().stream()
                 .filter(requiredTypeParameter -> !implementedTypeParameterNames.contains(requiredTypeParameter))
                 .collect(Collectors.toList());
         if (!missingTypeParameters.isEmpty()) {
@@ -209,7 +202,7 @@ public final class Abstraction {
     }
     private static void validateImplementation(
             Class<?> implementation,
-            List<RequiresTypeParameter> requiresTypeParameterAnnotations,
+            Map<String, RequiresTypeParameter> requiresTypeParameterAnnotations,
             List<RequiresChildMethod> requiresChildMethodAnnotations,
             ClassInfoList implementationDependencies
     ) {
