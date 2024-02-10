@@ -4,12 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
-public class TypeReferenceToAnotherTypeReferenceAsWildcardExtendsMultipleTypeParameterTest {
+public class TypeReferenceExtendingMultipleTypesTest {
 
     @RequiresTypeParameter(value = "T", extending = "Serializable & Comparable<T>")
     @RequiresChildMethod(

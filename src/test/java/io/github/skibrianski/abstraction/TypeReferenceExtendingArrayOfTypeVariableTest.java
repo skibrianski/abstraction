@@ -3,7 +3,7 @@ package io.github.skibrianski.abstraction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TypeReferenceToAnotherTypeReferenceAsArrayTest {
+public class TypeReferenceExtendingArrayOfTypeVariableTest {
 
     @RequiresTypeParameter("T")
     @RequiresTypeParameter(value = "U", extending = "T[][]")

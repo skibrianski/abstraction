@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest {
+public class TypeReferenceExtendingParameterizedTypeWithWildcardSuperofTypeVariableArgumentTest {
 
     @RequiresTypeParameter("T")
     @RequiresTypeParameter(value = "U", extending = "Collection<? super T>")
