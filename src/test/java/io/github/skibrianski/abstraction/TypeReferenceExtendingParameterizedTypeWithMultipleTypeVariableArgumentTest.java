@@ -31,32 +31,49 @@ public class TypeReferenceExtendingParameterizedTypeWithMultipleTypeVariableArgu
         Assertions.assertDoesNotThrow(() -> Abstraction.check(ValidSubclass.class));
     }
 
-//    @ManualValidation
-//    @HasTypeParameter(name = "T", ofClass = String.class)
-//    @HasTypeParameter(name = "U", ofString = "List<Integer>")
-//    static class InvalidWrongTypeParameter implements WithMethod {
-//        public void method(String t, List<Integer> u) { }
-//    }
-//    @Test
-//    void test_invalid_wrongScalarType() {
-//        Assertions.assertThrows(
-//                AbstractionException.TypeParameterViolatesBoundsException.class,
-//                () -> Abstraction.check(InvalidWrongTypeParameter.class)
-//        );
-//    }
-//
-//    @ManualValidation
-//    @HasTypeParameter(name = "T", ofClass = String.class)
-//    @HasTypeParameter(name = "U", ofString = "AtomicReference<String>")
-//    static class InvalidWrongRawType implements WithMethod {
-//        public void method(String t, AtomicReference<String> u) { }
-//    }
-//    @Test
-//    void test_invalid_wrongRawType() {
-//        Assertions.assertThrows(
-//                AbstractionException.TypeParameterViolatesBoundsException.class,
-//                () -> Abstraction.check(InvalidWrongRawType.class)
-//        );
-//    }
+    @ManualValidation
+    @HasTypeParameter(name = "K", ofClass = String.class)
+    @HasTypeParameter(name = "V", ofClass = Number.class)
+    @HasTypeParameter(name = "M", ofString = "Map<Number, Number>")
+    static class InvalidWrongFirstTypeParameter implements WithMethod {
+        public void method(Map<Number, Number> map) { }
+    }
+    @Test
+    void test_invalid_wrongFirstTypeParameter() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBoundsException.class,
+                () -> Abstraction.check(InvalidWrongFirstTypeParameter.class)
+        );
+    }
+
+    @ManualValidation
+    @HasTypeParameter(name = "K", ofClass = String.class)
+    @HasTypeParameter(name = "V", ofClass = Number.class)
+    @HasTypeParameter(name = "M", ofString = "Map<String, String>")
+    static class InvalidWrongSecondTypeParameter implements WithMethod {
+        public void method(Map<String, String> map) { }
+    }
+    @Test
+    void test_invalid_wrongSecondTypeParameter() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBoundsException.class,
+                () -> Abstraction.check(InvalidWrongSecondTypeParameter.class)
+        );
+    }
+
+    @ManualValidation
+    @HasTypeParameter(name = "K", ofClass = String.class)
+    @HasTypeParameter(name = "V", ofClass = Number.class)
+    @HasTypeParameter(name = "M", ofString = "Map.Entry<String, Number>")
+    static class InvalidWrongRawType implements WithMethod {
+        public void method(Map.Entry<String, String> map) { }
+    }
+    @Test
+    void test_invalid_wrongRawType() {
+        Assertions.assertThrows(
+                AbstractionException.TypeParameterViolatesBoundsException.class,
+                () -> Abstraction.check(InvalidWrongRawType.class)
+        );
+    }
 
 }

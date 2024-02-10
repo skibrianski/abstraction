@@ -8,7 +8,6 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // TODO: tests that support multiple extends / supers
 // TODO: tests for both extends and super? eg ? extends Comparable, Serializable super Whatever, WhateverElse

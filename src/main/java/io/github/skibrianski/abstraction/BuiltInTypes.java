@@ -181,11 +181,27 @@ public class BuiltInTypes extends TypeNameResolver {
         );
     }
 
+    private static Stream<Class<?>> builtInInnerClasses() {
+        return Stream.of(Map.Entry.class);
+    }
+
     public static Map<String, java.lang.reflect.Type> builtInClassMap() {
-        return builtInClasses().collect(
+        Stream<Map.Entry<String, Class<?>>> inners = builtInInnerClasses()
+                .map(innerClass ->
+                        Map.entry(
+                                innerClass.getEnclosingClass().getSimpleName() + "." + innerClass.getSimpleName(),
+                                innerClass
+                        )
+                );
+        Stream<Map.Entry<String, Class<?>>> outers = builtInClasses()
+                .map(klazz -> Map.entry(klazz.getSimpleName(), klazz));
+        return Stream.concat(inners, outers).collect(
+                // name -> java.util.Map$Entry
+                // simpleName -> Entry
+                // canonicalName -> java.util.Map.Entry
                 Collectors.toMap(
-                        Class::getSimpleName,
-                        java.lang.reflect.Type.class::cast
+                        Map.Entry::getKey,
+                        entry -> (java.lang.reflect.Type) entry.getValue()
                 )
         );
     }
