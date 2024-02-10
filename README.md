@@ -25,6 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
+- TypeReferenceToAnother* tests are named improperly and likely have some gaps
 - tests for use of multiple superOf separated by `&`
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
