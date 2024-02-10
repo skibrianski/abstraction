@@ -105,13 +105,20 @@ public final class Abstraction {
     // not the implemented method's types.
     private static void validateTypeParameterBounds(
             String implementationName,
-            java.lang.reflect.Type[] implementedTypeParameters,
+            Map<String, java.lang.reflect.Type> implementedTypeParameters,
             List<RequiresTypeParameter> requiredTypeParameters,
             TypeNameResolver typeNameResolver
     ) {
-        for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
-            java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters[pos];
-            RequiresTypeParameter requiredTypeParameter = requiredTypeParameters.get(pos);
+        // TODO: ths feels like the wrong place for this
+        Map<String, RequiresTypeParameter> requiredTypeParameterByName = requiredTypeParameters.stream()
+                .collect(Collectors.toMap(RequiresTypeParameter::value, r -> r));
+
+        // TODO: have we already validated that the implemented and required type params are the same?
+        //  if not add it somewhere
+
+        for (String typeVariable : implementedTypeParameters.keySet()) {
+            java.lang.reflect.Type implementedTypeParameter = implementedTypeParameters.get(typeVariable);
+            RequiresTypeParameter requiredTypeParameter = requiredTypeParameterByName.get(typeVariable);
 
             validateTypeBound(
                     requiredTypeParameter.superOf(),
@@ -215,12 +222,12 @@ public final class Abstraction {
         for (Class<?> superClass : loadAllUserSubAndSuperClassesAndInterfaces(implementationDependencies)) {
             typeNameResolver.addClass(superClass);
         }
-        java.lang.reflect.Type[] implementedTypes = Arrays.stream(hasTypeParameters)
-                .map(typeNameResolver::lookup)
-                .toArray(java.lang.reflect.Type[]::new);
-        for (int pos = 0; pos < implementedTypes.length; pos++) {
-            typeNameResolver.addTypeParameter(hasTypeParameters[pos].name(), implementedTypes[pos]);
-        }
+        Map<String, java.lang.reflect.Type> implementedTypes = Arrays.stream(hasTypeParameters)
+                .collect(Collectors.toMap(
+                        HasTypeParameter::name,
+                        typeNameResolver::lookup
+                ));
+        implementedTypes.forEach(typeNameResolver::addTypeParameter);
 
         TypeValidator typeValidator = new TypeValidator(typeNameResolver);
         validateTypeParameterBounds(
