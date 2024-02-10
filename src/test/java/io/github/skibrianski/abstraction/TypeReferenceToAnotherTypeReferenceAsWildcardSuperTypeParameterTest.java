@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TypeReferenceToAnotherTypeReferenceAsWildcardSuperTypeParameterTest {
 
+    // TODO: this is supposed to test superOf, not extending. lol wat did i do here?
     @RequiresTypeParameter("T")
     @RequiresTypeParameter(value = "U", extending = "Collection<? super T>")
     @RequiresChildMethod(
