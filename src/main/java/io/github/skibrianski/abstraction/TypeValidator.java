@@ -43,11 +43,11 @@ public class TypeValidator {
         if (implementedType instanceof Class) {
             // TODO: break out all these cases in to a separate helper
             if (requiredType instanceof ParameterizedType) {
-                return isAssignableFromParameterizedTypeToClass(
+                return isAssignableFromClassToParameterizedType(
                         (ParameterizedType) requiredType, (Class<?>) implementedType
                 );
             } else if (requiredType instanceof WildcardType) {
-                return isAssignableFromWildcardTypeToClass(
+                return isAssignableFromClassToWildcardType(
                         (WildcardType) requiredType, (Class<?>) implementedType
                 );
             } else if (requiredType instanceof Class<?>) {
@@ -63,7 +63,7 @@ public class TypeValidator {
         throw new RuntimeException("unimplemented");
     }
 
-    public static boolean isAssignableFromWildcardTypeToClass(
+    public static boolean isAssignableFromClassToWildcardType(
             WildcardType requiredWildcardType,
             Class<?> implementedType
     ) {
@@ -81,7 +81,7 @@ public class TypeValidator {
     }
 
     // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
-    public static boolean isAssignableFromParameterizedTypeToClass(
+    public static boolean isAssignableFromClassToParameterizedType(
             ParameterizedType requiredType,
             Class<?> implementedType
     ) {
