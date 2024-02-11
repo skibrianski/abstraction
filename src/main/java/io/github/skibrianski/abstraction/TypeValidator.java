@@ -60,9 +60,23 @@ public class TypeValidator {
     ) {
         if (implementedType instanceof Class<?>) {
             return requiredClass.isAssignableFrom((Class<?>) implementedType);
+        } else if (implementedType instanceof WildcardType) {
+            return isAssignableToClassFromWildcardType(requiredClass, (WildcardType) implementedType);
         }
-        // TODO: support Class <- WildcardType checks
+
         throw new RuntimeException("unimplemented");
+    }
+
+    private static boolean isAssignableToClassFromWildcardType(
+            Class<?> requiredClass,
+            WildcardType implementedWildcardType
+    ) {
+        for (java.lang.reflect.Type upperBound : implementedWildcardType.getLowerBounds()) {
+            if (isAssignableType(requiredClass, upperBound)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean isAssignableToWildcard(
@@ -98,7 +112,7 @@ public class TypeValidator {
         throw new RuntimeException("unimplemented");
     }
 
-    public static boolean isAssignableToWildcardTypeFromClass(
+    private static boolean isAssignableToWildcardTypeFromClass(
             WildcardType requiredWildcardType,
             Class<?> implementedType
     ) {
@@ -115,7 +129,7 @@ public class TypeValidator {
         return true;
     }
 
-    public static boolean isAssignableToParameterizedTypeFromClass(
+    private static boolean isAssignableToParameterizedTypeFromClass(
             ParameterizedType requiredType,
             Class<?> implementedType
     ) {
@@ -143,7 +157,7 @@ public class TypeValidator {
         return false;
     }
 
-    public static boolean isAssignableToParameterizedTypeFromParameterizedType(
+    private static boolean isAssignableToParameterizedTypeFromParameterizedType(
             ParameterizedType requiredParameterizedType,
             ParameterizedType implementedParameterizedType
     ) {
@@ -158,7 +172,7 @@ public class TypeValidator {
         );
     }
 
-    public static boolean hasAssignableArgumentTypes(
+    private static boolean hasAssignableArgumentTypes(
             java.lang.reflect.Type[] requiredTypeParameters,
             java.lang.reflect.Type[] implementedTypeParameters
     ) {
@@ -174,7 +188,7 @@ public class TypeValidator {
         return true;
     }
 
-    public static boolean parameterizedTypeHasAssignableRawType(
+    private static boolean parameterizedTypeHasAssignableRawType(
             ParameterizedType requiredType,
             ParameterizedType implementedType
     ) {
@@ -183,7 +197,7 @@ public class TypeValidator {
         return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
-    public static boolean isAssignableToArray(GenericArrayType requiredType, java.lang.reflect.Type implementedType) {
+    private static boolean isAssignableToArray(GenericArrayType requiredType, java.lang.reflect.Type implementedType) {
         if (!(implementedType instanceof GenericArrayType)) {
             throw new RuntimeException("well that won't work"); // TODO: words
         }
