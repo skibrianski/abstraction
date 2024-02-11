@@ -42,16 +42,16 @@ public class TypeValidator {
         // we expect concrete types here so no need to worry about TypeVariable
         // TODO: break these out so that check on required type comes before implemented
         if (implementedType instanceof Class) {
-            return isAssignableClass(requiredType, (Class<?>) implementedType);
+            return isAssignableFromClass(requiredType, (Class<?>) implementedType);
         } else if (implementedType instanceof ParameterizedType) {
-            return isAssignableParameterizedType(requiredType, (ParameterizedType) implementedType);
+            return isAssignableFromParameterizedType(requiredType, (ParameterizedType) implementedType);
         } else if (implementedType instanceof GenericArrayType) {
-            return isAssignableArray(requiredType, (GenericArrayType) implementedType);
+            return isAssignableFromArray(requiredType, (GenericArrayType) implementedType);
         }
         throw new RuntimeException("unimplemented");
     }
 
-    public static boolean isAssignableClass(
+    public static boolean isAssignableFromClass(
             java.lang.reflect.Type requiredType,
             Class<?> implementedClass
     ) {
@@ -115,7 +115,7 @@ public class TypeValidator {
         return false;
     }
 
-    public static boolean isAssignableParameterizedType(
+    public static boolean isAssignableFromParameterizedType(
             java.lang.reflect.Type requiredType,
             ParameterizedType implementedType
     ) {
@@ -160,7 +160,7 @@ public class TypeValidator {
         return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
-    public static boolean isAssignableArray(java.lang.reflect.Type requiredType, GenericArrayType implementedType) {
+    public static boolean isAssignableFromArray(java.lang.reflect.Type requiredType, GenericArrayType implementedType) {
         if (!(requiredType instanceof GenericArrayType)) {
             throw new RuntimeException("well that won't work"); // TODO: words
         }
