@@ -40,6 +40,7 @@ public class TypeValidator {
     public static boolean isAssignableType(java.lang.reflect.Type requiredType, java.lang.reflect.Type implementedType) {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // we expect concrete types here so no need to worry about TypeVariable
+        // TODO: break these out so that check on required type comes before implemented
         if (implementedType instanceof Class) {
             return isAssignableClass(requiredType, (Class<?>) implementedType);
         } else if (implementedType instanceof ParameterizedType) {
@@ -55,11 +56,11 @@ public class TypeValidator {
             Class<?> implementedClass
     ) {
         if (requiredType instanceof ParameterizedType) {
-            return isAssignableFromClassToParameterizedType(
+            return isAssignableToParameterizedTypeFromClass(
                     (ParameterizedType) requiredType, implementedClass
             );
         } else if (requiredType instanceof WildcardType) {
-            return isAssignableFromClassToWildcardType(
+            return isAssignableToWildcardTypeFromClass(
                     (WildcardType) requiredType, implementedClass
             );
         } else if (requiredType instanceof Class<?>) {
@@ -69,7 +70,7 @@ public class TypeValidator {
         }
     }
 
-    public static boolean isAssignableFromClassToWildcardType(
+    public static boolean isAssignableToWildcardTypeFromClass(
             WildcardType requiredWildcardType,
             Class<?> implementedType
     ) {
@@ -87,7 +88,7 @@ public class TypeValidator {
     }
 
     // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
-    public static boolean isAssignableFromClassToParameterizedType(
+    public static boolean isAssignableToParameterizedTypeFromClass(
             ParameterizedType requiredType,
             Class<?> implementedType
     ) {
