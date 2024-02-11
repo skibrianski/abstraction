@@ -40,12 +40,6 @@ public class TypeValidator {
     public static boolean isAssignableType(java.lang.reflect.Type requiredType, java.lang.reflect.Type implementedType) {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // we expect concrete types here so no need to worry about TypeVariable
-        // TODO: break these out so that check on required type comes before implemented
-        // done ParameterizedType <- Class
-        // done ParameterizedType <- ParameterizedType
-        // done GenericArrayType <- GenericArrayType
-        // done WildcardType <- Class
-        // TODO Class <- Class
         if (requiredType instanceof ParameterizedType) {
             return isAssignableToParameterizedType((ParameterizedType) requiredType, implementedType);
         } else if (requiredType instanceof GenericArrayType) {
@@ -62,25 +56,24 @@ public class TypeValidator {
             Class<?> requiredClass,
             java.lang.reflect.Type implementedType
     ) {
-        if (!(implementedType instanceof Class<?>)) {
-            throw new RuntimeException("unimplemented");
+        if (implementedType instanceof Class<?>) {
+            return requiredClass.isAssignableFrom((Class<?>) implementedType);
         }
-
-        return requiredClass.isAssignableFrom((Class<?>) implementedType);
+        // TODO: support Class <- WildcardType checks
+        throw new RuntimeException("unimplemented");
     }
 
     private static boolean isAssignableToWildcard(
             WildcardType requiredWildcardType,
             java.lang.reflect.Type implementedType
     ) {
-        // TODO: support WildcardType <- WildcardType checks
-        if (!(implementedType instanceof Class<?>)) {
-            throw new RuntimeException("unimplemented");
+        if (implementedType instanceof Class<?>) {
+            return isAssignableToWildcardTypeFromClass(
+                    requiredWildcardType, (Class<?>) implementedType
+            );
         }
-
-        return isAssignableToWildcardTypeFromClass(
-                requiredWildcardType, (Class<?>) implementedType
-        );
+        // TODO: support WildcardType <- WildcardType checks
+        throw new RuntimeException("unimplemented");
     }
 
     private static boolean isAssignableToParameterizedType(
@@ -93,7 +86,7 @@ public class TypeValidator {
                     (Class<?>) implementedType
             );
         } else if (implementedType instanceof ParameterizedType) {
-            return isAssignableFromParameterizedType(
+            return isAssignableToParameterizedTypeFromParameterizedType(
                     requiredParameterizedType,
                     (ParameterizedType) implementedType
             );
@@ -148,23 +141,18 @@ public class TypeValidator {
         return false;
     }
 
-    public static boolean isAssignableFromParameterizedType(
-            java.lang.reflect.Type requiredType,
-            ParameterizedType implementedType
+    public static boolean isAssignableToParameterizedTypeFromParameterizedType(
+            ParameterizedType requiredParameterizedType,
+            ParameterizedType implementedParameterizedType
     ) {
-        if (!(requiredType instanceof ParameterizedType)) {
-            throw new RuntimeException("unimplemented"); // TODO: possible?
-        }
-        ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
-
-        if (!parameterizedTypeHasAssignableRawType(requiredParameterizedType, implementedType)) {
+        if (!parameterizedTypeHasAssignableRawType(requiredParameterizedType, implementedParameterizedType)) {
             return false;
         }
 
         return hasAssignableArgumentTypes(
                 Arrays.stream(requiredParameterizedType.getActualTypeArguments())
                         .map(TypeValidator::possiblyBox)
-                        .toArray(java.lang.reflect.Type[]::new), implementedType.getActualTypeArguments()
+                        .toArray(java.lang.reflect.Type[]::new), implementedParameterizedType.getActualTypeArguments()
         );
     }
 
