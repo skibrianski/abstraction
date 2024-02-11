@@ -118,6 +118,7 @@ public class TypeValidator {
             ParameterizedType requiredType,
             Class<?> implementedType
     ) {
+        // TODO: this implementation is weird b/c it was first implemented to support Enum/Comparable. is it necessary?
         AnnotatedType superClassAnnotatedType = implementedType.getAnnotatedSuperclass();
         Set<AnnotatedType> superAnnotatedTypeSet = Stream.concat(
                 Arrays.stream(implementedType.getAnnotatedInterfaces()),
