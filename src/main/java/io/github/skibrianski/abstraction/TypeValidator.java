@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -113,12 +115,11 @@ public class TypeValidator {
         return true;
     }
 
-    // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
     public static boolean isAssignableToParameterizedTypeFromClass(
             ParameterizedType requiredType,
             Class<?> implementedType
     ) {
-        // TODO: this implementation is weird b/c it was first implemented to support Enum/Comparable. is it necessary?
+        // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
         AnnotatedType superClassAnnotatedType = implementedType.getAnnotatedSuperclass();
         Set<AnnotatedType> superAnnotatedTypeSet = Stream.concat(
                 Arrays.stream(implementedType.getAnnotatedInterfaces()),
