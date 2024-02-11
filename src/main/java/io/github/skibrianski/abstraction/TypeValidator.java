@@ -41,26 +41,32 @@ public class TypeValidator {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // we expect concrete types here so no need to worry about TypeVariable
         if (implementedType instanceof Class) {
-            // TODO: break out all these cases in to a separate helper
-            if (requiredType instanceof ParameterizedType) {
-                return isAssignableFromClassToParameterizedType(
-                        (ParameterizedType) requiredType, (Class<?>) implementedType
-                );
-            } else if (requiredType instanceof WildcardType) {
-                return isAssignableFromClassToWildcardType(
-                        (WildcardType) requiredType, (Class<?>) implementedType
-                );
-            } else if (requiredType instanceof Class<?>) {
-                return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
-            } else {
-                throw new RuntimeException("unimplemented");
-            }
+            return isAssignableClass(requiredType, (Class<?>) implementedType);
         } else if (implementedType instanceof ParameterizedType) {
             return isAssignableParameterizedType(requiredType, (ParameterizedType) implementedType);
         } else if (implementedType instanceof GenericArrayType) {
             return isAssignableArray(requiredType, (GenericArrayType) implementedType);
         }
         throw new RuntimeException("unimplemented");
+    }
+
+    public static boolean isAssignableClass(
+            java.lang.reflect.Type requiredType,
+            Class<?> implementedClass
+    ) {
+        if (requiredType instanceof ParameterizedType) {
+            return isAssignableFromClassToParameterizedType(
+                    (ParameterizedType) requiredType, implementedClass
+            );
+        } else if (requiredType instanceof WildcardType) {
+            return isAssignableFromClassToWildcardType(
+                    (WildcardType) requiredType, implementedClass
+            );
+        } else if (requiredType instanceof Class<?>) {
+            return ((Class<?>) requiredType).isAssignableFrom(implementedClass);
+        } else {
+            throw new RuntimeException("unimplemented");
+        }
     }
 
     public static boolean isAssignableFromClassToWildcardType(
@@ -148,8 +154,8 @@ public class TypeValidator {
             ParameterizedType requiredType,
             ParameterizedType implementedType
     ) {
-        Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
         Class<?> baseRequiredClass = (Class<?>) requiredType.getRawType();
+        Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
         return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
