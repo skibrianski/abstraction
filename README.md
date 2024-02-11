@@ -25,7 +25,7 @@ but additionally allows for some tricks that interfaces cannot provide:
 
 ## todo
 
-- TypeReferenceSuperofWildcardSuperOfTypeVariableTest - tests for use of multiple superOf separated by `&`
+- TypeReferenceSuperofMultipleTypesTest - tests for use of multiple superOf separated by `&`
 - put cf comments above each test showing comparable raw java extension code
 - do we need a solution for loading all child classes of the classes *used* by the abstraction?
 - do wildcard types and boxing interact negatively? are there other edge cases with boxing?
