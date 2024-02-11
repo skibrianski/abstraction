@@ -23,11 +23,11 @@ public class TypeValidator {
         java.lang.reflect.Type[] requiredParameterTypesConv = Arrays.stream(requiredParameterTypes)
                 .map(this::convertFromAnnotation)
                 .toArray(java.lang.reflect.Type[]::new);
-        return hasAssignableArgumentTypes(implementedParameterTypes, requiredParameterTypesConv);
+        return hasAssignableArgumentTypes(requiredParameterTypesConv, implementedParameterTypes);
     }
 
-    public boolean isAssignableType(java.lang.reflect.Type implementedType, Type type) {
-        return isAssignableType(implementedType, convertFromAnnotation(type));
+    public boolean isAssignableType(Type requiredType, java.lang.reflect.Type implementedType) {
+        return isAssignableType(convertFromAnnotation(requiredType), implementedType);
     }
 
     public java.lang.reflect.Type convertFromAnnotation(Type type) {
@@ -37,20 +37,18 @@ public class TypeValidator {
         return new TypeParameterParser(type.value(), typeNameResolver).parse();
     }
 
-    public static boolean isAssignableType(java.lang.reflect.Type implementedType, java.lang.reflect.Type requiredType) {
+    public static boolean isAssignableType(java.lang.reflect.Type requiredType, java.lang.reflect.Type implementedType) {
         // note: a Type can be a Class, GenericArrayType, ParameterizedType, TypeVariable<D>, or WildcardType
         // we expect concrete types here so no need to worry about TypeVariable
         if (implementedType instanceof Class) {
             // TODO: break out all these cases in to a separate helper
             if (requiredType instanceof ParameterizedType) {
                 return isAssignableFromParameterizedTypeToClass(
-                        (Class<?>) implementedType,
-                        (ParameterizedType) requiredType
+                        (ParameterizedType) requiredType, (Class<?>) implementedType
                 );
             } else if (requiredType instanceof WildcardType) {
                 return isAssignableFromWildcardTypeToClass(
-                        (Class<?>) implementedType,
-                        (WildcardType) requiredType
+                        (WildcardType) requiredType, (Class<?>) implementedType
                 );
             } else if (requiredType instanceof Class<?>) {
                 return ((Class<?>) requiredType).isAssignableFrom((Class<?>) implementedType);
@@ -58,24 +56,24 @@ public class TypeValidator {
                 throw new RuntimeException("unimplemented");
             }
         } else if (implementedType instanceof ParameterizedType) {
-            return isAssignableParameterizedType((ParameterizedType) implementedType, requiredType);
+            return isAssignableParameterizedType(requiredType, (ParameterizedType) implementedType);
         } else if (implementedType instanceof GenericArrayType) {
-            return isAssignableArray((GenericArrayType) implementedType, requiredType);
+            return isAssignableArray(requiredType, (GenericArrayType) implementedType);
         }
         throw new RuntimeException("unimplemented");
     }
 
     public static boolean isAssignableFromWildcardTypeToClass(
-            Class<?> implementedType,
-            WildcardType requiredWildcardType
+            WildcardType requiredWildcardType,
+            Class<?> implementedType
     ) {
         for (java.lang.reflect.Type upperBound : requiredWildcardType.getUpperBounds()) {
-            if (!isAssignableType(implementedType, upperBound)) {
+            if (!isAssignableType(upperBound, implementedType)) {
                 return false;
             }
         }
         for (java.lang.reflect.Type lowerBound : requiredWildcardType.getLowerBounds()) {
-            if (!isAssignableType(lowerBound, implementedType)) {
+            if (!isAssignableType(implementedType, lowerBound)) {
                 return false;
             }
         }
@@ -84,8 +82,8 @@ public class TypeValidator {
 
     // handles the case of e.g. lowerBound = Enum<T> or lowerBound = Comparable<T>
     public static boolean isAssignableFromParameterizedTypeToClass(
-            Class<?> implementedType,
-            ParameterizedType requiredType
+            ParameterizedType requiredType,
+            Class<?> implementedType
     ) {
         AnnotatedType superClassAnnotatedType = implementedType.getAnnotatedSuperclass();
         Set<AnnotatedType> superAnnotatedTypeSet = Stream.concat(
@@ -111,36 +109,35 @@ public class TypeValidator {
     }
 
     public static boolean isAssignableParameterizedType(
-            ParameterizedType implementedType,
-            java.lang.reflect.Type requiredType
+            java.lang.reflect.Type requiredType,
+            ParameterizedType implementedType
     ) {
         if (!(requiredType instanceof ParameterizedType)) {
             throw new RuntimeException("unimplemented"); // TODO: possible?
         }
         ParameterizedType requiredParameterizedType = (ParameterizedType) requiredType;
 
-        if (!parameterizedTypeHasAssignableRawType(implementedType, requiredParameterizedType)) {
+        if (!parameterizedTypeHasAssignableRawType(requiredParameterizedType, implementedType)) {
             return false;
         }
 
         return hasAssignableArgumentTypes(
-                implementedType.getActualTypeArguments(),
                 Arrays.stream(requiredParameterizedType.getActualTypeArguments())
                         .map(TypeValidator::possiblyBox)
-                        .toArray(java.lang.reflect.Type[]::new)
+                        .toArray(java.lang.reflect.Type[]::new), implementedType.getActualTypeArguments()
         );
     }
 
     public static boolean hasAssignableArgumentTypes(
-            java.lang.reflect.Type[] implementedTypeParameters,
-            java.lang.reflect.Type[] requiredTypeParameters
+            java.lang.reflect.Type[] requiredTypeParameters,
+            java.lang.reflect.Type[] implementedTypeParameters
     ) {
         if (implementedTypeParameters.length != requiredTypeParameters.length) {
             return false;
         }
 
         for (int pos = 0; pos < implementedTypeParameters.length; pos++) {
-            if (!isAssignableType(implementedTypeParameters[pos], requiredTypeParameters[pos])) {
+            if (!isAssignableType(requiredTypeParameters[pos], implementedTypeParameters[pos])) {
                 return false;
             }
         }
@@ -148,22 +145,21 @@ public class TypeValidator {
     }
 
     public static boolean parameterizedTypeHasAssignableRawType(
-            ParameterizedType implementedType,
-            ParameterizedType requiredType
+            ParameterizedType requiredType,
+            ParameterizedType implementedType
     ) {
         Class<?> baseImplementedClass = (Class<?>) implementedType.getRawType();
         Class<?> baseRequiredClass = (Class<?>) requiredType.getRawType();
         return baseRequiredClass.isAssignableFrom(baseImplementedClass);
     }
 
-    public static boolean isAssignableArray(GenericArrayType implementedType, java.lang.reflect.Type requiredType) {
+    public static boolean isAssignableArray(java.lang.reflect.Type requiredType, GenericArrayType implementedType) {
         if (!(requiredType instanceof GenericArrayType)) {
             throw new RuntimeException("well that won't work"); // TODO: words
         }
         GenericArrayType requiredArrayType = (GenericArrayType) requiredType;
         return isAssignableType(
-                implementedType.getGenericComponentType(),
-                requiredArrayType.getGenericComponentType()
+                requiredArrayType.getGenericComponentType(), implementedType.getGenericComponentType()
         );
     }
 

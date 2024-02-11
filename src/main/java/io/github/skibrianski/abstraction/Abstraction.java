@@ -144,8 +144,8 @@ public final class Abstraction {
         for (String typeString : typeStrings) {
             for (Type typeBound : new TypeParameterParser(typeString, typeNameResolver).parseTypeBoundList()) {
                 boolean isAssignable = typeBoundOperation == TypeBoundOperation.EXTENDS
-                        ? TypeValidator.isAssignableType(implementedType, typeBound)
-                        : TypeValidator.isAssignableType(typeBound, implementedType);
+                        ? TypeValidator.isAssignableType(typeBound, implementedType)
+                        : TypeValidator.isAssignableType(implementedType, typeBound);
                 if (!isAssignable) {
                     throw new AbstractionException.TypeParameterViolatesBoundsException(
                             "implementation " + implementationName
@@ -284,7 +284,7 @@ public final class Abstraction {
             TypeValidator typeValidator
     ) {
         for (Method method : methodsWithMatchingNameAndArguments) {
-            if (typeValidator.isAssignableType(method.getGenericReturnType(), requiresChildMethod.returnType())) {
+            if (typeValidator.isAssignableType(requiresChildMethod.returnType(), method.getGenericReturnType())) {
                 return true;
             }
         }
