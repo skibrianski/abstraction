@@ -6,7 +6,7 @@
 
     <groupId>io.github.skibrianski</groupId>
     <artifactId>abstraction</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <!-- TODO: could we go to lower, perhaps to 8? -->
