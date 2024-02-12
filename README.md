@@ -8,6 +8,10 @@ but additionally allows for some tricks that interfaces cannot provide:
   - TODO: non-public methods in interface (bad idea?)
   - TODO: constructor constraints?
 
+## getting started
+
+for now, have a look at the tests.
+
 ## caveats
 
 - order matters when declaring @RequiresTypeParameter. in other words,
